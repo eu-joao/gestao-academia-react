@@ -1,0 +1,7 @@
+package br.edu.ifpb.academia.exception;
+
+public class ResourceNotFoundException extends RuntimeException {
+	public ResourceNotFoundException(String message) {
+		super(message);
+	}
+}
