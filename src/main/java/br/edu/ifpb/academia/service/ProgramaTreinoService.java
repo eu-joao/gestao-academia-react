@@ -10,8 +10,8 @@ import br.edu.ifpb.academia.dto.request.ProgramaTreinoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.ProgramaTreinoResponse;
 import br.edu.ifpb.academia.entity.ProgramaTreino;
 import br.edu.ifpb.academia.enums.NivelExperiencia;
-import br.edu.ifpb.academia.exception.BusinessException;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.ProgramaTreinoRepository;
 
 @Service
@@ -37,7 +37,7 @@ public class ProgramaTreinoService {
 	public ProgramaTreinoResponse criar(ProgramaTreinoRequest request) {
 		if (repository.existsByNivelExperienciaAndFrequenciaSemanal(request.nivelExperiencia(),
 				request.frequenciaSemanal())) {
-			throw new BusinessException("Ja existe programa para este nivel e frequencia.");
+			throw new RegraDeNegocioException("Ja existe programa para este nivel e frequencia.");
 		}
 		ProgramaTreino programa = new ProgramaTreino();
 		aplicar(programa, request);
@@ -58,12 +58,12 @@ public class ProgramaTreinoService {
 
 	public ProgramaTreino buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Programa de treino nao encontrado."));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Programa de treino não encontrado com ID: " + id));
 	}
 
 	public ProgramaTreino buscarPorPerfil(NivelExperiencia nivel, Integer frequencia) {
 		return repository.findByNivelExperienciaAndFrequenciaSemanal(nivel, frequencia)
-				.orElseThrow(() -> new BusinessException("Nao existe programa para o perfil do aluno."));
+				.orElseThrow(() -> new RegraDeNegocioException("Nao existe programa para o perfil do aluno."));
 	}
 
 	private void aplicar(ProgramaTreino programa, ProgramaTreinoRequest request) {
@@ -73,3 +73,5 @@ public class ProgramaTreinoService {
 		programa.setDescricao(request.descricao());
 	}
 }
+
+

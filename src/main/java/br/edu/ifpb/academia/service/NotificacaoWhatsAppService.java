@@ -15,3 +15,4 @@ public class NotificacaoWhatsAppService {
 		System.out.println("WhatsApp: cobranca atrasada para " + cobranca.getContrato().getAluno().getTelefone());
 	}
 }
+

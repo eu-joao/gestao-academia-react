@@ -135,4 +135,7 @@ public class Aluno {
 	public void setStatus(StatusAluno status) {
 		this.status = status;
 	}
+	public boolean isAtivo() {
+		return status == StatusAluno.ATIVO;
+	}
 }

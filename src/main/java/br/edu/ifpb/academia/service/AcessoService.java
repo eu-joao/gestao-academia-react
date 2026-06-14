@@ -6,9 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.ifpb.academia.dto.Mapper;
 import br.edu.ifpb.academia.dto.response.Responses.AcessoResponse;
 import br.edu.ifpb.academia.entity.Aluno;
-import br.edu.ifpb.academia.enums.StatusAluno;
 import br.edu.ifpb.academia.enums.StatusCobranca;
 import br.edu.ifpb.academia.enums.StatusContrato;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.repository.CobrancaRepository;
 import br.edu.ifpb.academia.repository.ContratoRepository;
 
@@ -32,8 +32,8 @@ public class AcessoService {
 	public AcessoResponse verificar(Long alunoId) {
 		cobrancaService.atualizarAtrasadas();
 		Aluno aluno = alunoService.buscarEntidade(alunoId);
-		if (aluno.getStatus() == StatusAluno.INATIVO) {
-			return Mapper.acesso(alunoId, false, "Aluno inativo.");
+		if (!aluno.isAtivo()) {
+			throw new RegraDeNegocioException("Aluno inativo. Acesso negado.");
 		}
 		if (contratoRepository.findFirstByAlunoIdAndStatusOrderByDataInicioDesc(alunoId, StatusContrato.ATIVO)
 				.isEmpty()) {

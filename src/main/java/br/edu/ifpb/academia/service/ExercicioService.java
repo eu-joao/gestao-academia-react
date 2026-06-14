@@ -9,8 +9,8 @@ import br.edu.ifpb.academia.dto.Mapper;
 import br.edu.ifpb.academia.dto.request.ExercicioRequest;
 import br.edu.ifpb.academia.dto.response.Responses.ExercicioResponse;
 import br.edu.ifpb.academia.entity.Exercicio;
-import br.edu.ifpb.academia.exception.BusinessException;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.ExercicioRepository;
 
 @Service
@@ -35,7 +35,7 @@ public class ExercicioService {
 	@Transactional
 	public ExercicioResponse criar(ExercicioRequest request) {
 		if (repository.existsByNome(request.nome())) {
-			throw new BusinessException("Ja existe exercicio com este nome.");
+			throw new RegraDeNegocioException("Ja existe exercicio com este nome.");
 		}
 		Exercicio exercicio = new Exercicio();
 		aplicar(exercicio, request);
@@ -56,7 +56,7 @@ public class ExercicioService {
 
 	public Exercicio buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Exercicio nao encontrado."));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Exercício não encontrado com ID: " + id));
 	}
 
 	private void aplicar(Exercicio exercicio, ExercicioRequest request) {
@@ -64,3 +64,5 @@ public class ExercicioService {
 		exercicio.setMusculaturaAlvo(request.musculaturaAlvo());
 	}
 }
+
+

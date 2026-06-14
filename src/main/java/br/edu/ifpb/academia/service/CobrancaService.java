@@ -14,7 +14,8 @@ import br.edu.ifpb.academia.dto.response.Responses.CobrancaResponse;
 import br.edu.ifpb.academia.entity.Cobranca;
 import br.edu.ifpb.academia.entity.Contrato;
 import br.edu.ifpb.academia.enums.StatusCobranca;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.repository.CobrancaRepository;
 import br.edu.ifpb.academia.repository.ContratoRepository;
 
@@ -78,6 +79,9 @@ public class CobrancaService {
 	@Transactional
 	public CobrancaResponse pagar(Long id, PagamentoRequest request) {
 		Cobranca cobranca = buscarEntidade(id);
+		if (cobranca.isPaga()) {
+			throw new RegraDeNegocioException("Esta cobrança já foi paga.");
+		}
 		cobranca.setDataPagamento(request.dataPagamento());
 		cobranca.setFormaPagamento(request.formaPagamento());
 		cobranca.setStatus(StatusCobranca.PAGO);
@@ -116,11 +120,11 @@ public class CobrancaService {
 
 	private Cobranca buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Cobranca nao encontrada."));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Cobrança não encontrada com ID: " + id));
 	}
 
 	private Contrato buscarContrato(Long id) {
 		return contratoRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Contrato nao encontrado."));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato não encontrado com ID: " + id));
 	}
 }

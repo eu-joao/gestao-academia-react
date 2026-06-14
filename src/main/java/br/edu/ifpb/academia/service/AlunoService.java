@@ -10,8 +10,8 @@ import br.edu.ifpb.academia.dto.request.AlunoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
 import br.edu.ifpb.academia.entity.Aluno;
 import br.edu.ifpb.academia.enums.StatusAluno;
-import br.edu.ifpb.academia.exception.BusinessException;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.AlunoRepository;
 
 @Service
@@ -38,10 +38,10 @@ public class AlunoService {
 	@Transactional
 	public AlunoResponse criar(AlunoRequest request) {
 		if (repository.existsByCpf(request.cpf())) {
-			throw new BusinessException("Ja existe aluno com este CPF.");
+			throw new RegraDeNegocioException("Ja existe aluno com este CPF.");
 		}
 		if (repository.existsByEmail(request.email())) {
-			throw new BusinessException("Ja existe aluno com este e-mail.");
+			throw new RegraDeNegocioException("Ja existe aluno com este e-mail.");
 		}
 		Aluno aluno = new Aluno();
 		aplicar(aluno, request);
@@ -56,10 +56,10 @@ public class AlunoService {
 		boolean perfilMudou = !aluno.getNivelExperiencia().equals(request.nivelExperiencia())
 				|| !aluno.getFrequenciaSemanal().equals(request.frequenciaSemanal());
 		if (!aluno.getCpf().equals(request.cpf()) && repository.existsByCpf(request.cpf())) {
-			throw new BusinessException("Ja existe aluno com este CPF.");
+			throw new RegraDeNegocioException("Ja existe aluno com este CPF.");
 		}
 		if (!aluno.getEmail().equals(request.email()) && repository.existsByEmail(request.email())) {
-			throw new BusinessException("Ja existe aluno com este e-mail.");
+			throw new RegraDeNegocioException("Ja existe aluno com este e-mail.");
 		}
 		aplicar(aluno, request);
 		aluno = repository.save(aluno);
@@ -75,7 +75,7 @@ public class AlunoService {
 	}
 
 	public Aluno buscarEntidade(Long id) {
-		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Aluno nao encontrado."));
+		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno não encontrado com ID: " + id));
 	}
 
 	public void ativar(Aluno aluno) {
@@ -101,3 +101,5 @@ public class AlunoService {
 		aluno.setStatus(request.status() == null ? StatusAluno.ATIVO : request.status());
 	}
 }
+
+

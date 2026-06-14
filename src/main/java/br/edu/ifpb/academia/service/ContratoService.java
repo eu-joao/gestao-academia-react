@@ -11,8 +11,8 @@ import br.edu.ifpb.academia.dto.response.Responses.ContratoResponse;
 import br.edu.ifpb.academia.entity.Aluno;
 import br.edu.ifpb.academia.entity.Contrato;
 import br.edu.ifpb.academia.enums.StatusContrato;
-import br.edu.ifpb.academia.exception.BusinessException;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.repository.ContratoRepository;
 
 @Service
@@ -48,7 +48,7 @@ public class ContratoService {
 	@Transactional
 	public ContratoResponse criar(ContratoRequest request) {
 		if (repository.existsByAlunoIdAndStatus(request.alunoId(), StatusContrato.ATIVO)) {
-			throw new BusinessException("Aluno ja possui contrato ativo.");
+			throw new RegraDeNegocioException("Aluno já possui um contrato ativo.");
 		}
 		Contrato contrato = new Contrato();
 		aplicar(contrato, request);
@@ -64,7 +64,7 @@ public class ContratoService {
 		Contrato contrato = buscarEntidade(id);
 		if (!contrato.getAluno().getId().equals(request.alunoId())
 				&& repository.existsByAlunoIdAndStatus(request.alunoId(), StatusContrato.ATIVO)) {
-			throw new BusinessException("Aluno ja possui contrato ativo.");
+			throw new RegraDeNegocioException("Aluno já possui um contrato ativo.");
 		}
 		aplicar(contrato, request);
 		return Mapper.toResponse(repository.save(contrato));
@@ -73,6 +73,9 @@ public class ContratoService {
 	@Transactional
 	public ContratoResponse cancelar(Long id) {
 		Contrato contrato = buscarEntidade(id);
+		if (!contrato.isAtivo()) {
+			throw new RegraDeNegocioException("Este contrato já está cancelado.");
+		}
 		contrato.setStatus(StatusContrato.CANCELADO);
 		alunoService.inativar(contrato.getAluno());
 		return Mapper.toResponse(repository.save(contrato));
@@ -85,7 +88,7 @@ public class ContratoService {
 
 	public Contrato buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Contrato nao encontrado."));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato não encontrado com ID: " + id));
 	}
 
 	private void aplicar(Contrato contrato, ContratoRequest request) {

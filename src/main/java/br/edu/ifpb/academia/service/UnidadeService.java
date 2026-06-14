@@ -9,8 +9,8 @@ import br.edu.ifpb.academia.dto.Mapper;
 import br.edu.ifpb.academia.dto.request.UnidadeRequest;
 import br.edu.ifpb.academia.dto.response.Responses.UnidadeResponse;
 import br.edu.ifpb.academia.entity.Unidade;
-import br.edu.ifpb.academia.exception.BusinessException;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.UnidadeRepository;
 
 @Service
@@ -35,7 +35,7 @@ public class UnidadeService {
 	@Transactional
 	public UnidadeResponse criar(UnidadeRequest request) {
 		if (repository.existsByCnpj(request.cnpj())) {
-			throw new BusinessException("Ja existe unidade com este CNPJ.");
+			throw new RegraDeNegocioException("Ja existe unidade com este CNPJ.");
 		}
 		Unidade unidade = new Unidade();
 		aplicar(unidade, request);
@@ -56,7 +56,7 @@ public class UnidadeService {
 
 	public Unidade buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Unidade nao encontrada."));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Unidade não encontrada com ID: " + id));
 	}
 
 	private void aplicar(Unidade unidade, UnidadeRequest request) {
@@ -66,3 +66,5 @@ public class UnidadeService {
 		unidade.setTelefone(request.telefone());
 	}
 }
+
+

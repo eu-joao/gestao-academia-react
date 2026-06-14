@@ -9,7 +9,7 @@ import br.edu.ifpb.academia.dto.Mapper;
 import br.edu.ifpb.academia.dto.request.DiaTreinoExercicioRequest;
 import br.edu.ifpb.academia.dto.response.Responses.DiaTreinoExercicioResponse;
 import br.edu.ifpb.academia.entity.DiaTreinoExercicio;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.DiaTreinoExercicioRepository;
 
 @Service
@@ -56,7 +56,7 @@ public class DiaTreinoExercicioService {
 
 	private DiaTreinoExercicio buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Exercicio do dia de treino nao encontrado."));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Vínculo não encontrado com ID: " + id));
 	}
 
 	private void aplicar(DiaTreinoExercicio item, DiaTreinoExercicioRequest request) {
@@ -67,3 +67,5 @@ public class DiaTreinoExercicioService {
 		item.setOrdem(request.ordem());
 	}
 }
+
+

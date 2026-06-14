@@ -12,7 +12,7 @@ import br.edu.ifpb.academia.entity.Aluno;
 import br.edu.ifpb.academia.entity.ProgramaTreino;
 import br.edu.ifpb.academia.entity.TreinoAtivo;
 import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
-import br.edu.ifpb.academia.exception.ResourceNotFoundException;
+import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.TreinoAtivoRepository;
 
 @Service
@@ -34,7 +34,7 @@ public class TreinoAtivoService {
 	@Transactional(readOnly = true)
 	public TreinoAtivoResponse buscar(Long id) {
 		return Mapper.toResponse(repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Treino ativo nao encontrado.")));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Treino ativo nao encontrado.")));
 	}
 
 	@Transactional(readOnly = true)
@@ -63,3 +63,4 @@ public class TreinoAtivoService {
 		}
 	}
 }
+

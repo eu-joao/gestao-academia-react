@@ -94,4 +94,7 @@ public class Contrato {
 			dataTermino = dataInicio.plusDays(plano.getDuracao());
 		}
 	}
+	public boolean isAtivo() {
+		return status == StatusContrato.ATIVO;
+	}
 }

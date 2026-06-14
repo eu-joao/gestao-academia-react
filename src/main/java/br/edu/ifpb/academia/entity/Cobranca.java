@@ -91,4 +91,7 @@ public class Cobranca {
 	public void setStatus(StatusCobranca status) {
 		this.status = status;
 	}
+	public boolean isPaga() {
+		return status == StatusCobranca.PAGO;
+	}
 }
