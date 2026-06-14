@@ -77,7 +77,7 @@ public class CobrancaService {
 	public CobrancaResponse pagar(Long id, PagamentoRequest request) {
 		Cobranca cobranca = buscarEntidade(id);
 		if (cobranca.isPaga()) {
-			throw new RegraDeNegocioException("Esta cobranÃ§a jÃ¡ foi paga.");
+			throw new RegraDeNegocioException("Esta cobrança já foi paga.");
 		}
 		cobranca.setDataPagamento(request.dataPagamento());
 		cobranca.setFormaPagamento(request.formaPagamento());
