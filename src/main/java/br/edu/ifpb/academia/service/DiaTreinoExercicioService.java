@@ -53,7 +53,7 @@ public class DiaTreinoExercicioService {
 
 	private DiaTreinoExercicio buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("VÃ­nculo nÃ£o encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Vinculo não encontrado com ID: " + id));
 	}
 
 	private void aplicar(DiaTreinoExercicio item, DiaTreinoExercicioRequest request) {

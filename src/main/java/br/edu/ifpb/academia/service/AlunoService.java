@@ -74,7 +74,7 @@ public class AlunoService {
 	}
 
 	public Aluno buscarEntidade(Long id) {
-		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno nÃ£o encontrado com ID: " + id));
+		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno não encontrado com ID: " + id));
 	}
 
 	public void ativar(Aluno aluno) {

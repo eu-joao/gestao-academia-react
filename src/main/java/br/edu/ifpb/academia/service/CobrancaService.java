@@ -117,11 +117,11 @@ public class CobrancaService {
 
 	private Cobranca buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("CobranÃ§a nÃ£o encontrada com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("CobranÃ§a não encontrada com ID: " + id));
 	}
 
 	private Contrato buscarContrato(Long id) {
 		return contratoRepository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato nÃ£o encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato não encontrado com ID: " + id));
 	}
 }

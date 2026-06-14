@@ -58,7 +58,7 @@ public class ProgramaTreinoService {
 
 	public ProgramaTreino buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Programa de treino nÃ£o encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Programa de treino nãoo encontrado com ID: " + id));
 	}
 
 	public ProgramaTreino buscarPorPerfil(NivelExperiencia nivel, Integer frequencia) {

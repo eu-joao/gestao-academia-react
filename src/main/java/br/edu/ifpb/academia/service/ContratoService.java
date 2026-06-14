@@ -42,7 +42,7 @@ public class ContratoService {
 	@Transactional
 	public ContratoResponse criar(ContratoRequest request) {
 		if (repository.existsByAlunoIdAndStatus(request.alunoId(), StatusContrato.ATIVO)) {
-			throw new RegraDeNegocioException("Aluno jÃ¡ possui um contrato ativo.");
+			throw new RegraDeNegocioException("Aluno já possui um contrato ativo.");
 		}
 		Contrato contrato = new Contrato();
 		aplicar(contrato, request);
@@ -58,7 +58,7 @@ public class ContratoService {
 		Contrato contrato = buscarEntidade(id);
 		if (!contrato.getAluno().getId().equals(request.alunoId())
 				&& repository.existsByAlunoIdAndStatus(request.alunoId(), StatusContrato.ATIVO)) {
-			throw new RegraDeNegocioException("Aluno jÃ¡ possui um contrato ativo.");
+			throw new RegraDeNegocioException("Aluno já possui um contrato ativo.");
 		}
 		aplicar(contrato, request);
 		return Mapper.toResponse(repository.save(contrato));
@@ -68,7 +68,7 @@ public class ContratoService {
 	public ContratoResponse cancelar(Long id) {
 		Contrato contrato = buscarEntidade(id);
 		if (!contrato.isAtivo()) {
-			throw new RegraDeNegocioException("Este contrato jÃ¡ estÃ¡ cancelado.");
+			throw new RegraDeNegocioException("Este contrato já está¡ cancelado.");
 		}
 		contrato.setStatus(StatusContrato.CANCELADO);
 		alunoService.inativar(contrato.getAluno());
@@ -82,7 +82,7 @@ public class ContratoService {
 
 	public Contrato buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato nÃ£o encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato não encontrado com ID: " + id));
 	}
 
 	private void aplicar(Contrato contrato, ContratoRequest request) {

@@ -52,7 +52,7 @@ public class DiaTreinoService {
 
 	public DiaTreino buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Dia de treino nÃ£o encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Dia de treino nãoo encontrado com ID: " + id));
 	}
 
 	private void aplicar(DiaTreino dia, DiaTreinoRequest request) {

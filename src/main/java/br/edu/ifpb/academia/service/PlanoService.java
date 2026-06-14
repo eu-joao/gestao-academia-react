@@ -57,7 +57,7 @@ public class PlanoService {
 	}
 
 	public Plano buscarEntidade(Long id) {
-		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Plano nÃ£o encontrado com ID: " + id));
+		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Plano não encontrado com ID: " + id));
 	}
 
 	private void aplicar(Plano plano, PlanoRequest request) {

@@ -56,7 +56,7 @@ public class ExercicioService {
 
 	public Exercicio buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("ExercÃ­cio nÃ£o encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Exercício não encontrado com ID: " + id));
 	}
 
 	private void aplicar(Exercicio exercicio, ExercicioRequest request) {

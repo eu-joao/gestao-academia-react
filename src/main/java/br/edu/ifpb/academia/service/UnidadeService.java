@@ -56,7 +56,7 @@ public class UnidadeService {
 
 	public Unidade buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Unidade nÃ£o encontrada com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Unidade não encontrada com ID: " + id));
 	}
 
 	private void aplicar(Unidade unidade, UnidadeRequest request) {
