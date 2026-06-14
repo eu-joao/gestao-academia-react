@@ -12,7 +12,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Aluno {
 
@@ -52,89 +58,6 @@ public class Aluno {
 	@Column(nullable = false)
 	private StatusAluno status = StatusAluno.ATIVO;
 
-	public Long getId() {
-		return id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public LocalDate getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(LocalDate dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-
-	public BigDecimal getPeso() {
-		return peso;
-	}
-
-	public void setPeso(BigDecimal peso) {
-		this.peso = peso;
-	}
-
-	public BigDecimal getAltura() {
-		return altura;
-	}
-
-	public void setAltura(BigDecimal altura) {
-		this.altura = altura;
-	}
-
-	public NivelExperiencia getNivelExperiencia() {
-		return nivelExperiencia;
-	}
-
-	public void setNivelExperiencia(NivelExperiencia nivelExperiencia) {
-		this.nivelExperiencia = nivelExperiencia;
-	}
-
-	public Integer getFrequenciaSemanal() {
-		return frequenciaSemanal;
-	}
-
-	public void setFrequenciaSemanal(Integer frequenciaSemanal) {
-		this.frequenciaSemanal = frequenciaSemanal;
-	}
-
-	public StatusAluno getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusAluno status) {
-		this.status = status;
-	}
 	public boolean isAtivo() {
 		return status == StatusAluno.ATIVO;
 	}

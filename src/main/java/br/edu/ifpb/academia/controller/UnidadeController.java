@@ -18,15 +18,14 @@ import br.edu.ifpb.academia.dto.response.Responses.UnidadeResponse;
 import br.edu.ifpb.academia.service.UnidadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/unidades")
+@RequiredArgsConstructor
 public class UnidadeController {
 	private final UnidadeService service;
 
-	public UnidadeController(UnidadeService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista unidades")
 	@GetMapping

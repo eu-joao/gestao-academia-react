@@ -18,15 +18,14 @@ import br.edu.ifpb.academia.dto.response.Responses.ContratoResponse;
 import br.edu.ifpb.academia.service.ContratoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/contratos")
+@RequiredArgsConstructor
 public class ContratoController {
 	private final ContratoService service;
 
-	public ContratoController(ContratoService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista contratos")
 	@GetMapping

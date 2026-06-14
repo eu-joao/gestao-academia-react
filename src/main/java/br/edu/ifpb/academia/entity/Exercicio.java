@@ -5,7 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Exercicio {
 
@@ -18,24 +24,4 @@ public class Exercicio {
 
 	@Column(nullable = false)
 	private String musculaturaAlvo;
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getMusculaturaAlvo() {
-		return musculaturaAlvo;
-	}
-
-	public void setMusculaturaAlvo(String musculaturaAlvo) {
-		this.musculaturaAlvo = musculaturaAlvo;
-	}
 }

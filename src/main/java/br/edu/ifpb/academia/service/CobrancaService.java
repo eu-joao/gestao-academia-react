@@ -18,8 +18,11 @@ import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.repository.CobrancaRepository;
 import br.edu.ifpb.academia.repository.ContratoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class CobrancaService {
 
 	private static final int DIAS_CARENCIA = 2;
@@ -28,12 +31,6 @@ public class CobrancaService {
 	private final ContratoRepository contratoRepository;
 	private final NotificacaoWhatsAppService notificacaoService;
 
-	public CobrancaService(CobrancaRepository repository, ContratoRepository contratoRepository,
-			NotificacaoWhatsAppService notificacaoService) {
-		this.repository = repository;
-		this.contratoRepository = contratoRepository;
-		this.notificacaoService = notificacaoService;
-	}
 
 	@Transactional(readOnly = true)
 	public List<CobrancaResponse> listar() {
@@ -80,7 +77,7 @@ public class CobrancaService {
 	public CobrancaResponse pagar(Long id, PagamentoRequest request) {
 		Cobranca cobranca = buscarEntidade(id);
 		if (cobranca.isPaga()) {
-			throw new RegraDeNegocioException("Esta cobrança já foi paga.");
+			throw new RegraDeNegocioException("Esta cobranÃ§a jÃ¡ foi paga.");
 		}
 		cobranca.setDataPagamento(request.dataPagamento());
 		cobranca.setFormaPagamento(request.formaPagamento());
@@ -120,11 +117,11 @@ public class CobrancaService {
 
 	private Cobranca buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Cobrança não encontrada com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("CobranÃ§a nÃ£o encontrada com ID: " + id));
 	}
 
 	private Contrato buscarContrato(Long id) {
 		return contratoRepository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato não encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato nÃ£o encontrado com ID: " + id));
 	}
 }

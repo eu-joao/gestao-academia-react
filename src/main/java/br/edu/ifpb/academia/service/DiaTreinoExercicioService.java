@@ -11,19 +11,16 @@ import br.edu.ifpb.academia.dto.response.Responses.DiaTreinoExercicioResponse;
 import br.edu.ifpb.academia.entity.DiaTreinoExercicio;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.DiaTreinoExercicioRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class DiaTreinoExercicioService {
 	private final DiaTreinoExercicioRepository repository;
 	private final DiaTreinoService diaTreinoService;
 	private final ExercicioService exercicioService;
 
-	public DiaTreinoExercicioService(DiaTreinoExercicioRepository repository, DiaTreinoService diaTreinoService,
-			ExercicioService exercicioService) {
-		this.repository = repository;
-		this.diaTreinoService = diaTreinoService;
-		this.exercicioService = exercicioService;
-	}
 
 	@Transactional(readOnly = true)
 	public List<DiaTreinoExercicioResponse> listar() {
@@ -56,7 +53,7 @@ public class DiaTreinoExercicioService {
 
 	private DiaTreinoExercicio buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Vínculo não encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("VÃ­nculo nÃ£o encontrado com ID: " + id));
 	}
 
 	private void aplicar(DiaTreinoExercicio item, DiaTreinoExercicioRequest request) {

@@ -18,15 +18,14 @@ import br.edu.ifpb.academia.dto.response.Responses.PlanoResponse;
 import br.edu.ifpb.academia.service.PlanoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/planos")
+@RequiredArgsConstructor
 public class PlanoController {
 	private final PlanoService service;
 
-	public PlanoController(PlanoService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista planos")
 	@GetMapping

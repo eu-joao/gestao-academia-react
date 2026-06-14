@@ -18,15 +18,14 @@ import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
 import br.edu.ifpb.academia.service.AlunoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/alunos")
+@RequiredArgsConstructor
 public class AlunoController {
 	private final AlunoService service;
 
-	public AlunoController(AlunoService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista alunos")
 	@GetMapping

@@ -7,7 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class DiaTreino {
 
@@ -23,32 +29,4 @@ public class DiaTreino {
 
 	@Column(nullable = false)
 	private Integer ordem;
-
-	public Long getId() {
-		return id;
-	}
-
-	public ProgramaTreino getProgramaTreino() {
-		return programaTreino;
-	}
-
-	public void setProgramaTreino(ProgramaTreino programaTreino) {
-		this.programaTreino = programaTreino;
-	}
-
-	public String getNomeDia() {
-		return nomeDia;
-	}
-
-	public void setNomeDia(String nomeDia) {
-		this.nomeDia = nomeDia;
-	}
-
-	public Integer getOrdem() {
-		return ordem;
-	}
-
-	public void setOrdem(Integer ordem) {
-		this.ordem = ordem;
-	}
 }

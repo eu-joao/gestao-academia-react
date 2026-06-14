@@ -11,16 +11,15 @@ import br.edu.ifpb.academia.dto.response.Responses.DiaTreinoResponse;
 import br.edu.ifpb.academia.entity.DiaTreino;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.DiaTreinoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class DiaTreinoService {
 	private final DiaTreinoRepository repository;
 	private final ProgramaTreinoService programaTreinoService;
 
-	public DiaTreinoService(DiaTreinoRepository repository, ProgramaTreinoService programaTreinoService) {
-		this.repository = repository;
-		this.programaTreinoService = programaTreinoService;
-	}
 
 	@Transactional(readOnly = true)
 	public List<DiaTreinoResponse> listar() {
@@ -53,7 +52,7 @@ public class DiaTreinoService {
 
 	public DiaTreino buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Dia de treino não encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Dia de treino nÃ£o encontrado com ID: " + id));
 	}
 
 	private void aplicar(DiaTreino dia, DiaTreinoRequest request) {

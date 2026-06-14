@@ -14,15 +14,15 @@ import br.edu.ifpb.academia.enums.TipoPlano;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.PlanoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class PlanoService {
 
 	private final PlanoRepository repository;
 
-	public PlanoService(PlanoRepository repository) {
-		this.repository = repository;
-	}
 
 	@Transactional(readOnly = true)
 	public List<PlanoResponse> listar() {
@@ -57,7 +57,7 @@ public class PlanoService {
 	}
 
 	public Plano buscarEntidade(Long id) {
-		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Plano não encontrado com ID: " + id));
+		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Plano nÃ£o encontrado com ID: " + id));
 	}
 
 	private void aplicar(Plano plano, PlanoRequest request) {

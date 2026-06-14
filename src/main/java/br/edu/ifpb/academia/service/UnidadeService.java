@@ -12,15 +12,15 @@ import br.edu.ifpb.academia.entity.Unidade;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.UnidadeRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class UnidadeService {
 
 	private final UnidadeRepository repository;
 
-	public UnidadeService(UnidadeRepository repository) {
-		this.repository = repository;
-	}
 
 	@Transactional(readOnly = true)
 	public List<UnidadeResponse> listar() {
@@ -56,7 +56,7 @@ public class UnidadeService {
 
 	public Unidade buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Unidade não encontrada com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Unidade nÃ£o encontrada com ID: " + id));
 	}
 
 	private void aplicar(Unidade unidade, UnidadeRequest request) {

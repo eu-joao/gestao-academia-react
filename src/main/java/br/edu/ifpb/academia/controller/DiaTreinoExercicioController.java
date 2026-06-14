@@ -18,15 +18,14 @@ import br.edu.ifpb.academia.dto.response.Responses.DiaTreinoExercicioResponse;
 import br.edu.ifpb.academia.service.DiaTreinoExercicioService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/dias-treino-exercicios")
+@RequiredArgsConstructor
 public class DiaTreinoExercicioController {
 	private final DiaTreinoExercicioService service;
 
-	public DiaTreinoExercicioController(DiaTreinoExercicioService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista exercicios dos dias de treino")
 	@GetMapping

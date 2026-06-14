@@ -12,15 +12,15 @@ import br.edu.ifpb.academia.entity.Exercicio;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.ExercicioRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class ExercicioService {
 
 	private final ExercicioRepository repository;
 
-	public ExercicioService(ExercicioRepository repository) {
-		this.repository = repository;
-	}
 
 	@Transactional(readOnly = true)
 	public List<ExercicioResponse> listar() {
@@ -56,7 +56,7 @@ public class ExercicioService {
 
 	public Exercicio buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Exercício não encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("ExercÃ­cio nÃ£o encontrado com ID: " + id));
 	}
 
 	private void aplicar(Exercicio exercicio, ExercicioRequest request) {

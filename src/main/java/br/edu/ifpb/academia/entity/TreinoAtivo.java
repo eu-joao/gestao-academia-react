@@ -12,7 +12,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class TreinoAtivo {
 
@@ -34,48 +40,4 @@ public class TreinoAtivo {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private StatusTreinoAtivo status = StatusTreinoAtivo.ATIVO;
-
-	public Long getId() {
-		return id;
-	}
-
-	public Aluno getAluno() {
-		return aluno;
-	}
-
-	public void setAluno(Aluno aluno) {
-		this.aluno = aluno;
-	}
-
-	public ProgramaTreino getProgramaTreino() {
-		return programaTreino;
-	}
-
-	public void setProgramaTreino(ProgramaTreino programaTreino) {
-		this.programaTreino = programaTreino;
-	}
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
-
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
-
-	public StatusTreinoAtivo getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusTreinoAtivo status) {
-		this.status = status;
-	}
 }

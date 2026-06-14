@@ -13,17 +13,16 @@ import br.edu.ifpb.academia.enums.StatusAluno;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.AlunoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class AlunoService {
 
 	private final AlunoRepository repository;
 	private final TreinoAtivoService treinoAtivoService;
 
-	public AlunoService(AlunoRepository repository, TreinoAtivoService treinoAtivoService) {
-		this.repository = repository;
-		this.treinoAtivoService = treinoAtivoService;
-	}
 
 	@Transactional(readOnly = true)
 	public List<AlunoResponse> listar() {
@@ -75,7 +74,7 @@ public class AlunoService {
 	}
 
 	public Aluno buscarEntidade(Long id) {
-		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno não encontrado com ID: " + id));
+		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno nÃ£o encontrado com ID: " + id));
 	}
 
 	public void ativar(Aluno aluno) {

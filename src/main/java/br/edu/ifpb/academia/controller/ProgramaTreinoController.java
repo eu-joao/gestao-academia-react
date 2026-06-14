@@ -18,15 +18,14 @@ import br.edu.ifpb.academia.dto.response.Responses.ProgramaTreinoResponse;
 import br.edu.ifpb.academia.service.ProgramaTreinoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/programas-treino")
+@RequiredArgsConstructor
 public class ProgramaTreinoController {
 	private final ProgramaTreinoService service;
 
-	public ProgramaTreinoController(ProgramaTreinoService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista programas de treino")
 	@GetMapping

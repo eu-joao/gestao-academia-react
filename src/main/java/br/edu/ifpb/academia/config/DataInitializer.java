@@ -14,17 +14,15 @@ import br.edu.ifpb.academia.enums.TipoEstrutural;
 import br.edu.ifpb.academia.enums.TipoPlano;
 import br.edu.ifpb.academia.repository.PlanoRepository;
 import br.edu.ifpb.academia.repository.ProgramaTreinoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
 	private final PlanoRepository planoRepository;
 	private final ProgramaTreinoRepository programaTreinoRepository;
 
-	public DataInitializer(PlanoRepository planoRepository, ProgramaTreinoRepository programaTreinoRepository) {
-		this.planoRepository = planoRepository;
-		this.programaTreinoRepository = programaTreinoRepository;
-	}
 
 	@Override
 	@Transactional

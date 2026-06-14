@@ -10,7 +10,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Plano {
 
@@ -33,48 +39,4 @@ public class Plano {
 
 	@Column(nullable = false)
 	private String descricao;
-
-	public Long getId() {
-		return id;
-	}
-
-	public TipoPlano getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(TipoPlano tipo) {
-		this.tipo = tipo;
-	}
-
-	public BigDecimal getValor() {
-		return valor;
-	}
-
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
-	}
-
-	public Integer getDuracao() {
-		return duracao;
-	}
-
-	public void setDuracao(Integer duracao) {
-		this.duracao = duracao;
-	}
-
-	public BigDecimal getPercentualDesconto() {
-		return percentualDesconto;
-	}
-
-	public void setPercentualDesconto(BigDecimal percentualDesconto) {
-		this.percentualDesconto = percentualDesconto;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
 }

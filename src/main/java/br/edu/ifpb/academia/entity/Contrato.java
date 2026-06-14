@@ -12,7 +12,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Contrato {
 
@@ -39,37 +45,9 @@ public class Contrato {
 	@Column(nullable = false)
 	private StatusContrato status = StatusContrato.ATIVO;
 
-	public Long getId() {
-		return id;
-	}
-
-	public Aluno getAluno() {
-		return aluno;
-	}
-
-	public void setAluno(Aluno aluno) {
-		this.aluno = aluno;
-	}
-
-	public Unidade getUnidade() {
-		return unidade;
-	}
-
-	public void setUnidade(Unidade unidade) {
-		this.unidade = unidade;
-	}
-
-	public Plano getPlano() {
-		return plano;
-	}
-
 	public void setPlano(Plano plano) {
 		this.plano = plano;
 		recalcularDataTermino();
-	}
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
 	}
 
 	public void setDataInicio(LocalDate dataInicio) {
@@ -77,24 +55,13 @@ public class Contrato {
 		recalcularDataTermino();
 	}
 
-	public LocalDate getDataTermino() {
-		return dataTermino;
-	}
-
-	public StatusContrato getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusContrato status) {
-		this.status = status;
+	public boolean isAtivo() {
+		return status == StatusContrato.ATIVO;
 	}
 
 	private void recalcularDataTermino() {
 		if (dataInicio != null && plano != null && plano.getDuracao() != null) {
 			dataTermino = dataInicio.plusDays(plano.getDuracao());
 		}
-	}
-	public boolean isAtivo() {
-		return status == StatusContrato.ATIVO;
 	}
 }

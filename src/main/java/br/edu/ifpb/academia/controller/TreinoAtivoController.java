@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ifpb.academia.dto.response.Responses.TreinoAtivoResponse;
 import br.edu.ifpb.academia.service.TreinoAtivoService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/treinos-ativos")
+@RequiredArgsConstructor
 public class TreinoAtivoController {
 	private final TreinoAtivoService service;
 
-	public TreinoAtivoController(TreinoAtivoService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista treinos ativos e historico")
 	@GetMapping

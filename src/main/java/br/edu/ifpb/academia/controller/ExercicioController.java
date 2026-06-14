@@ -18,15 +18,14 @@ import br.edu.ifpb.academia.dto.response.Responses.ExercicioResponse;
 import br.edu.ifpb.academia.service.ExercicioService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/exercicios")
+@RequiredArgsConstructor
 public class ExercicioController {
 	private final ExercicioService service;
 
-	public ExercicioController(ExercicioService service) {
-		this.service = service;
-	}
 
 	@Operation(summary = "Lista exercicios")
 	@GetMapping

@@ -9,7 +9,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class ProgramaTreino {
 
@@ -30,40 +36,4 @@ public class ProgramaTreino {
 
 	@Column(nullable = false)
 	private String descricao;
-
-	public Long getId() {
-		return id;
-	}
-
-	public NivelExperiencia getNivelExperiencia() {
-		return nivelExperiencia;
-	}
-
-	public void setNivelExperiencia(NivelExperiencia nivelExperiencia) {
-		this.nivelExperiencia = nivelExperiencia;
-	}
-
-	public Integer getFrequenciaSemanal() {
-		return frequenciaSemanal;
-	}
-
-	public void setFrequenciaSemanal(Integer frequenciaSemanal) {
-		this.frequenciaSemanal = frequenciaSemanal;
-	}
-
-	public TipoEstrutural getTipoEstrutural() {
-		return tipoEstrutural;
-	}
-
-	public void setTipoEstrutural(TipoEstrutural tipoEstrutural) {
-		this.tipoEstrutural = tipoEstrutural;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
 }

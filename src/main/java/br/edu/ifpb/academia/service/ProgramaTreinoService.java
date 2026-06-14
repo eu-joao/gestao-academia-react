@@ -13,15 +13,15 @@ import br.edu.ifpb.academia.enums.NivelExperiencia;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.ProgramaTreinoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class ProgramaTreinoService {
 
 	private final ProgramaTreinoRepository repository;
 
-	public ProgramaTreinoService(ProgramaTreinoRepository repository) {
-		this.repository = repository;
-	}
 
 	@Transactional(readOnly = true)
 	public List<ProgramaTreinoResponse> listar() {
@@ -58,7 +58,7 @@ public class ProgramaTreinoService {
 
 	public ProgramaTreino buscarEntidade(Long id) {
 		return repository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException("Programa de treino não encontrado com ID: " + id));
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Programa de treino nÃ£o encontrado com ID: " + id));
 	}
 
 	public ProgramaTreino buscarPorPerfil(NivelExperiencia nivel, Integer frequencia) {

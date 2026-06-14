@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import br.edu.ifpb.academia.entity.Cobranca;
 
 @Service
+@SuppressWarnings("null")
 public class NotificacaoWhatsAppService {
 
 	public void vencimentoProximo(Cobranca cobranca) {

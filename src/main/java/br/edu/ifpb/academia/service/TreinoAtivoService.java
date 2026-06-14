@@ -14,17 +14,16 @@ import br.edu.ifpb.academia.entity.TreinoAtivo;
 import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.TreinoAtivoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class TreinoAtivoService {
 
 	private final TreinoAtivoRepository repository;
 	private final ProgramaTreinoService programaTreinoService;
 
-	public TreinoAtivoService(TreinoAtivoRepository repository, ProgramaTreinoService programaTreinoService) {
-		this.repository = repository;
-		this.programaTreinoService = programaTreinoService;
-	}
 
 	@Transactional(readOnly = true)
 	public List<TreinoAtivoResponse> listar() {

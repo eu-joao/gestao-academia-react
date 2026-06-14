@@ -11,8 +11,11 @@ import br.edu.ifpb.academia.enums.StatusContrato;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.repository.CobrancaRepository;
 import br.edu.ifpb.academia.repository.ContratoRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@SuppressWarnings("null")
+@RequiredArgsConstructor
 public class AcessoService {
 
 	private final AlunoService alunoService;
@@ -20,13 +23,6 @@ public class AcessoService {
 	private final CobrancaRepository cobrancaRepository;
 	private final CobrancaService cobrancaService;
 
-	public AcessoService(AlunoService alunoService, ContratoRepository contratoRepository,
-			CobrancaRepository cobrancaRepository, CobrancaService cobrancaService) {
-		this.alunoService = alunoService;
-		this.contratoRepository = contratoRepository;
-		this.cobrancaRepository = cobrancaRepository;
-		this.cobrancaService = cobrancaService;
-	}
 
 	@Transactional
 	public AcessoResponse verificar(Long alunoId) {
