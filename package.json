@@ -27,8 +27,5 @@
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
     "lint-staged": "^17.6.0"
-  },
-  "dependencies": {
-    "expo": "^57.0.26"
   }
 }
