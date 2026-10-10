@@ -1,0 +1,16 @@
+[tools]
+node = "24"
+
+[tasks.install]
+description = "Instala dependências da raiz e do mobile"
+run = ["npm ci", "npm ci --prefix mobile"]
+
+[tasks.mobile]
+description = "Sobe o Expo"
+dir = "{{config_root}}/mobile"
+run = "npm start"
+
+[tasks.lint]
+description = "Lint e typecheck do mobile"
+dir = "{{config_root}}/mobile"
+run = ["npm run lint", "npx tsc --noEmit"]
