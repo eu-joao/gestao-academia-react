@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   # ---------------------------------------------------------------
-  # ATIVO: mobile (Expo + SQLite local)
+  # ATIVO: mobile (Expo; armazenamento local planejado com AsyncStorage)
   # ---------------------------------------------------------------
   mobile:
     runs-on: ubuntu-latest
