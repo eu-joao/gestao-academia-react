@@ -28,9 +28,8 @@ jobs:
           cache: npm
           cache-dependency-path: mobile/package-lock.json
       - run: npm ci
-      # Reativar quando conseguir configurar isso de um jeito eficaz
-      # - run: npx prettier --check .
-      # - run: npm run lint
+      - run: npx prettier --check .
+      - run: npm run lint
       - run: npx tsc --noEmit
       - run: npx expo-doctor
       # Roda os testes se o script "test" existir (jest-expo); não falha enquanto não houver
