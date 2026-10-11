@@ -1,56 +1,50 @@
-# Welcome to your Expo app 👋
+# Gestão Academia Mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo multiplataforma do projeto Gestão Academia para Android, iOS e web.
 
-## Get started
+## Sobre
 
-1. Install dependencies
+O app mobile é implementado com Expo, React Native, TypeScript e Expo Router. As telas e a navegação ficam no diretório `src/app/`.
 
-   ```bash
-   npm install
-   ```
+## Tecnologias
 
-2. Start the app
+- Expo SDK 57
+- React Native 0.86
+- React 19
+- TypeScript
+- Expo Router
 
-   ```bash
-   npx expo start
-   ```
+## Estrutura
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+mobile/
+├── assets/       # Imagens e recursos visuais
+├── src/app/      # Rotas e telas do aplicativo
+├── app.json      # Configuração do Expo
+└── package.json  # Dependências e comandos do app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Instalação e execução
 
-### Other setup steps
+Recomendamos usar [mise](https://mise.jdx.dev/) para instalar e gerenciar o Node.js. Na raiz do repositório, execute:
 
-- Run `npm run lint` to check the app with ESLint. ESLint and Prettier also run on matching staged files before commits. For more details, see ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/).
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+mise install
+mise run install
+mise run mobile
+```
 
-## Learn more
+`mise install` instala a versão do Node.js declarada no `mise.toml`. `mise run install` instala as dependências da raiz e do app; `mise run mobile` inicia o Expo.
 
-To learn more about developing your project with Expo, look at the following resources:
+No terminal do Expo, escolha Android, iOS ou web. Também é possível executar comandos específicos diretamente no diretório `mobile/`:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm start
+npm run android
+npm run ios
+npm run web
+```
 
-## Join the community
+## Contribuindo
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações específicas do app mobile. As regras gerais de branch, commit e pull request estão em [../CONTRIBUTING.md](../CONTRIBUTING.md).
