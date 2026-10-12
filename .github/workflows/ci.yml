@@ -1,0 +1,103 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Cancela execuções antigas do mesmo PR quando chega um push novo
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------
+  # ATIVO: mobile (Expo; armazenamento local planejado com AsyncStorage)
+  # ---------------------------------------------------------------
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci
+      - run: npx prettier --check .
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npx expo-doctor
+      # Roda os testes se o script "test" existir (jest-expo); não falha enquanto não houver
+      - run: npm test --if-present -- --ci
+
+  # ---------------------------------------------------------------
+  # ATIVO: valida o título do PR (Conventional Commits)
+  # ---------------------------------------------------------------
+  pr-title:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ---------------------------------------------------------------
+  # DESATIVADO: backend (NestJS + Postgres) - reativar quando começar
+  # ---------------------------------------------------------------
+  # backend:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: backend
+  #   services:
+  #     postgres:
+  #       image: postgres:16
+  #       env:
+  #         POSTGRES_USER: test
+  #         POSTGRES_PASSWORD: test
+  #         POSTGRES_DB: academia_test
+  #       ports: ["5432:5432"]
+  #       options: >-
+  #         --health-cmd "pg_isready -U test"
+  #         --health-interval 5s
+  #         --health-timeout 5s
+  #         --health-retries 5
+  #   env:
+  #     DATABASE_URL: postgresql://test:test@localhost:5432/academia_test
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22
+  #         cache: npm
+  #         cache-dependency-path: backend/package-lock.json
+  #     - run: npm ci
+  #     - run: npm run lint
+  #     # - run: npx prisma migrate deploy   # ou o equivalente do ORM escolhido
+  #     - run: npm test
+  #     - run: npm run build
+
+  # ---------------------------------------------------------------
+  # DESATIVADO: web (Next.js) - reativar quando começar
+  # ---------------------------------------------------------------
+  # web:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: web
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22
+  #         cache: npm
+  #         cache-dependency-path: web/package-lock.json
+  #     - run: npm ci
+  #     - run: npm run lint
+  #     - run: npx tsc --noEmit
+  #     - run: npm run build
