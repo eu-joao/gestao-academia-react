@@ -10,6 +10,7 @@ Este repositório reúne o aplicativo mobile e as ferramentas compartilhadas do 
 
 ```text
 .
+├── .agents/skills/           # Skills compartilhadas dos agentes
 ├── .github/                  # Modelos de issues e pull requests
 ├── .husky/                   # Hooks de commit
 ├── docs/
@@ -40,3 +41,7 @@ As capturas de tela do aplicativo ficam organizadas em [`docs/capturas-de-tela/`
 ## Contribuindo
 
 Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações gerais de contribuição.
+
+## Skills dos agentes
+
+As skills compartilhadas ficam em [`.agents/skills/`](./.agents/skills/). O Gemini CLI e o Mistral Vibe descobrem as skills nesse caminho; cada skill tem sua própria pasta com um arquivo `SKILL.md`.
