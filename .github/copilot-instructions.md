@@ -26,6 +26,10 @@ npx tsc --noEmit          # verifica os tipos TypeScript
 
 Não há runner ou suíte de testes configurados, portanto não existe um comando para executar um teste específico. O script `npm test` da raiz é apenas um placeholder e termina com erro. Também não há script de build de produção nem configuração do EAS versionada no repositório. Para adicionar dependências, use `npx expo install <package>` para que o Expo selecione uma versão compatível.
 
+## Validação de mudanças
+
+Antes de concluir mudanças de código, siga a skill de validação e acompanhamento da CI em `.agents/skills/validar-e-acompanhar-ci/SKILL.md`.
+
 ## Arquitetura
 
 - `mobile/` é um app Expo multiplataforma (Expo SDK 57, React Native e TypeScript) cuja entrada é o Expo Router (`expo-router/entry`). Os projetos nativos de Android e iOS são gerados pelo Continuous Native Generation; configure recursos nativos em `mobile/app.json` ou em config plugins, não em diretórios nativos mantidos manualmente.
