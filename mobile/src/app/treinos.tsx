@@ -7,6 +7,7 @@ import {
   atualizar,
   remover,
 } from "../services/treinoStorage";
+import { validarTreino, ErrosTreino } from "../utils/validarTreino";
 
 export default function TreinosScreen() {
   const [treinos, setTreinos] = useState<Treino[]>([]);
@@ -14,6 +15,7 @@ export default function TreinosScreen() {
   const [diaSemana, setDiaSemana] = useState("");
   const [duracaoMin, setDuracaoMin] = useState("");
   const [editandoId, setEditandoId] = useState<string | null>(null);
+  const [erros, setErros] = useState<ErrosTreino>({});
 
   async function carregar() {
     setTreinos(await listar());
@@ -36,10 +38,22 @@ export default function TreinosScreen() {
     setDiaSemana("");
     setDuracaoMin("");
     setEditandoId(null);
+    setErros({});
   }
 
   async function salvar() {
-    const dados = { nome, diaSemana, duracaoMin: Number(duracaoMin) };
+    const novosErros = validarTreino({ nome, diaSemana, duracaoMin });
+    setErros(novosErros);
+
+    if (Object.keys(novosErros).length > 0) {
+      return;
+    }
+
+    const dados = {
+      nome: nome.trim(),
+      diaSemana: diaSemana.trim(),
+      duracaoMin: Number(duracaoMin),
+    };
 
     if (editandoId) {
       await atualizar(editandoId, dados);
@@ -69,17 +83,27 @@ export default function TreinosScreen() {
         value={nome}
         onChangeText={setNome}
       />
+      {erros.nome && <Text style={{ color: "red" }}>{erros.nome}</Text>}
+
       <TextInput
         placeholder="Dia da semana"
         value={diaSemana}
         onChangeText={setDiaSemana}
       />
+      {erros.diaSemana && (
+        <Text style={{ color: "red" }}>{erros.diaSemana}</Text>
+      )}
+
       <TextInput
         placeholder="Duração (min)"
         keyboardType="numeric"
         value={duracaoMin}
         onChangeText={setDuracaoMin}
       />
+      {erros.duracaoMin && (
+        <Text style={{ color: "red" }}>{erros.duracaoMin}</Text>
+      )}
+
       <Button title={editandoId ? "Atualizar" : "Adicionar"} onPress={salvar} />
       {editandoId && (
         <Button title="Cancelar edição" onPress={limparFormulario} />
