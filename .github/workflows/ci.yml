@@ -31,7 +31,7 @@ jobs:
       - run: npx prettier --check .
       - run: npm run lint
       - run: npx tsc --noEmit
-      - run: npx expo-doctor
+      - run: npx expo-doctor@1.20.4
       # Roda os testes se o script "test" existir (jest-expo); não falha enquanto não houver
       - run: npm test --if-present -- --ci
 
