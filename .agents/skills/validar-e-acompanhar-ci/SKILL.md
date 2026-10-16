@@ -7,13 +7,13 @@ description: Escolhe e executa validações locais conforme as mudanças e acomp
 
 Use esta skill antes de concluir mudanças de código neste repositório e ao acompanhar a CI de um pull request relacionado ao trabalho.
 
-## Validação local
+## Escolher onde validar
 
-1. Identifique os arquivos e áreas afetados pelo diff.
-2. Consulte `AGENTS.md`, `CONTRIBUTING.md`, os guias da área e os scripts de pacote ou tarefas para descobrir as verificações documentadas. Confira também `.github/workflows/` para entender o que a CI executa.
-3. Escolha as verificações pertinentes ao escopo. Prefira os comandos documentados e execute verificações mais amplas quando a mudança for transversal ou a CI sempre as exigir.
+1. Identifique os arquivos e áreas afetados pelo diff. Consulte `AGENTS.md`, `CONTRIBUTING.md`, os guias da área e os scripts de pacote ou tarefas para descobrir as verificações documentadas. Confira também `.github/workflows/` para saber quais verificações a CI executa.
+2. Quando houver CI relevante para as mudanças, prefira executar essas verificações na CI e não repita localmente os mesmos testes ou builds apenas por rotina. Isso evita consumir recursos da máquina local sem acrescentar evidência.
+3. Execute verificações localmente quando não houver CI relevante, quando a CI estiver indisponível ou não puder ser acionada, quando for necessário reproduzir ou investigar uma falha, ou quando o usuário pedir explicitamente. Escolha comandos documentados e mantenha a validação proporcional ao escopo.
 4. Se uma verificação falhar, examine a saída e determine se ela aponta para a mudança, para um problema preexistente ou para um bloqueio do ambiente. Investigue antes de relatar a tarefa como concluída.
-5. Registre os comandos executados e seus resultados. Identifique explicitamente o que não foi executado e o motivo; não apresente isso como aprovado.
+5. Registre os comandos locais executados e seus resultados. Para a CI, registre os checks e seus estados, incluindo links ou identificadores de execução quando disponíveis. Identifique explicitamente verificações não executadas e o motivo; não apresente itens pendentes ou sem evidência como aprovados.
 
 Não invente comandos de teste. Se o projeto não tiver testes automatizados para aquela área, diga isso e informe quais outras verificações foram executadas.
 
