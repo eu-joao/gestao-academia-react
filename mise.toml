@@ -1,5 +1,6 @@
 [tools]
 node = "24"
+java = "temurin-17"
 
 [tasks.install]
 description = "Instala dependências da raiz e do mobile"
@@ -14,3 +15,21 @@ run = "npm start"
 description = "Lint e typecheck do mobile"
 dir = "{{config_root}}/mobile"
 run = ["npm run lint", "npx tsc --noEmit"]
+
+[tasks.backend-run]
+description = "Executa a API Spring Boot"
+dir = "{{config_root}}/backend"
+env._.file = "backend/.env"
+run = "./mvnw spring-boot:run"
+
+[tasks.backend-test]
+description = "Executa os testes do backend"
+dir = "{{config_root}}/backend"
+env._.file = "backend/.env"
+run = "./mvnw test"
+
+[tasks.backend-package]
+description = "Empacota o backend"
+dir = "{{config_root}}/backend"
+env._.file = "backend/.env"
+run = "./mvnw package"
