@@ -1,35 +1,123 @@
+# ---------------------------------------------------------------------
+# Runtimes do projeto
+# ---------------------------------------------------------------------
 [tools]
 node = "24"
 java = "temurin-17"
 
-[tasks.install]
-description = "Instala dependências da raiz e do mobile"
-run = ["npm ci", "npm ci --prefix mobile"]
+# ---------------------------------------------------------------------
+# Tarefas
+#
+# Padrão dos nomes: mise run <ação>:<módulo>
+#   ações:   install, dev, lint, test, build
+#   módulos: backend, web, mobile (e root, só na instalação)
+#
+# Sem o módulo, a tarefa roda em todos os módulos que têm a ação:
+#   mise run install   mise run lint   mise run test   mise run build
+# Não existe "mise run dev" porque cada servidor ocupa um terminal.
+#
+# Lista completa: mise tasks
+# ---------------------------------------------------------------------
 
-[tasks.mobile]
-description = "Sobe o Expo"
+# --- install ---------------------------------------------------------
+
+[tasks.install]
+description = "Instala as dependências da raiz, do mobile e do web"
+depends = ["install:*"]
+
+[tasks."install:root"]
+description = "Instala as ferramentas de commit da raiz (husky e commitlint)"
+dir = "{{config_root}}"
+run = "npm ci"
+
+[tasks."install:mobile"]
+description = "Instala as dependências do mobile"
+dir = "{{config_root}}/mobile"
+run = "npm ci"
+
+[tasks."install:web"]
+description = "Instala as dependências do web"
+dir = "{{config_root}}/web"
+run = "npm ci"
+
+# --- dev (servidores de desenvolvimento) -----------------------------
+
+[tasks."dev:backend"]
+description = "Sobe a API Spring Boot em http://localhost:8080"
+dir = "{{config_root}}/backend"
+env._.file = "{{config_root}}/backend/.env"
+depends = ["check:backend-env"]
+run = "./mvnw spring-boot:run"
+
+[tasks."dev:web"]
+description = "Sobe o site Next.js em http://localhost:3000"
+dir = "{{config_root}}/web"
+run = "npm run dev"
+
+[tasks."dev:mobile"]
+description = "Sobe o Expo (escolha Android, iOS ou navegador no terminal)"
 dir = "{{config_root}}/mobile"
 run = "npm start"
 
+# --- lint (estilo e tipos) -------------------------------------------
+
 [tasks.lint]
-description = "Lint e typecheck do mobile"
+description = "Roda o lint do mobile e do web"
+depends = ["lint:*"]
+
+[tasks."lint:mobile"]
+description = "Prettier, ESLint e TypeScript do mobile (mesmo que a CI, sem o Expo Doctor)"
 dir = "{{config_root}}/mobile"
-run = ["npm run lint", "npx tsc --noEmit"]
+run = ["npx prettier --check .", "npm run lint", "npx tsc --noEmit"]
 
-[tasks.backend]
-description = "Executa a API Spring Boot"
-dir = "{{config_root}}/backend"
-env._.file = "backend/.env"
-run = "./mvnw spring-boot:run"
+# O Next.js 16 gera os tipos de rotas (como LayoutProps) com "next typegen".
+# Sem ele, o tsc falha com "Cannot find name 'LayoutProps'".
+[tasks."lint:web"]
+description = "ESLint e TypeScript do web"
+dir = "{{config_root}}/web"
+run = ["npm run lint", "npx next typegen", "npx tsc --noEmit"]
 
-[tasks.test-backend]
-description = "Executa os testes do backend"
+# --- test ------------------------------------------------------------
+
+[tasks.test]
+description = "Roda os testes de todos os módulos que têm testes"
+depends = ["test:*"]
+
+[tasks."test:backend"]
+description = "Testes do backend (o backend ainda não tem testes)"
 dir = "{{config_root}}/backend"
-env._.file = "backend/.env"
+env._.file = "{{config_root}}/backend/.env"
 run = "./mvnw test"
 
-[tasks.package-backend]
-description = "Empacota o backend"
+# --- build -----------------------------------------------------------
+
+[tasks.build]
+description = "Gera o pacote do backend e o build do web"
+depends = ["build:*"]
+
+[tasks."build:backend"]
+description = "Empacota o backend em backend/target/"
 dir = "{{config_root}}/backend"
-env._.file = "backend/.env"
+env._.file = "{{config_root}}/backend/.env"
 run = "./mvnw package"
+
+[tasks."build:web"]
+description = "Gera o build de produção do web"
+dir = "{{config_root}}/web"
+run = "npm run build"
+
+# --- verificações internas -------------------------------------------
+
+# O mise ignora um .env que não existe. Sem este aviso, a API só falharia
+# depois, com um erro de variável sem valor.
+[tasks."check:backend-env"]
+description = "Confere se o backend/.env existe"
+hide = true
+dir = "{{config_root}}/backend"
+run = '''
+if [ ! -f .env ]; then
+  echo "backend/.env não encontrado. Na raiz do repositório, rode:"
+  echo "  cp backend/.env.example backend/.env"
+  exit 1
+fi
+'''

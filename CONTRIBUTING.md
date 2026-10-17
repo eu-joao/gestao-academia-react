@@ -32,4 +32,14 @@ O PR só pode ser aceito depois de uma aprovação de outra pessoa que não seja
 
 ## Verificações
 
-A CI executa o lint do aplicativo mobile. É recomendável executar as verificações localmente antes de abrir o PR; os comandos estão em [mobile/CONTRIBUTING.md](./mobile/CONTRIBUTING.md).
+A CI valida o título do PR e executa as verificações do aplicativo mobile. O web e o backend ainda não têm verificações na CI.
+
+Antes de abrir o PR, execute localmente as verificações dos módulos que você alterou. Na raiz do repositório:
+
+```bash
+mise run lint
+mise run test:backend
+mise run build
+```
+
+`lint` cobre o mobile e o web, `test:backend` cobre o backend e `build` gera o pacote do backend e o build do web. Os detalhes de cada módulo estão em [mobile/CONTRIBUTING.md](./mobile/CONTRIBUTING.md) e [backend/CONTRIBUTING.md](./backend/CONTRIBUTING.md).
