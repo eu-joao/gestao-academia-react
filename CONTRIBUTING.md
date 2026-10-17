@@ -9,7 +9,7 @@
 
 ## Branches
 
-Cada issue deve ser trabalhada em uma branch própria, criada a partir de `main`. Crie a branch pela opção de desenvolvimento da issue e mantenha o nome sugerido automaticamente pelo GitHub (normalmente `<número-da-issue>-<descrição>`). Toda branch de trabalho deve estar associada à issue correspondente na seção **Development**.
+Cada issue deve ser trabalhada em uma branch própria, criada a partir de `main`. Crie a branch pela opção de desenvolvimento da issue e associe-a à issue correspondente na seção **Development**. Antes de criar, revise o nome sugerido pelo GitHub: use somente letras ASCII sem acentos, números e hífens (`-`), no formato `<número-da-issue>-<descrição>`. Não use espaços nem outros caracteres especiais. Por exemplo, use `65-nomes-de-branches-ascii` em vez de `65-nomes-de-branches-sem-acentos`.
 
 ## Commits
 
