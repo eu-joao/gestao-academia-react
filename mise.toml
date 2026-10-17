@@ -16,19 +16,19 @@ description = "Lint e typecheck do mobile"
 dir = "{{config_root}}/mobile"
 run = ["npm run lint", "npx tsc --noEmit"]
 
-[tasks.backend-run]
+[tasks.backend]
 description = "Executa a API Spring Boot"
 dir = "{{config_root}}/backend"
 env._.file = "backend/.env"
 run = "./mvnw spring-boot:run"
 
-[tasks.backend-test]
+[tasks.test-backend]
 description = "Executa os testes do backend"
 dir = "{{config_root}}/backend"
 env._.file = "backend/.env"
 run = "./mvnw test"
 
-[tasks.backend-package]
+[tasks.package-backend]
 description = "Empacota o backend"
 dir = "{{config_root}}/backend"
 env._.file = "backend/.env"

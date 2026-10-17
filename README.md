@@ -29,26 +29,11 @@ Recomendamos usar [mise](https://mise.jdx.dev/) para instalar e gerenciar o Node
 ```bash
 mise install
 mise run install
-mise run mobile  # inicia o aplicativo mobile
+mise run mobile
+mise run backend
 ```
 
-`mise install` instala o Node.js e o Java declarados no `mise.toml`. `mise run install` instala as dependências da raiz e do mobile. Consulte o [README do mobile](./mobile/README.md) para escolher uma plataforma e ver os comandos específicos.
-
-### Backend
-
-Copie o exemplo de configuração para criar o arquivo local de variáveis de ambiente:
-
-```bash
-cp backend/.env.example backend/.env
-```
-
-Edite `backend/.env` com os dados de conexão do banco. Esse arquivo não é enviado ao Git. Para iniciar a API, execute na raiz:
-
-```bash
-mise run backend-run
-```
-
-Para testar ou empacotar o backend, use `mise run backend-test` ou `mise run backend-package`.
+`mise install` instala os runtimes do projeto e `mise run install` instala as dependências do mobile. Execute `mise run mobile` e `mise run backend` em terminais separados. Consulte o [README do mobile](./mobile/README.md) e o [README do backend](./backend/README.md) para detalhes de cada módulo.
 
 ## Capturas de tela
 
