@@ -24,6 +24,12 @@ Exemplos:
 
 Use um tipo compatível com a mudança (`feat`, `fix`, `docs`, `test`, `refactor` ou `chore`, por exemplo). O escopo é opcional; não termine a mensagem com ponto.
 
+### Co-autoria de agentes de IA
+
+Cada agente de IA que contribuir para um commit deve incluir sua própria co-autoria quando tiver uma identidade e um email válidos para esse uso. Use um trailer `Co-authored-by: Nome do agente <email>` para cada agente; não use uma identidade fixa de outro agente nem invente ou empreste um email.
+
+Para o GitHub vincular a co-autoria a uma conta, o email do trailer deve estar associado a essa conta. Se a conta mantiver o email privado, use o endereço `noreply` fornecido pelo GitHub. Se não houver identidade e email válidos disponíveis para o agente, não crie um trailer fictício e informe que não foi possível registrar a co-autoria. Consulte a [documentação do GitHub sobre commits com vários autores](https://docs.github.com/pt/pull-requests/how-tos/commit-changes/creating-a-commit-with-multiple-authors).
+
 ## Pull requests
 
 Abra o PR da branch da issue para `main` e use o modelo em [`.github/pull_request_template.md`](./.github/pull_request_template.md). Informe a issue relacionada no campo indicado e use `Closes #<número>` quando o PR concluir a issue.
