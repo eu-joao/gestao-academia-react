@@ -9,7 +9,7 @@
 
 ## Branches
 
-Cada issue deve ser trabalhada em uma branch própria, criada a partir de `main`. Crie a branch pela opção de desenvolvimento da issue e mantenha o nome sugerido automaticamente pelo GitHub (normalmente `<número-da-issue>-<descrição>`). Toda branch de trabalho deve estar associada à issue correspondente na seção **Development**.
+Cada issue deve ser trabalhada em uma branch própria, criada a partir de `main`. Crie a branch pela opção de desenvolvimento da issue e associe-a à issue correspondente na seção **Development**. Antes de criar, revise o nome sugerido pelo GitHub: use somente letras ASCII sem acentos, números e hífens (`-`), no formato `<número-da-issue>-<descrição>`. Não use espaços nem outros caracteres especiais. Por exemplo, use `65-nomes-de-branches-ascii` em vez de `65-nomes-de-branches-sem-acentos`.
 
 ## Commits
 
@@ -23,6 +23,12 @@ Exemplos:
 - `test(membros): cobre validação do formulário`
 
 Use um tipo compatível com a mudança (`feat`, `fix`, `docs`, `test`, `refactor` ou `chore`, por exemplo). O escopo é opcional; não termine a mensagem com ponto.
+
+### Co-autoria de agentes de IA
+
+Cada agente de IA que contribuir para um commit deve incluir sua própria co-autoria quando tiver uma identidade e um email válidos para esse uso. Use um trailer `Co-authored-by: Nome do agente <email>` para cada agente; não use uma identidade fixa de outro agente nem invente ou empreste um email.
+
+Para o GitHub vincular a co-autoria a uma conta, o email do trailer deve estar associado a essa conta. Se a conta mantiver o email privado, use o endereço `noreply` fornecido pelo GitHub. Se não houver identidade e email válidos disponíveis para o agente, não crie um trailer fictício e informe que não foi possível registrar a co-autoria. Consulte a [documentação do GitHub sobre commits com vários autores](https://docs.github.com/pt/pull-requests/how-tos/commit-changes/creating-a-commit-with-multiple-authors).
 
 ## Pull requests
 
