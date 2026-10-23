@@ -31,19 +31,22 @@ Recomendamos usar [mise](https://mise.jdx.dev/) para instalar e gerenciar o Node
 ```bash
 mise install
 mise run install
-mise run mobile
 ```
 
-`mise install` instala a versão do Node.js declarada no `mise.toml`. `mise run install` instala as dependências da raiz e do app; `mise run mobile` inicia o Expo.
+`mise install` instala a versão do Node.js declarada no `mise.toml`. `mise run install` instala as dependências da raiz, do app e do web.
+
+Depois, inicie o Expo, também na raiz do repositório:
+
+```bash
+mise run dev:mobile
+```
 
 No terminal do Expo, escolha Android, iOS ou web. Também é possível executar comandos específicos diretamente no diretório `mobile/`:
 
-```bash
-npm start
-npm run android
-npm run ios
-npm run web
-```
+- `npm start` inicia o servidor de desenvolvimento do Expo.
+- `npm run android` inicia para Android.
+- `npm run ios` inicia para iOS.
+- `npm run web` inicia para web.
 
 ## Contribuindo
 

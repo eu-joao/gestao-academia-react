@@ -7,9 +7,9 @@ O repositório usa Node 24 e npm. O app Expo e seu manifesto de pacotes ficam em
 A partir da raiz do repositório, os atalhos definidos em `mise.toml` são:
 
 ```bash
-mise run install   # executa npm ci na raiz e em mobile/
-mise run mobile    # inicia o Expo
-mise run lint      # executa ESLint e as verificações de TypeScript do app
+mise run install       # executa npm ci na raiz, em mobile/ e em web/
+mise run dev:mobile    # inicia o Expo
+mise run lint:mobile   # executa Prettier, ESLint e as verificações de TypeScript do app
 ```
 
 Para trabalhar diretamente no app:
@@ -25,6 +25,10 @@ npx tsc --noEmit          # verifica os tipos TypeScript
 ```
 
 Não há runner ou suíte de testes configurados, portanto não existe um comando para executar um teste específico. O script `npm test` da raiz é apenas um placeholder e termina com erro. Também não há script de build de produção nem configuração do EAS versionada no repositório. Para adicionar dependências, use `npx expo install <package>` para que o Expo selecione uma versão compatível.
+
+## Validação de mudanças
+
+Antes de concluir mudanças de código, siga a skill de validação e acompanhamento da CI em `.agents/skills/validar-e-acompanhar-ci/SKILL.md`.
 
 ## Arquitetura
 

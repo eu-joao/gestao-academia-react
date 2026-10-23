@@ -1,0 +1,4 @@
+# O Maven Wrapper precisa manter o fim de linha original para rodar.
+# Sem isto, o Git no Windows pode converter o mvnw para CRLF e quebrá-lo.
+backend/mvnw text eol=lf
+backend/mvnw.cmd text eol=crlf
