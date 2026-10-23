@@ -80,6 +80,10 @@ Os nomes seguem o padrão `mise run <ação>:<módulo>`. Sem o módulo, a tarefa
 
 As capturas de tela do aplicativo ficam organizadas em [`docs/capturas-de-tela/`](./docs/capturas-de-tela/).
 
+## Protótipo mobile
+
+O protótipo da interface mobile está disponível no [Figma](https://www.figma.com/proto/yjRxhNBA2eSLiNGXFwswcn/Aplicativo-de-rede-de-academias?node-id=0-1&t=wmaNHiS11XvZoqm8-1).
+
 ## Contribuindo
 
 Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações gerais de contribuição.
