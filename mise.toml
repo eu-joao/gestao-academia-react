@@ -10,7 +10,7 @@ java = "temurin-17"
 #
 # Padrão dos nomes: mise run <ação>:<módulo>
 #   ações:   install, dev, lint, test, build
-#   módulos: backend, web, mobile (e root, só na instalação)
+#   módulos: backend, web, mobile
 #
 # Sem o módulo, a tarefa roda em todos os módulos que têm a ação:
 #   mise run install   mise run lint   mise run test   mise run build
@@ -22,13 +22,8 @@ java = "temurin-17"
 # --- install ---------------------------------------------------------
 
 [tasks.install]
-description = "Instala as dependências da raiz, do mobile e do web"
-depends = ["install:*"]
-
-[tasks."install:root"]
-description = "Instala as ferramentas de commit da raiz (husky e commitlint)"
-dir = "{{config_root}}"
-run = "npm ci"
+description = "Instala as dependências do mobile e do web"
+depends = ["install:mobile", "install:web"]
 
 [tasks."install:mobile"]
 description = "Instala as dependências do mobile"
@@ -77,7 +72,7 @@ description = "ESLint e TypeScript do web"
 dir = "{{config_root}}/web"
 run = ["npm run lint", "npx next typegen", "npx tsc --noEmit"]
 
-# --- test ------------------------------------------------------------
+# --- test -------------------------------------------------------------
 
 [tasks.test]
 description = "Roda os testes de todos os módulos que têm testes"
@@ -89,7 +84,7 @@ dir = "{{config_root}}/backend"
 env._.file = "{{config_root}}/backend/.env"
 run = "./mvnw test"
 
-# --- build -----------------------------------------------------------
+# --- build ------------------------------------------------------------
 
 [tasks.build]
 description = "Gera o pacote do backend e o build do web"
