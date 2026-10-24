@@ -120,6 +120,9 @@ export default function TreinosListScreen() {
     0,
   );
 
+  const mediaMinutos =
+    treinos.length > 0 ? Math.round(tempoTotal / treinos.length) : 0;
+
   function alternarOrdem() {
     if (ordem === "padrao") setOrdem("duracao");
     else if (ordem === "duracao") setOrdem("nome");
@@ -164,15 +167,21 @@ export default function TreinosListScreen() {
                 Acompanhe e organize sua programação semanal
               </Text>
 
+              {/* Estatísticas simples (RF03 + Bônus) */}
               <View style={styles.statsRow}>
                 <View style={styles.statItem}>
                   <Text style={styles.statValue}>{treinos.length}</Text>
-                  <Text style={styles.statLabel}>Total cadastrado</Text>
+                  <Text style={styles.statLabel}>Sessões</Text>
                 </View>
                 <View style={styles.statDivider} />
                 <View style={styles.statItem}>
                   <Text style={styles.statValue}>{tempoTotal} min</Text>
                   <Text style={styles.statLabel}>Tempo total</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <Text style={styles.statValue}>{mediaMinutos} min</Text>
+                  <Text style={styles.statLabel}>Média / sessão</Text>
                 </View>
               </View>
             </View>
@@ -372,6 +381,13 @@ export default function TreinosListScreen() {
                 })
               }
             >
+              {item.categoria ? (
+                <View style={styles.categoryTag}>
+                  <Ionicons name="pricetag-outline" size={12} color="#0284C7" />
+                  <Text style={styles.categoryTagText}>{item.categoria}</Text>
+                </View>
+              ) : null}
+
               <View style={styles.tag}>
                 <Ionicons name="calendar-outline" size={13} color="#475569" />
                 <Text style={styles.tagText}>{item.diaSemana}</Text>
@@ -690,6 +706,22 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#F1F5F9",
     paddingTop: 10,
+  },
+  categoryTag: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F0F9FF",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#BAE6FD",
+    gap: 4,
+  },
+  categoryTagText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#0284C7",
   },
   tag: {
     flexDirection: "row",

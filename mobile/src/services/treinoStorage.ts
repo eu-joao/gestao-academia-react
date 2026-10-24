@@ -5,6 +5,7 @@ const KEY = "@academia:treinos ";
 export type Treino = {
   id: string;
   nome: string;
+  categoria?: string;
   diaSemana: string;
   duracaoMin: number;
 };

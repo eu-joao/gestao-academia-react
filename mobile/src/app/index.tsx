@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { listar, Treino } from "../services/treinoStorage";
 
@@ -27,6 +27,18 @@ export default function IndexScreen() {
       ativo = false;
     };
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      let ativo = true;
+      listar().then((lista: Treino[]) => {
+        if (ativo) setTotalTreinos(lista.length);
+      });
+      return () => {
+        ativo = false;
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>

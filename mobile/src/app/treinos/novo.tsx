@@ -19,6 +19,8 @@ import {
 } from "../../services/treinoStorage";
 import { validarTreino, ErrosTreino } from "../../utils/validarTreino";
 
+const CATEGORIAS_OPCOES = ["Musculação", "Cardio", "Funcional", "Mobilidade"];
+
 const DIAS_OPCOES = [
   "Segunda",
   "Terça",
@@ -35,6 +37,7 @@ export default function TreinoFormScreen() {
   const isEditing = Boolean(id);
 
   const [nome, setNome] = useState("");
+  const [categoria, setCategoria] = useState("Musculação");
   const [diaSemana, setDiaSemana] = useState("");
   const [duracaoMin, setDuracaoMin] = useState("");
   const [erros, setErros] = useState<ErrosTreino>({});
@@ -50,6 +53,7 @@ export default function TreinoFormScreen() {
       .then((treino) => {
         if (ativo && treino) {
           setNome(treino.nome);
+          if (treino.categoria) setCategoria(treino.categoria);
           setDiaSemana(treino.diaSemana);
           setDuracaoMin(String(treino.duracaoMin));
         }
@@ -78,6 +82,7 @@ export default function TreinoFormScreen() {
     try {
       const payload = {
         nome: nome.trim(),
+        categoria: categoria.trim(),
         diaSemana: diaSemana.trim(),
         duracaoMin: Number(duracaoMin.trim()),
       };
@@ -200,6 +205,30 @@ export default function TreinoFormScreen() {
                 <Text style={styles.errorText}>{erros.nome}</Text>
               </View>
             )}
+          </View>
+
+          {/* Campo Categoria */}
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Categoria</Text>
+            <View style={styles.chipsContainer}>
+              {CATEGORIAS_OPCOES.map((cat) => {
+                const ativo = categoria === cat;
+                return (
+                  <TouchableOpacity
+                    key={cat}
+                    style={[styles.chip, ativo && styles.chipActive]}
+                    onPress={() => setCategoria(cat)}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[styles.chipText, ativo && styles.chipTextActive]}
+                    >
+                      {cat}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </View>
 
           {/* Campo Dia da Semana */}

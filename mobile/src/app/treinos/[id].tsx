@@ -151,7 +151,11 @@ export default function TreinoDetalheScreen() {
             <View style={styles.badgeRow}>
               <View style={styles.activeBadge}>
                 <Ionicons name="fitness-outline" size={13} color="#0284C7" />
-                <Text style={styles.activeBadgeText}>ROTINA ATIVA</Text>
+                <Text style={styles.activeBadgeText}>
+                  {treino.categoria
+                    ? treino.categoria.toUpperCase()
+                    : "ROTINA ATIVA"}
+                </Text>
               </View>
             </View>
 
@@ -159,6 +163,22 @@ export default function TreinoDetalheScreen() {
 
             {/* Informações em grade */}
             <View style={styles.infoGrid}>
+              {treino.categoria ? (
+                <View style={styles.infoItem}>
+                  <View style={styles.infoIconBox}>
+                    <Ionicons
+                      name="pricetag-outline"
+                      size={20}
+                      color="#0284C7"
+                    />
+                  </View>
+                  <View>
+                    <Text style={styles.infoLabel}>Categoria do treino</Text>
+                    <Text style={styles.infoValue}>{treino.categoria}</Text>
+                  </View>
+                </View>
+              ) : null}
+
               <View style={styles.infoItem}>
                 <View style={styles.infoIconBox}>
                   <Ionicons name="calendar-outline" size={20} color="#0284C7" />
