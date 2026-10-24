@@ -17,11 +17,13 @@ As rotas do Expo Router ficam em `src/app/`; mantenha componentes, hooks e lógi
 
 ## Verificações
 
-A CI executa o lint. É recomendável executar lint e verificação de tipos antes de abrir o PR. Na raiz do repositório:
+A CI executa Prettier, ESLint, TypeScript e Expo Doctor quando há alterações em `mobile/`. O aplicativo ainda não possui uma suíte de testes automatizados; essa tarefa está acompanhada pela issue [#55](https://github.com/eu-joao/gestao-academia-react/issues/55). A CI remota é a validação obrigatória. Para obter feedback local antes de abrir o PR, você pode executar, na raiz do repositório:
 
 ```bash
-mise run lint
+mise run lint:mobile
 ```
+
+Essa tarefa roda Prettier, ESLint e TypeScript, as mesmas verificações da CI, exceto o Expo Doctor.
 
 ## Regras gerais
 
