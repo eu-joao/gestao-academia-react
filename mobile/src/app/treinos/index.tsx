@@ -17,7 +17,7 @@ import { useRouter, useFocusEffect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Treino, listar, remover } from "../../services/treinoStorage";
 
-const heroImage = require("../../../assets/images/mulheres_treinando_modelo.jpg");
+const heroImage = require("../../../assets/images/inicio_treino.jpg");
 const emptyImage = require("../../../assets/images/homem_treinando_modelo.jpg");
 
 const FILTROS_DIAS = [

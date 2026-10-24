@@ -16,7 +16,7 @@ import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Treino, buscarPorId, remover } from "../../services/treinoStorage";
 
-const detailImage = require("../../../assets/images/mulheres_treinando_modelo.jpg");
+const detailImage = require("../../../assets/images/inicio_treino.jpg");
 
 export default function TreinoDetalheScreen() {
   const router = useRouter();
