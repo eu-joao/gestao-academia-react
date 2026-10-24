@@ -19,12 +19,7 @@ import {
 } from "../../services/treinoStorage";
 import { validarTreino, ErrosTreino } from "../../utils/validarTreino";
 
-const CATEGORIAS_OPCOES = [
-  "Musculação",
-  "Cardio",
-  "Funcional",
-  "Mobilidade",
-];
+const CATEGORIAS_OPCOES = ["Musculação", "Cardio", "Funcional", "Mobilidade"];
 
 const DIAS_OPCOES = [
   "Segunda",
