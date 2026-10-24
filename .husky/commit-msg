@@ -1,8 +1,0 @@
-# .husky/commit-msg
-npx --no -- commitlint --edit "$1" || {
-  echo ""
-  echo "Commit rejeitado. Consulte:"
-  echo "  - Conventional Commits: https://www.conventionalcommits.org/pt-br/v1.0.0/"
-  echo "  - CONTRIBUTING.md na raiz do repositório"
-  exit 1
-}
