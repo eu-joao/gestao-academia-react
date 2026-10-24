@@ -38,4 +38,20 @@ O PR só pode ser aceito depois de uma aprovação de outra pessoa que não seja
 
 ## Verificações
 
-A CI executa o lint do aplicativo mobile. É recomendável executar as verificações localmente antes de abrir o PR; os comandos estão em [mobile/CONTRIBUTING.md](./mobile/CONTRIBUTING.md).
+A CI do GitHub Actions é a validação obrigatória e a referência final para todos os PRs. Ela valida o título e as mensagens dos commits e executa somente os módulos afetados:
+
+- **Mobile:** Prettier, ESLint, TypeScript e Expo Doctor.
+- **Web:** ESLint, geração dos tipos do Next.js, TypeScript e build de produção.
+- **Backend Spring e JDBC:** Maven Wrapper com `verify`, usando Java 17.
+
+Alterações em `.github/workflows/` executam todas as verificações dos módulos. Um job ignorado porque seu módulo não foi alterado é considerado válido pelo job final da CI; isso evita deixar verificações obrigatórias pendentes em PRs de documentação ou de outro módulo.
+
+O Husky e os hooks locais foram removidos. Não é necessário instalar ferramentas de Git hooks nem executar verificações automáticas a cada commit. As tarefas locais do mise continuam disponíveis como opção para obter feedback antes de abrir um PR:
+
+```bash
+mise run lint
+mise run test:backend
+mise run build
+```
+
+Essas tarefas são auxiliares; não substituem nem alteram o resultado obrigatório da CI. O backend ainda não possui testes automatizados, então o Maven `verify` valida compilação e empacotamento, mas não representa cobertura de testes. Os detalhes de cada módulo estão em [mobile/CONTRIBUTING.md](./mobile/CONTRIBUTING.md) e [backend/CONTRIBUTING.md](./backend/CONTRIBUTING.md).
