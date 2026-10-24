@@ -36,3 +36,8 @@ export async function remover(id: string): Promise<void> {
   const lista = await listar();
   await salvar(lista.filter((t) => t.id !== id));
 }
+
+export async function buscarPorId(id: string): Promise<Treino | undefined> {
+  const lista = await listar();
+  return lista.find((t) => t.id === id);
+}
