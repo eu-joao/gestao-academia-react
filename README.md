@@ -88,6 +88,9 @@ O protótipo da interface mobile está disponível no [Figma](https://www.figma.
 
 Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações gerais de contribuição.
 
+## Orientações para agentes
+
+As regras gerais para trabalhar no monorepo estão em [`docs/agent-guidelines.md`](./docs/agent-guidelines.md). As instruções operacionais para agentes ficam em [`AGENTS.md`](./AGENTS.md).
 ## Skills dos agentes
 
 As skills compartilhadas ficam em [`.agents/skills/`](./.agents/skills/). O Gemini CLI e o Mistral Vibe descobrem as skills nesse caminho; cada skill tem sua própria pasta com um arquivo `SKILL.md`.
