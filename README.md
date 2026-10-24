@@ -8,7 +8,7 @@ Este repositório reúne os três módulos do projeto: a API REST, o site e o ap
 
 | Módulo | O que é | Tecnologias | Documentação |
 | --- | --- | --- | --- |
-| `backend/` | API REST | Spring Boot, Java 17 e PostgreSQL | [README do backend](./backend/README.md) |
+| `backend/spring/` | API REST | Spring Boot, Java 17 e PostgreSQL | [README do backend](./backend/spring/README.md) |
 | `web/` | Site | Next.js, React e TypeScript | [README do web](./web/README.md) |
 | `mobile/` | Aplicativo | Expo, React Native e TypeScript | [README do mobile](./mobile/README.md) |
 
@@ -46,7 +46,7 @@ mise run install
 
 ### Rodar os módulos
 
-Cada módulo roda em um terminal próprio. Antes de rodar o backend pela primeira vez, siga a [configuração local do backend](./backend/README.md#configuração-local), que cria o banco e o arquivo `backend/.env`.
+Cada módulo roda em um terminal próprio. Antes de rodar o backend pela primeira vez, siga a [configuração local do backend](./backend/spring/README.md#configuração-local), que cria o banco e o arquivo `backend/spring/.env`.
 
 API em http://localhost:8080:
 
@@ -91,3 +91,6 @@ Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações gerais de co
 ## Orientações para agentes
 
 As regras gerais para trabalhar no monorepo estão em [`docs/agent-guidelines.md`](./docs/agent-guidelines.md). As instruções operacionais para agentes ficam em [`AGENTS.md`](./AGENTS.md).
+## Skills dos agentes
+
+As skills compartilhadas ficam em [`.agents/skills/`](./.agents/skills/). O Gemini CLI e o Mistral Vibe descobrem as skills nesse caminho; cada skill tem sua própria pasta com um arquivo `SKILL.md`.
