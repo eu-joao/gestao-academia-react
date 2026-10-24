@@ -16,19 +16,19 @@ de treino dele.
 
 ## 2. Atributos
 
-| Campo               | Tipo (PostgreSQL)  | Obrigatório | Regra                                              |
-|---------------------|--------------------|-------------|----------------------------------------------------|
-| id                  | integer (identity) | sim         | chave primária, gerada automaticamente             |
-| nome                | varchar(150)       | sim         | nome completo                                      |
-| cpf                 | char(11)           | sim         | somente dígitos, único                             |
-| telefone            | varchar(20)        | sim         | usado nas notificações via WhatsApp (RN07)         |
-| email               | varchar(150)       | sim         | formato válido, único                              |
-| data_nascimento     | date               | sim         | a idade é calculada a partir dela                  |
-| peso                | numeric(5,2)       | sim         | em quilos, maior que 0                             |
-| altura              | smallint           | sim         | em centímetros, maior que 0                        |
-| nivel_experiencia   | enum               | sim         | Iniciante, Intermediário ou Avançado               |
-| frequencia_semanal  | smallint           | sim         | 3, 4, 5 ou 6 dias                                  |
-| status              | varchar(10)        | sim         | ativo ou inativo, padrão ativo; mantido pelo sistema |
+| Campo               | Tipo (PostgreSQL)  | Obrigatório | Regra                                                                  |
+|---------------------|--------------------|-------------|------------------------------------------------------------------------|
+| id                  | integer (identity) | sim         | chave primária, gerada automaticamente                                 |
+| nome                | varchar(150)       | sim         | nome completo                                                          |
+| cpf                 | char(11)           | sim         | exatamente 11 dígitos (garantido por `CHECK`), único                   |
+| telefone            | varchar(20)        | sim         | usado nas notificações via WhatsApp (RN07)                             |
+| email               | varchar(150)       | sim         | único; o formato é validado na aplicação (o banco garante só a unicidade) |
+| data_nascimento     | date               | sim         | a idade é calculada a partir dela                                      |
+| peso                | numeric(5,2)       | sim         | em quilos, maior que 0                                                 |
+| altura              | smallint           | sim         | em centímetros, maior que 0                                            |
+| nivel_experiencia   | enum               | sim         | Iniciante, Intermediário ou Avançado                                   |
+| frequencia_semanal  | smallint           | sim         | 3, 4, 5 ou 6 dias                                                      |
+| status              | varchar(10)        | sim         | ativo ou inativo, padrão ativo; mantido pelo sistema                   |
 
 ## 3. Script SQL
 
@@ -38,7 +38,7 @@ CREATE TYPE nivel_experiencia AS ENUM ('Iniciante', 'Intermediário', 'Avançado
 CREATE TABLE aluno (
   id                 integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   nome               varchar(150) NOT NULL,
-  cpf                char(11)     NOT NULL UNIQUE,
+  cpf                char(11)     NOT NULL UNIQUE CHECK (cpf ~ '^[0-9]{11}$'),
   telefone           varchar(20)  NOT NULL,
   email              varchar(150) NOT NULL UNIQUE,
   data_nascimento    date         NOT NULL,
@@ -65,8 +65,7 @@ CREATE TABLE aluno (
 - Contrato 1:N Cobrança
 - TreinoAtivo N:1 ProgramaTreino
 
-Os diagramas completos do modelo lógico (todas as entidades) está em
-`docs/DIAGRAMAS.md`.
+Os diagramas do modelo (BRModelo) estão em [DIAGRAMAS.md](DIAGRAMAS.md).
 
 ```mermaid
 erDiagram
