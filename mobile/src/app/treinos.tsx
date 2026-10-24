@@ -77,11 +77,11 @@ export default function TreinosScreen() {
   }
 
   function alterar(campo: keyof ErrosTreino, setter: (valor: string) => void) {
-  return (valor: string) => {
-    setter(valor);
-    setErros(e => ({ ...e, [campo]: undefined }));
-  };
-}
+    return (valor: string) => {
+      setter(valor);
+      setErros((e) => ({ ...e, [campo]: undefined }));
+    };
+  }
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
