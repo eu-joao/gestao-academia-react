@@ -13,6 +13,8 @@ import br.edu.ifpb.academia.enums.StatusAluno;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.AlunoRepository;
+import br.edu.ifpb.academia.repository.ContratoRepository;
+import br.edu.ifpb.academia.repository.TreinoAtivoRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,6 +24,8 @@ public class AlunoService {
 
 	private final AlunoRepository repository;
 	private final TreinoAtivoService treinoAtivoService;
+	private final ContratoRepository contratoRepository;
+	private final TreinoAtivoRepository treinoAtivoRepository;
 
 
 	@Transactional(readOnly = true)
@@ -70,8 +74,15 @@ public class AlunoService {
 
 	@Transactional
 	public void excluir(Long id) {
-		repository.delete(buscarEntidade(id));
+	Aluno aluno = buscarEntidade(id);
+
+	if (contratoRepository.existsByAlunoId(id)) {
+		throw new RegraDeNegocioException("Aluno possui contratos e nao pode ser excluido.");
 	}
+
+	treinoAtivoRepository.deleteByAlunoId(id);
+	repository.delete(aluno);
+}
 
 	public Aluno buscarEntidade(Long id) {
 		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno não encontrado com ID: " + id));
