@@ -96,6 +96,13 @@ mobile/src/app/
    - Exibe a ficha completa do treino com cabeçalho em imagem, categoria destacada, dia programado e duração prevista.
    - Cartão com orientações de execução física e botões para editar ou remover o treino com confirmação de segurança.
 
+### 4.2 Galeria Visual das Telas
+
+|                                       Tela Inicial                                       |                               Listagem Inteligente & Estatísticas                               |                                              Cadastro & Edição de Treino                                              |                                       Detalhes da Sessão                                        |
+| :--------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: |
+| <img src="../capturas-de-tela/tela_inicial.png" width="180" alt="Tela Inicial do App" /> | <img src="../capturas-de-tela/tela_de_treinos.png" width="180" alt="Listagem e Estatísticas" /> | <img src="../capturas-de-tela/tela_criacao_edicao_de_treino.png" width="180" alt="Formulário de Cadastro e Edição" /> | <img src="../capturas-de-tela/tela_detalhes_treino.png" width="180" alt="Detalhes do Treino" /> |
+|                                 **Boas-vindas e Status**                                 |                                      **Painel de Treinos**                                      |                                             **Formulário com Validação**                                              |                                      **Ficha de Detalhes**                                      |
+
 ---
 
 ## 5. Roteiro Sugerido para Gravação do Vídeo (2 a 5 minutos)
