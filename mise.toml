@@ -39,8 +39,8 @@ run = "npm ci"
 
 [tasks."dev:backend"]
 description = "Sobe a API Spring Boot em http://localhost:8080"
-dir = "{{config_root}}/backend"
-env._.file = "{{config_root}}/backend/.env"
+dir = "{{config_root}}/backend/spring"
+env._.file = "{{config_root}}/backend/spring/.env"
 depends = ["check:backend-env"]
 run = "./mvnw spring-boot:run"
 
@@ -80,8 +80,8 @@ depends = ["test:*"]
 
 [tasks."test:backend"]
 description = "Testes do backend (o backend ainda não tem testes)"
-dir = "{{config_root}}/backend"
-env._.file = "{{config_root}}/backend/.env"
+dir = "{{config_root}}/backend/spring"
+env._.file = "{{config_root}}/backend/spring/.env"
 run = "./mvnw test"
 
 # --- build ------------------------------------------------------------
@@ -91,9 +91,9 @@ description = "Gera o pacote do backend e o build do web"
 depends = ["build:*"]
 
 [tasks."build:backend"]
-description = "Empacota o backend em backend/target/"
-dir = "{{config_root}}/backend"
-env._.file = "{{config_root}}/backend/.env"
+description = "Empacota o backend em backend/spring/target/"
+dir = "{{config_root}}/backend/spring"
+env._.file = "{{config_root}}/backend/spring/.env"
 run = "./mvnw package"
 
 [tasks."build:web"]
@@ -106,13 +106,13 @@ run = "npm run build"
 # O mise ignora um .env que não existe. Sem este aviso, a API só falharia
 # depois, com um erro de variável sem valor.
 [tasks."check:backend-env"]
-description = "Confere se o backend/.env existe"
+description = "Confere se o backend/spring/.env existe"
 hide = true
-dir = "{{config_root}}/backend"
+dir = "{{config_root}}/backend/spring"
 run = '''
 if [ ! -f .env ]; then
-  echo "backend/.env não encontrado. Na raiz do repositório, rode:"
-  echo "  cp backend/.env.example backend/.env"
+  echo "backend/spring/.env não encontrado. Na raiz do repositório, rode:"
+  echo "  cp backend/spring/.env.example backend/spring/.env"
   exit 1
 fi
 '''

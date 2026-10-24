@@ -1,7 +1,7 @@
 version: 2
 updates:
   # - package-ecosystem: "npm"
-  #   directory: "/backend"
+  #   directory: "/backend/spring"
   #   schedule:
   #     interval: "weekly"
   #   groups:
