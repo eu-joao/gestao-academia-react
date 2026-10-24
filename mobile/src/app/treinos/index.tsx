@@ -55,7 +55,7 @@ export default function TreinosListScreen() {
     };
   }, []);
 
-  // Recarrega sempre que a tela ganha foco (ao voltar de outra tela)
+  // Recarrega sempre que a tela ganha foco
   useFocusEffect(
     useCallback(() => {
       let ativo = true;
@@ -132,31 +132,9 @@ export default function TreinosListScreen() {
     return "Padrão";
   }
 
-  function renderHeader() {
+  function renderHeroBanner() {
     return (
-      <View style={styles.headerContainer}>
-        {/* Barra superior de navegação */}
-        <View style={styles.topBar}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.push("/")}
-            activeOpacity={0.7}
-            accessibilityLabel="Voltar ao início"
-          >
-            <Ionicons name="arrow-back-outline" size={20} color="#0F172A" />
-          </TouchableOpacity>
-          <Text style={styles.topBarTitle}>Meus Treinos</Text>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => router.push("/treinos/novo")}
-            activeOpacity={0.8}
-            accessibilityLabel="Novo treino"
-          >
-            <Ionicons name="add" size={20} color="#FFFFFF" />
-            <Text style={styles.addButtonText}>Novo</Text>
-          </TouchableOpacity>
-        </View>
-
+      <View style={styles.heroWrapper}>
         {/* Mensagem de Feedback de Exclusão (RF06) */}
         {feedbackMsg && (
           <View style={styles.feedbackBanner}>
@@ -200,6 +178,59 @@ export default function TreinosListScreen() {
             </View>
           </ImageBackground>
         </View>
+      </View>
+    );
+  }
+
+  function renderEmpty() {
+    return (
+      <View style={styles.emptyContainer}>
+        <Image source={emptyImage} style={styles.emptyImage} />
+        <Text style={styles.emptyTitle}>Nenhum treino encontrado</Text>
+        <Text style={styles.emptySubtitle}>
+          {busca.trim() || diaFiltro !== "Todos"
+            ? "Tente ajustar a busca ou o filtro de dia para visualizar outros treinos."
+            : "Você ainda não possui treinos cadastrados. Clique no botão 'Novo' para criar sua primeira sessão."}
+        </Text>
+        <TouchableOpacity
+          style={styles.emptyAddButton}
+          onPress={() => router.push("/treinos/novo")}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="add" size={18} color="#FFFFFF" />
+          <Text style={styles.emptyAddButtonText}>Cadastrar Treino</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+
+      {/* Controles e busca fixos no topo para garantir foco ininterrupto na digitação */}
+      <View style={styles.fixedHeader}>
+        {/* Barra superior de navegação */}
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.push("/")}
+            activeOpacity={0.7}
+            accessibilityLabel="Voltar ao início"
+          >
+            <Ionicons name="arrow-back-outline" size={20} color="#0F172A" />
+          </TouchableOpacity>
+          <Text style={styles.topBarTitle}>Meus Treinos</Text>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => router.push("/treinos/novo")}
+            activeOpacity={0.8}
+            accessibilityLabel="Novo treino"
+          >
+            <Ionicons name="add" size={20} color="#FFFFFF" />
+            <Text style={styles.addButtonText}>Novo</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* RF03: Controles de Busca e Filtro */}
         <View style={styles.controlsCard}>
@@ -217,6 +248,8 @@ export default function TreinosListScreen() {
               placeholderTextColor="#94A3B8"
               value={busca}
               onChangeText={setBusca}
+              autoCorrect={false}
+              autoCapitalize="none"
             />
             {busca.length > 0 && (
               <TouchableOpacity onPress={() => setBusca("")}>
@@ -270,41 +303,16 @@ export default function TreinosListScreen() {
           </View>
         </View>
       </View>
-    );
-  }
 
-  function renderEmpty() {
-    return (
-      <View style={styles.emptyContainer}>
-        <Image source={emptyImage} style={styles.emptyImage} />
-        <Text style={styles.emptyTitle}>Nenhum treino encontrado</Text>
-        <Text style={styles.emptySubtitle}>
-          {busca.trim() || diaFiltro !== "Todos"
-            ? "Tente ajustar a busca ou o filtro de dia para visualizar outros treinos."
-            : "Você ainda não possui treinos cadastrados. Clique no botão 'Novo' para criar sua primeira sessão."}
-        </Text>
-        <TouchableOpacity
-          style={styles.emptyAddButton}
-          onPress={() => router.push("/treinos/novo")}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="add" size={18} color="#FFFFFF" />
-          <Text style={styles.emptyAddButtonText}>Cadastrar Treino</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
-  return (
-    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      {/* Lista com Hero Banner e Cards */}
       <FlatList
         data={treinosFiltrados}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={renderHeader}
+        ListHeaderComponent={renderHeroBanner}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
         renderItem={({ item }) => (
           <View style={styles.card}>
             <View style={styles.cardHeader}>
@@ -393,20 +401,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F8FAFC",
   },
-  listContent: {
+  fixedHeader: {
     paddingHorizontal: 16,
-    paddingBottom: 40,
-  },
-  headerContainer: {
     paddingTop: 4,
-    marginBottom: 8,
+    backgroundColor: "#F8FAFC",
   },
   topBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 14,
-    paddingVertical: 4,
+    marginBottom: 12,
+    paddingVertical: 2,
   },
   backButton: {
     width: 38,
@@ -436,97 +441,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 13,
     fontWeight: "600",
-  },
-  feedbackBanner: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F0FDF4",
-    borderWidth: 1,
-    borderColor: "#BBF7D0",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 12,
-    gap: 8,
-  },
-  feedbackBannerText: {
-    color: "#166534",
-    fontSize: 13,
-    fontWeight: "600",
-  },
-  heroCard: {
-    borderRadius: 18,
-    overflow: "hidden",
-    marginBottom: 16,
-    backgroundColor: "#0F172A",
-  },
-  heroImage: {
-    width: "100%",
-  },
-  heroImageStyle: {
-    opacity: 0.35,
-  },
-  heroOverlay: {
-    padding: 18,
-  },
-  heroTag: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-start",
-    backgroundColor: "rgba(15, 23, 42, 0.7)",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "rgba(56, 189, 248, 0.4)",
-    marginBottom: 8,
-    gap: 6,
-  },
-  heroTagText: {
-    color: "#38BDF8",
-    fontSize: 10,
-    fontWeight: "700",
-    letterSpacing: 1.2,
-  },
-  heroTitle: {
-    color: "#FFFFFF",
-    fontSize: 22,
-    fontWeight: "800",
-    marginBottom: 4,
-  },
-  heroSubtitle: {
-    color: "#CBD5E1",
-    fontSize: 12,
-    marginBottom: 14,
-  },
-  statsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 12,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-  },
-  statItem: {
-    flex: 1,
-    alignItems: "center",
-  },
-  statValue: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  statLabel: {
-    color: "#94A3B8",
-    fontSize: 11,
-    marginTop: 2,
-  },
-  statDivider: {
-    width: 1,
-    height: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
   },
   controlsCard: {
     backgroundColor: "#FFFFFF",
@@ -603,6 +517,104 @@ const styles = StyleSheet.create({
   resultsCount: {
     fontSize: 12,
     color: "#64748B",
+  },
+  heroWrapper: {
+    paddingTop: 4,
+    marginBottom: 12,
+  },
+  feedbackBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F0FDF4",
+    borderWidth: 1,
+    borderColor: "#BBF7D0",
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
+    gap: 8,
+  },
+  feedbackBannerText: {
+    color: "#166534",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  heroCard: {
+    borderRadius: 18,
+    overflow: "hidden",
+    backgroundColor: "#0F172A",
+  },
+  heroImage: {
+    width: "100%",
+  },
+  heroImageStyle: {
+    opacity: 0.35,
+  },
+  heroOverlay: {
+    padding: 18,
+  },
+  heroTag: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: "rgba(15, 23, 42, 0.7)",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(56, 189, 248, 0.4)",
+    marginBottom: 8,
+    gap: 6,
+  },
+  heroTagText: {
+    color: "#38BDF8",
+    fontSize: 10,
+    fontWeight: "700",
+    letterSpacing: 1.2,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    fontSize: 22,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  heroSubtitle: {
+    color: "#CBD5E1",
+    fontSize: 12,
+    marginBottom: 14,
+  },
+  statsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+  },
+  statItem: {
+    flex: 1,
+    alignItems: "center",
+  },
+  statValue: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  statLabel: {
+    color: "#94A3B8",
+    fontSize: 11,
+    marginTop: 2,
+  },
+  statDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.15)",
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 40,
   },
   card: {
     backgroundColor: "#FFFFFF",
