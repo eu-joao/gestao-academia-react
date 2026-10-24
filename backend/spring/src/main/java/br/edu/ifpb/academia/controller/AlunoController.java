@@ -24,38 +24,41 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/alunos")
 @RequiredArgsConstructor
 public class AlunoController {
-	private final AlunoService service;
 
+    private final AlunoService service;
 
-	@Operation(summary = "Lista alunos")
-	@GetMapping
-	public List<AlunoResponse> listar() {
-		return service.listar();
-	}
+    @Operation(summary = "Lista alunos")
+    @GetMapping
+    public List<AlunoResponse> listar() {
+        return service.listar();
+    }
 
-	@Operation(summary = "Busca aluno por ID")
-	@GetMapping("/{id}")
-	public AlunoResponse buscar(@PathVariable Long id) {
-		return service.buscar(id);
-	}
+    @Operation(summary = "Busca aluno por ID")
+    @GetMapping("/{id}")
+    public AlunoResponse buscar(@PathVariable Long id) {
+        return service.buscar(id);
+    }
 
-	@Operation(summary = "Cria aluno e treino ativo automaticamente")
-	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping
-	public AlunoResponse criar(@Valid @RequestBody AlunoRequest request) {
-		return service.criar(request);
-	}
+    @Operation(summary = "Cria aluno e treino ativo automaticamente")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public AlunoResponse criar(
+            @Valid @RequestBody AlunoRequest request) {
+        return service.criar(request);
+    }
 
-	@Operation(summary = "Atualiza aluno e recria treino ativo quando o perfil muda")
-	@PutMapping("/{id}")
-	public AlunoResponse atualizar(@PathVariable Long id, @Valid @RequestBody AlunoRequest request) {
-		return service.atualizar(id, request);
-	}
+    @Operation(summary = "Atualiza aluno e recria treino ativo quando o perfil muda")
+    @PutMapping("/{id}")
+    public AlunoResponse atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody AlunoRequest request) {
+        return service.atualizar(id, request);
+    }
 
-	@Operation(summary = "Remove aluno")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@DeleteMapping("/{id}")
-	public void excluir(@PathVariable Long id) {
-		service.excluir(id);
-	}
+    @Operation(summary = "Remove aluno")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void excluir(@PathVariable Long id) {
+        service.excluir(id);
+    }
 }
