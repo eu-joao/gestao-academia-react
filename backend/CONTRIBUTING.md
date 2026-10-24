@@ -19,8 +19,8 @@ Execute a API a partir da raiz com `mise run dev:backend`. Para usar o Maven Wra
 
 ## Verificações
 
-Execute os testes com `mise run test:backend` e gere o pacote com `mise run build:backend`. O backend ainda não tem testes automatizados, então `test:backend` não valida nada por enquanto. A CI atual do repositório não executa verificações Maven; a configuração dessa CI está sendo acompanhada separadamente.
+A CI executa `./mvnw --batch-mode --no-transfer-progress verify` com Java 17 quando há alterações no backend Spring. O projeto JDBC em `backend/jdbc/` também executa o Maven Wrapper quando seus arquivos são alterados. Ainda não há testes automatizados no backend; por isso, `verify` valida principalmente compilação e empacotamento. Para executar as verificações localmente, use `mise run test:backend` e `mise run build:backend` como apoio. A CI remota é a validação obrigatória.
 
 ## Regras gerais
 
-As regras de branches, commits e pull requests são compartilhadas com o restante do projeto. Consulte [CONTRIBUTING.md na raiz](../CONTRIBUTING.md).
+As regras de branches, commits e pull requests são compartilhadas com o restante do projeto. Consulte [`CONTRIBUTING.md` na raiz](../CONTRIBUTING.md).
