@@ -38,8 +38,7 @@ jobs:
               - 'web/**'
               - '.github/workflows/**'
             backend_spring:
-              - 'backend/**'
-              - '!backend/jdbc/**'
+              - 'backend/spring/**'
               - '.github/workflows/**'
             backend_jdbc:
               - 'backend/jdbc/**'
@@ -122,7 +121,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend
+        working-directory: backend/spring
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
