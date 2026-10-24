@@ -71,7 +71,7 @@ export default function IndexScreen() {
           <View style={styles.actionsContainer}>
             <TouchableOpacity
               style={styles.primaryButton}
-              onPress={() => router.push("/treinos/index")}
+              onPress={() => router.push("/treinos")}
               activeOpacity={0.85}
             >
               <Text style={styles.primaryButtonText}>Ver Meus Treinos</Text>

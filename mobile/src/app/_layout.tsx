@@ -9,9 +9,7 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="treinos/index" />
-      <Stack.Screen name="treinos/novo" />
-      <Stack.Screen name="treinos/[id]" />
+      <Stack.Screen name="treinos" />
     </Stack>
   );
 }

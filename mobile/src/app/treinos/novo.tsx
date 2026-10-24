@@ -90,7 +90,7 @@ export default function TreinoFormScreen() {
 
       setSucesso(true);
       setTimeout(() => {
-        router.replace("/treinos/index");
+        router.replace("/treinos");
       }, 700);
     } catch {
       setErros({

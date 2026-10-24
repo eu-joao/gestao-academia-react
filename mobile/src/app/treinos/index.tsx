@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -41,12 +41,30 @@ export default function TreinosListScreen() {
 
   async function carregar() {
     const dados = await listar();
-    setTreinos(dados);
+    setTreinos(dados || []);
   }
 
+  // Carrega imediatamente na montagem inicial (essencial para web)
+  useEffect(() => {
+    let ativo = true;
+    listar().then((dados) => {
+      if (ativo) setTreinos(dados || []);
+    });
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  // Recarrega sempre que a tela ganha foco (ao voltar de outra tela)
   useFocusEffect(
     useCallback(() => {
-      carregar();
+      let ativo = true;
+      listar().then((dados) => {
+        if (ativo) setTreinos(dados || []);
+      });
+      return () => {
+        ativo = false;
+      };
     }, []),
   );
 
@@ -77,29 +95,28 @@ export default function TreinosListScreen() {
     carregar();
   }
 
-  // RF03: Busca, Filtro e Ordenação
+  // RF03: Busca, Filtro e Ordenação com proteção contra valores vazios/nulos
   const treinosFiltrados = treinos
     .filter((item) => {
-      const atendeBusca = item.nome
-        .toLowerCase()
-        .includes(busca.trim().toLowerCase());
+      const nome = (item?.nome || "").toLowerCase();
+      const dia = (item?.diaSemana || "").toLowerCase();
+      const atendeBusca = nome.includes(busca.trim().toLowerCase());
       const atendeDia =
-        diaFiltro === "Todos" ||
-        item.diaSemana.toLowerCase() === diaFiltro.toLowerCase();
+        diaFiltro === "Todos" || dia === diaFiltro.toLowerCase();
       return atendeBusca && atendeDia;
     })
     .sort((a, b) => {
       if (ordem === "duracao") {
-        return (b.duracaoMin || 0) - (a.duracaoMin || 0);
+        return (b?.duracaoMin || 0) - (a?.duracaoMin || 0);
       }
       if (ordem === "nome") {
-        return a.nome.localeCompare(b.nome);
+        return (a?.nome || "").localeCompare(b?.nome || "");
       }
       return 0;
     });
 
   const tempoTotal = treinos.reduce(
-    (acc, curr) => acc + (curr.duracaoMin || 0),
+    (acc, curr) => acc + (curr?.duracaoMin || 0),
     0,
   );
 
@@ -289,36 +306,38 @@ export default function TreinosListScreen() {
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            activeOpacity={0.85}
-            onPress={() =>
-              router.push({
-                pathname: "/treinos/[id]",
-                params: { id: item.id },
-              })
-            }
-          >
+          <View style={styles.card}>
             <View style={styles.cardHeader}>
-              <View style={styles.cardIconBox}>
-                <Ionicons name="barbell-outline" size={18} color="#0284C7" />
-              </View>
-              <View style={styles.cardInfo}>
-                <Text style={styles.cardTitle} numberOfLines={1}>
-                  {item.nome}
-                </Text>
-                <Text style={styles.cardHint}>Toque para ver detalhes</Text>
-              </View>
+              <TouchableOpacity
+                style={styles.cardClickArea}
+                activeOpacity={0.7}
+                onPress={() =>
+                  router.push({
+                    pathname: "/treinos/[id]",
+                    params: { id: item.id },
+                  })
+                }
+              >
+                <View style={styles.cardIconBox}>
+                  <Ionicons name="barbell-outline" size={18} color="#0284C7" />
+                </View>
+                <View style={styles.cardInfo}>
+                  <Text style={styles.cardTitle} numberOfLines={1}>
+                    {item.nome}
+                  </Text>
+                  <Text style={styles.cardHint}>Toque para ver detalhes</Text>
+                </View>
+              </TouchableOpacity>
+
               <View style={styles.cardActions}>
                 <TouchableOpacity
                   style={styles.actionButtonEdit}
-                  onPress={(e) => {
-                    e.stopPropagation();
+                  onPress={() =>
                     router.push({
                       pathname: "/treinos/novo",
                       params: { id: item.id },
-                    });
-                  }}
+                    })
+                  }
                   activeOpacity={0.7}
                   accessibilityLabel="Editar treino"
                 >
@@ -326,10 +345,7 @@ export default function TreinosListScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.actionButtonDelete}
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    confirmarExclusao(item);
-                  }}
+                  onPress={() => confirmarExclusao(item)}
                   activeOpacity={0.7}
                   accessibilityLabel="Excluir treino"
                 >
@@ -338,7 +354,16 @@ export default function TreinosListScreen() {
               </View>
             </View>
 
-            <View style={styles.cardFooter}>
+            <TouchableOpacity
+              style={styles.cardFooter}
+              activeOpacity={0.7}
+              onPress={() =>
+                router.push({
+                  pathname: "/treinos/[id]",
+                  params: { id: item.id },
+                })
+              }
+            >
               <View style={styles.tag}>
                 <Ionicons name="calendar-outline" size={13} color="#475569" />
                 <Text style={styles.tagText}>{item.diaSemana}</Text>
@@ -355,8 +380,8 @@ export default function TreinosListScreen() {
                 color="#CBD5E1"
                 style={{ marginLeft: "auto" }}
               />
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         )}
       />
     </SafeAreaView>
@@ -590,7 +615,13 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 10,
+  },
+  cardClickArea: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
   },
   cardIconBox: {
     width: 36,
@@ -621,8 +652,8 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   actionButtonEdit: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
     borderRadius: 8,
     backgroundColor: "#F0F9FF",
     alignItems: "center",
@@ -631,8 +662,8 @@ const styles = StyleSheet.create({
     borderColor: "#BAE6FD",
   },
   actionButtonDelete: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
     borderRadius: 8,
     backgroundColor: "#FEF2F2",
     alignItems: "center",
