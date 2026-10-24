@@ -76,19 +76,26 @@ export default function TreinosScreen() {
     carregar();
   }
 
+  function alterar(campo: keyof ErrosTreino, setter: (valor: string) => void) {
+  return (valor: string) => {
+    setter(valor);
+    setErros(e => ({ ...e, [campo]: undefined }));
+  };
+}
+
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <TextInput
         placeholder="Nome do treino"
         value={nome}
-        onChangeText={setNome}
+        onChangeText={alterar("nome", setNome)}
       />
       {erros.nome && <Text style={{ color: "red" }}>{erros.nome}</Text>}
 
       <TextInput
         placeholder="Dia da semana"
         value={diaSemana}
-        onChangeText={setDiaSemana}
+        onChangeText={alterar("diaSemana", setDiaSemana)}
       />
       {erros.diaSemana && (
         <Text style={{ color: "red" }}>{erros.diaSemana}</Text>
@@ -98,7 +105,7 @@ export default function TreinosScreen() {
         placeholder="Duração (min)"
         keyboardType="numeric"
         value={duracaoMin}
-        onChangeText={setDuracaoMin}
+        onChangeText={alterar("duracaoMin", setDuracaoMin)}
       />
       {erros.duracaoMin && (
         <Text style={{ color: "red" }}>{erros.duracaoMin}</Text>

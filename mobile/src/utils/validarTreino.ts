@@ -25,15 +25,11 @@ export function validarTreino({
     erros.diaSemana = "O dia da semana é obrigatório.";
   }
 
-  const duracao = Number(duracaoMin);
-  if (
-    !duracaoMin.trim() ||
-    !Number.isInteger(duracao) ||
-    duracao < 1 ||
-    duracao > 300
-  ) {
-    erros.duracaoMin =
-      "A duração deve ser um número inteiro entre 1 e 300 minutos.";
+  const texto = duracaoMin.trim();
+  const duracao = Number(texto);
+
+  if (!/^\d+$/.test(texto) || duracao < 1 || duracao > 300) {
+    erros.duracaoMin = 'A duração deve ser um número inteiro entre 1 e 300';
   }
 
   return erros;
