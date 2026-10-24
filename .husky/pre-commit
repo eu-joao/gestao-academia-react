@@ -1,7 +1,0 @@
-status=0
-# Descomentar apenas quando o projeto do backend estiver pronto para rodar o lint-staged
-# Configuração do projeto: npm install -D eslint prettier lint-staged
-# (cd web && npx lint-staged) || status=1
-# (cd backend && npx lint-staged) || status=1
-(cd mobile && npx lint-staged) || status=1
-exit $status
