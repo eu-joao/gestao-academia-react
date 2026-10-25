@@ -9,6 +9,7 @@ import br.edu.ifpb.academia.dto.Mapper;
 import br.edu.ifpb.academia.dto.request.AlunoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
 import br.edu.ifpb.academia.entity.Aluno;
+import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
 import br.edu.ifpb.academia.enums.StatusAluno;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
@@ -79,10 +80,13 @@ public class AlunoService {
 	if (contratoRepository.existsByAlunoId(id)) {
 		throw new RegraDeNegocioException("Aluno possui contratos e nao pode ser excluido.");
 	}
+	if (treinoAtivoRepository.existsByAlunoIdAndStatusNot(id, StatusTreinoAtivo.ATIVO)) {
+		throw new RegraDeNegocioException("Aluno possui historico de treinos encerrados e nao pode ser excluido.");
+	}
 
-	treinoAtivoRepository.deleteByAlunoId(id);
+	treinoAtivoRepository.deleteByAlunoIdAndStatus(id, StatusTreinoAtivo.ATIVO);
 	repository.delete(aluno);
-}
+	}
 
 	public Aluno buscarEntidade(Long id) {
 		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno não encontrado com ID: " + id));
