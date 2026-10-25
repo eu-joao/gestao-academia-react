@@ -5,6 +5,7 @@ const KEY = "@academia:treinos ";
 export type Treino = {
   id: string;
   nome: string;
+  categoria?: string;
   diaSemana: string;
   duracaoMin: number;
 };
@@ -35,4 +36,9 @@ export async function atualizar(id: string, dados: TreinoInput): Promise<void> {
 export async function remover(id: string): Promise<void> {
   const lista = await listar();
   await salvar(lista.filter((t) => t.id !== id));
+}
+
+export async function buscarPorId(id: string): Promise<Treino | undefined> {
+  const lista = await listar();
+  return lista.find((t) => t.id === id);
 }
