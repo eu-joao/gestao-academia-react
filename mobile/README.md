@@ -21,6 +21,13 @@ O app mobile é implementado com Expo, React Native, TypeScript e Expo Router. A
 - **Navegação Declarativa (RF05):** Estrutura de rotas organizada com Expo Router.
 - **Feedback ao Usuário (RF06):** Banners e mensagens de confirmação para ações de cadastro, edição e exclusão.
 
+## Capturas de Tela
+
+|                                         Tela Inicial                                          |                                 Listagem Inteligente & Estatísticas                                  |                                                Cadastro & Edição de Treino                                                 |                                          Detalhes da Sessão                                          |
+| :-------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
+| <img src="../docs/capturas-de-tela/tela_inicial.png" width="200" alt="Tela Inicial do App" /> | <img src="../docs/capturas-de-tela/tela_de_treinos.png" width="200" alt="Listagem e Estatísticas" /> | <img src="../docs/capturas-de-tela/tela_criacao_edicao_de_treino.png" width="200" alt="Formulário de Cadastro e Edição" /> | <img src="../docs/capturas-de-tela/tela_detalhes_treino.png" width="200" alt="Detalhes do Treino" /> |
+|            **Boas-vindas e Status**<br>Contador de treinos e atalhos rápidos (`/`)            |     **Painel Principal**<br>Estatísticas, busca em tempo real, filtros e ordenação (`/treinos`)      |                     **Formulário com Validação**<br>Chips rápidos e validação inline (`/treinos/novo`)                     |        **Ficha do Treino**<br>Orientações físicas, edição e exclusão segura (`/treinos/[id]`)        |
+
 ## Tecnologias
 
 - Expo SDK 57
