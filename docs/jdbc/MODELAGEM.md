@@ -24,8 +24,8 @@ de treino dele.
 | telefone            | varchar(20)        | sim         | usado nas notificações via WhatsApp (RN07)                             |
 | email               | varchar(150)       | sim         | único; o formato é validado na aplicação (o banco garante só a unicidade) |
 | data_nascimento     | date               | sim         | a idade é calculada a partir dela                                      |
-| peso                | numeric(5,2)       | sim         | em quilos, maior que 0                                                 |
-| altura              | smallint           | sim         | em centímetros, maior que 0                                            |
+| peso                | numeric(6,2)       | sim         | em quilos, maior que 0                                                 |
+| altura              | numeric(4,2)        | sim        | em mestros, maior que 0                                                |
 | nivel_experiencia   | enum               | sim         | Iniciante, Intermediário ou Avançado                                   |
 | frequencia_semanal  | smallint           | sim         | 3, 4, 5 ou 6 dias                                                      |
 | status              | varchar(10)        | sim         | ativo ou inativo, padrão ativo; mantido pelo sistema                   |
@@ -49,6 +49,30 @@ CREATE TABLE aluno (
   status             varchar(10)  NOT NULL DEFAULT 'ativo' CHECK (status IN ('ativo', 'inativo'))
 );
 ```
+
+## Implementação no Spring (esquema real)
+
+O script SQL acima é o modelo de referência. O esquema real no PostgreSQL é
+gerado pelo Hibernate (`ddl-auto=update`) a partir de `Aluno.java`:
+
+| Campo              | Tipo gerado           | Observação                                         |
+|--------------------|-----------------------|----------------------------------------------------|
+| id                 | bigint                | chave primária, gerada                             |
+| nome               | varchar(255)          | obrigatório                                        |
+| cpf                | varchar(255)          | obrigatório, único; formato validado na aplicação  |
+| telefone           | varchar(255)          | obrigatório                                        |
+| email              | varchar(255)          | obrigatório, único                                 |
+| data_nascimento    | date                  | obrigatório                                        |
+| peso               | numeric(6,2)          | em quilos                                          |
+| altura             | numeric(4,2)          | em **metros** (ex.: 1,75)                          |
+| nivel_experiencia  | varchar(255) + CHECK  | INICIANTE, INTERMEDIARIO ou AVANCADO               |
+| frequencia_semanal | integer               | 3 a 6, validado na aplicação                       |
+| status             | varchar(255) + CHECK  | ATIVO ou INATIVO (padrão ATIVO)                    |
+
+Diferenças em relação ao script de referência: `id` é bigint, os textos não
+têm limite menor que 255, a altura é em metros e os enums são texto com `CHECK`
+(valores em maiúsculas e sem acento). Não há `CHECK` de CPF nem de frequência no
+banco; essas regras ficam no `AlunoRequest`.
 
 ## 4. Categorização, consulta e filtragem
 

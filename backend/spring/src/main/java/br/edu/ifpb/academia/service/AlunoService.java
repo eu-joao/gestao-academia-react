@@ -9,10 +9,13 @@ import br.edu.ifpb.academia.dto.Mapper;
 import br.edu.ifpb.academia.dto.request.AlunoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
 import br.edu.ifpb.academia.entity.Aluno;
+import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
 import br.edu.ifpb.academia.enums.StatusAluno;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.repository.AlunoRepository;
+import br.edu.ifpb.academia.repository.ContratoRepository;
+import br.edu.ifpb.academia.repository.TreinoAtivoRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,6 +25,8 @@ public class AlunoService {
 
 	private final AlunoRepository repository;
 	private final TreinoAtivoService treinoAtivoService;
+	private final ContratoRepository contratoRepository;
+	private final TreinoAtivoRepository treinoAtivoRepository;
 
 
 	@Transactional(readOnly = true)
@@ -70,7 +75,17 @@ public class AlunoService {
 
 	@Transactional
 	public void excluir(Long id) {
-		repository.delete(buscarEntidade(id));
+	Aluno aluno = buscarEntidade(id);
+
+	if (contratoRepository.existsByAlunoId(id)) {
+		throw new RegraDeNegocioException("Aluno possui contratos e nao pode ser excluido.");
+	}
+	if (treinoAtivoRepository.existsByAlunoIdAndStatusNot(id, StatusTreinoAtivo.ATIVO)) {
+		throw new RegraDeNegocioException("Aluno possui historico de treinos encerrados e nao pode ser excluido.");
+	}
+
+	treinoAtivoRepository.deleteByAlunoIdAndStatus(id, StatusTreinoAtivo.ATIVO);
+	repository.delete(aluno);
 	}
 
 	public Aluno buscarEntidade(Long id) {

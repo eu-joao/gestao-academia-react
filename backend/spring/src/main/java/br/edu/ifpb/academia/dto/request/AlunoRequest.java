@@ -12,8 +12,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Pattern;
 
-public record AlunoRequest(@NotBlank String nome, @NotBlank String cpf, @NotBlank String telefone,
+public record AlunoRequest(@NotBlank String nome, @NotBlank(message = "CPF é obrigatório")
+        @Pattern(
+                regexp = "\\d{11}",
+                message = "CPF deve conter exatamente 11 números"
+        )
+        String cpf, 
+		@NotBlank String telefone,
 		@NotBlank @Email String email, @NotNull @Past LocalDate dataNascimento, @NotNull @Positive BigDecimal peso,
 		@NotNull @Positive BigDecimal altura, @NotNull NivelExperiencia nivelExperiencia,
 		@NotNull @Min(3) @Max(6) Integer frequenciaSemanal, StatusAluno status) {

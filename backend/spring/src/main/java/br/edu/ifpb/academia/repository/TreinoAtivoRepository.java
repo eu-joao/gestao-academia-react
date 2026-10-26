@@ -11,4 +11,9 @@ import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
 public interface TreinoAtivoRepository extends JpaRepository<TreinoAtivo, Long> {
 	Optional<TreinoAtivo> findByAlunoIdAndStatus(Long alunoId, StatusTreinoAtivo status);
 	List<TreinoAtivo> findByAlunoIdOrderByDataInicioDesc(Long alunoId);
+
+	void deleteByAlunoIdAndStatus(Long alunoId, StatusTreinoAtivo status);
+
+	boolean existsByAlunoIdAndStatusNot(Long alunoId, StatusTreinoAtivo status);
+
 }

@@ -10,4 +10,7 @@ import br.edu.ifpb.academia.enums.StatusContrato;
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 	boolean existsByAlunoIdAndStatus(Long alunoId, StatusContrato status);
 	Optional<Contrato> findFirstByAlunoIdAndStatusOrderByDataInicioDesc(Long alunoId, StatusContrato status);
+
+	boolean existsByAlunoId(Long alunoId);
+
 }
