@@ -83,7 +83,7 @@ export default function IndexScreen() {
           <View style={styles.actionsContainer}>
             <TouchableOpacity
               style={styles.primaryButton}
-              onPress={() => router.push("/treinos")}
+              onPress={() => router.push({ pathname: "/treinos" })}
               activeOpacity={0.85}
             >
               <Text style={styles.primaryButtonText}>Ver Meus Treinos</Text>
@@ -96,7 +96,7 @@ export default function IndexScreen() {
 
             <TouchableOpacity
               style={styles.secondaryButton}
-              onPress={() => router.push("/treinos/novo")}
+              onPress={() => router.push({ pathname: "/treinos/novo" })}
               activeOpacity={0.8}
             >
               <Ionicons name="add-outline" size={18} color="#FFFFFF" />

@@ -95,7 +95,7 @@ export default function TreinoFormScreen() {
 
       setSucesso(true);
       setTimeout(() => {
-        router.replace("/treinos");
+        router.replace({ pathname: "/treinos" });
       }, 700);
     } catch {
       setErros({

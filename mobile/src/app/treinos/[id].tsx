@@ -62,7 +62,7 @@ export default function TreinoDetalheScreen() {
   async function executarExclusao() {
     if (!id) return;
     await remover(id);
-    router.replace("/treinos");
+    router.replace({ pathname: "/treinos" });
   }
 
   if (carregando) {
@@ -82,7 +82,7 @@ export default function TreinoDetalheScreen() {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => router.replace("/treinos")}
+            onPress={() => router.replace({ pathname: "/treinos" })}
             activeOpacity={0.7}
           >
             <Ionicons name="arrow-back-outline" size={20} color="#0F172A" />
@@ -99,7 +99,7 @@ export default function TreinoDetalheScreen() {
           </Text>
           <TouchableOpacity
             style={styles.backToListButton}
-            onPress={() => router.replace("/treinos")}
+            onPress={() => router.replace({ pathname: "/treinos" })}
             activeOpacity={0.8}
           >
             <Text style={styles.backToListButtonText}>Voltar para Treinos</Text>
@@ -117,7 +117,7 @@ export default function TreinoDetalheScreen() {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => router.replace("/treinos")}
+          onPress={() => router.replace({ pathname: "/treinos" })}
           activeOpacity={0.7}
           accessibilityLabel="Voltar"
         >

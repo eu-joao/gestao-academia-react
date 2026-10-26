@@ -203,7 +203,7 @@ export default function TreinosListScreen() {
         </Text>
         <TouchableOpacity
           style={styles.emptyAddButton}
-          onPress={() => router.push("/treinos/novo")}
+          onPress={() => router.push({ pathname: "/treinos/novo" })}
           activeOpacity={0.8}
         >
           <Ionicons name="add" size={18} color="#FFFFFF" />
@@ -232,7 +232,7 @@ export default function TreinosListScreen() {
           <Text style={styles.topBarTitle}>Meus Treinos</Text>
           <TouchableOpacity
             style={styles.addButton}
-            onPress={() => router.push("/treinos/novo")}
+            onPress={() => router.push({ pathname: "/treinos/novo" })}
             activeOpacity={0.8}
             accessibilityLabel="Novo treino"
           >
