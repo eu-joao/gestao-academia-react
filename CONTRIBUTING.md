@@ -54,4 +54,4 @@ mise run test:backend
 mise run build
 ```
 
-Essas tarefas são auxiliares; não substituem nem alteram o resultado obrigatório da CI. O backend ainda não possui testes automatizados, então o Maven `verify` valida compilação e empacotamento, mas não representa cobertura de testes. Os detalhes de cada módulo estão em [mobile/CONTRIBUTING.md](./mobile/CONTRIBUTING.md) e [backend/CONTRIBUTING.md](./backend/spring/CONTRIBUTING.md).
+Essas tarefas são auxiliares; não substituem nem alteram o resultado obrigatório da CI. A suíte automatizada do backend Spring cobre o serviço e o controller de alunos; os demais recursos ainda não têm cobertura automatizada. O Maven `verify` também valida compilação e empacotamento. Os detalhes de cada módulo estão em [mobile/CONTRIBUTING.md](./mobile/CONTRIBUTING.md) e [backend/CONTRIBUTING.md](./backend/spring/CONTRIBUTING.md).

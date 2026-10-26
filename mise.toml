@@ -79,7 +79,7 @@ description = "Roda os testes de todos os módulos que têm testes"
 depends = ["test:*"]
 
 [tasks."test:backend"]
-description = "Testes do backend (o backend ainda não tem testes)"
+description = "Executa os testes automatizados do backend Spring"
 dir = "{{config_root}}/backend/spring"
 env._.file = "{{config_root}}/backend/spring/.env"
 run = "./mvnw test"
