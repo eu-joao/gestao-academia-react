@@ -19,7 +19,7 @@ Execute a API a partir da raiz com `mise run dev:backend`. Para usar o Maven Wra
 
 ## Verificações
 
-A CI executa `./mvnw --batch-mode --no-transfer-progress verify` com Java 17 quando há alterações no backend Spring. O projeto JDBC em `backend/jdbc/` também executa o Maven Wrapper quando seus arquivos são alterados. Ainda não há testes automatizados no backend; por isso, `verify` valida principalmente compilação e empacotamento. Para executar as verificações localmente, use `mise run test:backend` e `mise run build:backend` como apoio. A CI remota é a validação obrigatória.
+A CI executa `./mvnw --batch-mode --no-transfer-progress verify` com Java 17 quando há alterações no backend Spring. Ainda não há testes automatizados no backend; por isso, `verify` valida principalmente compilação e empacotamento. Para executar as verificações localmente, use `mise run test:backend` e `mise run build:backend` como apoio. A CI remota é a validação obrigatória.
 
 ## Regras gerais
 

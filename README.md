@@ -12,6 +12,15 @@ Este repositório reúne os três módulos do projeto: a API REST, o site e o ap
 | `web/`            | Site       | Next.js, React e TypeScript       | [README do web](./web/README.md)                |
 | `mobile/`         | Aplicativo | Expo, React Native e TypeScript   | [README do mobile](./mobile/README.md)          |
 
+## Documentação do domínio
+
+Os documentos de domínio do projeto estão em [`docs/jdbc/`](./docs/jdbc/):
+
+- [Minimundo](./docs/jdbc/MINIMUNDO_V4.md)
+- [Requisitos](./docs/jdbc/REQUISITOS.md)
+- [Modelagem da entidade principal](./docs/jdbc/MODELAGEM.md)
+- [Diagramas conceitual e lógico](./docs/jdbc/DIAGRAMAS.md), com links para os modelos interativos e imagens locais
+
 ## Estrutura
 
 ```text
@@ -19,8 +28,9 @@ Este repositório reúne os três módulos do projeto: a API REST, o site e o ap
 ├── .github/                  # Modelos de issues e pull requests, e CI
 ├── .husky/                   # Hooks de commit
 ├── backend/                  # API Spring Boot
-├── docs/
-│   └── capturas-de-tela/     # Capturas de tela do aplicativo
+├── docs/                     # Documentação do domínio e capturas de tela
+│   ├── capturas-de-tela/     # Capturas de tela do aplicativo
+│   └── jdbc/                 # Minimundo, requisitos, modelagem e diagramas
 ├── mobile/                   # Aplicativo Expo
 ├── web/                      # Site Next.js
 ├── mise.toml                 # Versões do Node.js e do Java, e tarefas do projeto
