@@ -2,31 +2,9 @@
 
 Aplicativo multiplataforma do projeto Gestão Academia para Android, iOS e web.
 
-## Documentação do Projeto
-
-A especificação completa do aplicativo, modelo de dados, justificativa técnica da persistência e roteiro de gravação do vídeo avaliativo estão disponíveis em:
-
-- [Documentação do Projeto (1 a 2 páginas)](../docs/mobile/documentacao-projeto.md)
-
 ## Sobre
 
 O app mobile é implementado com Expo, React Native, TypeScript e Expo Router. As telas e a navegação ficam no diretório `src/app/`.
-
-### Funcionalidades Implementadas
-
-- **CRUD Completo de Treinos (RF01):** Criação, listagem, visualização de detalhes, edição e exclusão de treinos.
-- **Persistência Local (RF02):** Armazenamento permanente offline no dispositivo utilizando `AsyncStorage`.
-- **Listagem Inteligente e Estatísticas (RF03 + Bônus):** Busca por nome, filtro por dia da semana, ordenação (duração/nome) e estatísticas simples (sessões, tempo total e média por sessão).
-- **Validação de Formulários (RF04):** Mensagens inline de erro impedindo inserção de dados incompletos ou inválidos.
-- **Navegação Declarativa (RF05):** Estrutura de rotas organizada com Expo Router.
-- **Feedback ao Usuário (RF06):** Banners e mensagens de confirmação para ações de cadastro, edição e exclusão.
-
-## Capturas de Tela
-
-|                                         Tela Inicial                                          |                                 Listagem Inteligente & Estatísticas                                  |                                                Cadastro & Edição de Treino                                                 |                                          Detalhes da Sessão                                          |
-| :-------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
-| <img src="../docs/capturas-de-tela/tela_inicial.png" width="200" alt="Tela Inicial do App" /> | <img src="../docs/capturas-de-tela/tela_de_treinos.png" width="200" alt="Listagem e Estatísticas" /> | <img src="../docs/capturas-de-tela/tela_criacao_edicao_de_treino.png" width="200" alt="Formulário de Cadastro e Edição" /> | <img src="../docs/capturas-de-tela/tela_detalhes_treino.png" width="200" alt="Detalhes do Treino" /> |
-|            **Boas-vindas e Status**<br>Contador de treinos e atalhos rápidos (`/`)            |     **Painel Principal**<br>Estatísticas, busca em tempo real, filtros e ordenação (`/treinos`)      |                     **Formulário com Validação**<br>Chips rápidos e validação inline (`/treinos/novo`)                     |        **Ficha do Treino**<br>Orientações físicas, edição e exclusão segura (`/treinos/[id]`)        |
 
 ## Tecnologias
 
@@ -35,17 +13,13 @@ O app mobile é implementado com Expo, React Native, TypeScript e Expo Router. A
 - React 19
 - TypeScript
 - Expo Router
-- AsyncStorage
 
 ## Estrutura
 
 ```text
 mobile/
 ├── assets/       # Imagens e recursos visuais
-├── src/
-│   ├── app/      # Rotas e telas do aplicativo (Expo Router)
-│   ├── services/ # Camada de persistência (AsyncStorage)
-│   └── utils/    # Validação e helpers
+├── src/app/      # Rotas e telas do aplicativo
 ├── app.json      # Configuração do Expo
 └── package.json  # Dependências e comandos do app
 ```
