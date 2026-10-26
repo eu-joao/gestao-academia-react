@@ -42,7 +42,7 @@ A CI do GitHub Actions é a validação obrigatória e a referência final para 
 
 - **Mobile:** Prettier, ESLint, TypeScript e Expo Doctor.
 - **Web:** ESLint, geração dos tipos do Next.js, TypeScript e build de produção.
-- **Backend Spring e JDBC:** Maven Wrapper com `verify`, usando Java 17.
+- **Backend Spring:** Maven Wrapper com `verify`, usando Java 17.
 
 Alterações em `.github/workflows/` executam todas as verificações dos módulos. Um job ignorado porque seu módulo não foi alterado é considerado válido pelo job final da CI; isso evita deixar verificações obrigatórias pendentes em PRs de documentação ou de outro módulo.
 
