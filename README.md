@@ -6,11 +6,11 @@ Sistema multiplataforma para apoiar a gestão de uma academia.
 
 Este repositório reúne os três módulos do projeto: a API REST, o site e o aplicativo mobile. As ferramentas compartilhadas, como os hooks de commit, ficam na raiz.
 
-| Módulo            | O que é    | Tecnologias                       | Documentação                                    |
-| ----------------- | ---------- | --------------------------------- | ----------------------------------------------- |
-| `backend/spring/` | API REST   | Spring Boot, Java 17 e PostgreSQL | [README do backend](./backend/spring/README.md) |
-| `web/`            | Site       | Next.js, React e TypeScript       | [README do web](./web/README.md)                |
-| `mobile/`         | Aplicativo | Expo, React Native e TypeScript   | [README do mobile](./mobile/README.md)          |
+| Módulo | O que é | Tecnologias | Documentação |
+| --- | --- | --- | --- |
+| `backend/spring/` | API REST | Spring Boot, Java 17 e PostgreSQL | [README do backend](./backend/spring/README.md) |
+| `web/` | Site | Next.js, React e TypeScript | [README do web](./web/README.md) |
+| `mobile/` | Aplicativo | Expo, React Native e TypeScript | [README do mobile](./mobile/README.md) |
 
 ## Documentação do domínio
 
@@ -80,19 +80,15 @@ mise run dev:mobile
 
 Os nomes seguem o padrão `mise run <ação>:<módulo>`. Sem o módulo, a tarefa roda em todos os que têm aquela ação. Para ver a lista completa, use `mise tasks`.
 
-| Comando                 | O que faz                                                                  |
-| ----------------------- | -------------------------------------------------------------------------- |
-| `mise run lint`         | Roda Prettier, ESLint e TypeScript no mobile, e ESLint e TypeScript no web |
-| `mise run test:backend` | Roda os testes do backend (ainda não há testes)                            |
-| `mise run build`        | Empacota o backend e gera o build do web                                   |
+| Comando | O que faz |
+| --- | --- |
+| `mise run lint` | Roda Prettier, ESLint e TypeScript no mobile, e ESLint e TypeScript no web |
+| `mise run test:backend` | Roda os testes do backend (ainda não há testes) |
+| `mise run build` | Empacota o backend e gera o build do web |
 
 ## Capturas de tela
 
 As capturas de tela do aplicativo ficam organizadas em [`docs/capturas-de-tela/`](./docs/capturas-de-tela/).
-
-|                                         Tela Inicial                                         |                                 Listagem Inteligente & Estatísticas                                 |                                                     Cadastro & Edição                                                     |                                         Detalhes da Sessão                                          |
-| :------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
-| <img src="./docs/capturas-de-tela/tela_inicial.png" width="180" alt="Tela Inicial do App" /> | <img src="./docs/capturas-de-tela/tela_de_treinos.png" width="180" alt="Listagem e Estatísticas" /> | <img src="./docs/capturas-de-tela/tela_criacao_edicao_de_treino.png" width="180" alt="Formulário de Cadastro e Edição" /> | <img src="./docs/capturas-de-tela/tela_detalhes_treino.png" width="180" alt="Detalhes do Treino" /> |
 
 ## Protótipo mobile
 
@@ -105,7 +101,6 @@ Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações gerais de co
 ## Orientações para agentes
 
 As regras gerais para trabalhar no monorepo estão em [`docs/agent-guidelines.md`](./docs/agent-guidelines.md). As instruções operacionais para agentes ficam em [`AGENTS.md`](./AGENTS.md).
-
 ## Skills dos agentes
 
 As skills compartilhadas ficam em [`.agents/skills/`](./.agents/skills/). O Gemini CLI e o Mistral Vibe descobrem as skills nesse caminho; cada skill tem sua própria pasta com um arquivo `SKILL.md`.
