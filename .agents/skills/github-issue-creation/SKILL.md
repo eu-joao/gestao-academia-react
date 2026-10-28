@@ -1,6 +1,6 @@
 ---
 name: github-issue-creation
-description: "Cria ou redige issues do GitHub claras e prontas para execução, seguindo os templates e convenções do repositório. Use quando o usuário pedir para criar, abrir, escrever ou melhorar uma issue."
+description: Create or draft clear GitHub issues using the repository's issue templates, conventions, and known labels. Use whenever the user asks to create, open, write, or improve an issue.
 ---
 
 # Criação de issues no GitHub
@@ -10,7 +10,7 @@ Crie issues claras e prontas para alguém executar. Siga primeiro as convençõe
 ## 1. Entender o pedido e o modo de trabalho
 
 - Use o contexto da conversa e do repositório atual. Identifique se é bug, funcionalidade, tarefa técnica ou outro tipo de issue.
-- “Crie/abra uma issue” autoriza publicar no GitHub. “Escreva/redija uma issue” sem pedido para abrir significa entregar apenas o rascunho.
+- "Crie/abra uma issue" autoriza publicar no GitHub. "Escreva/redija uma issue" sem pedido para abrir significa entregar apenas o rascunho.
 - Preserve o escopo solicitado. Não transforme uma ideia em requisitos ou compromissos que o usuário não mencionou.
 - Se uma dúvida puder mudar o escopo ou o comportamento esperado, pergunte antes de publicar. Para detalhes menores, use uma suposição razoável e sinalize-a no rascunho se necessário.
 
