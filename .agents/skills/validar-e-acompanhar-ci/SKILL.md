@@ -9,8 +9,10 @@ Use esta skill antes de concluir mudanças de código neste repositório e ao ac
 
 ## Escolher onde validar
 
-1. Identifique os arquivos e áreas afetados pelo diff. Consulte `AGENTS.md`, `CONTRIBUTING.md`, os guias da área e os scripts de pacote ou tarefas para descobrir as verificações documentadas. Confira também `.github/workflows/` para saber quais verificações a CI executa.
-2. Quando houver CI relevante para as mudanças, prefira executar essas verificações na CI e não repita localmente os mesmos testes ou builds apenas por rotina. Isso evita consumir recursos da máquina local sem acrescentar evidência.
+Princípio: a CI deste repositório é remota (`.github/workflows/ci.yml`). O padrão é **deixar a CI rodar e acompanhá-la**, não reproduzir o pipeline na sua máquina. Só execute algo localmente quando houver motivo concreto (CI ausente ou indisponível, para reproduzir/investigar uma falha, ou a pedido explícito do usuário).
+
+1. Identifique os arquivos e áreas afetados pelo diff. Consulte `AGENTS.md`, `CONTRIBUTING.md`, os guias da área e os scripts de pacote ou tarefas para descobrir as verificações documentadas. Confira `.github/workflows/ci.yml` para saber quais verificações a CI já executa.
+2. Quando houver CI relevante para as mudanças, **prefira a CI e não repita localmente** os mesmos testes ou builds apenas por rotina. Em particular, não rode localmente o que a CI já executa — `lint`, `tsc --noEmit`, `prettier --check`, `next typegen`/`build`, `expo-doctor` ou `mvnw verify`. Isso consome recursos da máquina local sem acrescentar evidência. Acione/espere a CI e leia o resultado dela.
 3. Execute verificações localmente quando não houver CI relevante, quando a CI estiver indisponível ou não puder ser acionada, quando for necessário reproduzir ou investigar uma falha, ou quando o usuário pedir explicitamente. Escolha comandos documentados e mantenha a validação proporcional ao escopo.
 4. Se uma verificação falhar, examine a saída e determine se ela aponta para a mudança, para um problema preexistente ou para um bloqueio do ambiente. Investigue antes de relatar a tarefa como concluída.
 5. Registre os comandos locais executados e seus resultados. Para a CI, registre os checks e seus estados, incluindo links ou identificadores de execução quando disponíveis. Identifique explicitamente verificações não executadas e o motivo; não apresente itens pendentes ou sem evidência como aprovados.
