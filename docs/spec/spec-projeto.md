@@ -23,6 +23,7 @@
 - Execute mise run test:backend para validar testes do backend
 - Execute mise run build para validar build de produção
 - Respeite as verificações da CI do GitHub Actions
+- Siga o fluxo de CI/CD descrito em docs/spec/spec-ci-cd.md
 - Não adicione hooks de commit locais - use as tarefas do mise
 
 ## Configuração Mobile
