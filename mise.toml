@@ -10,7 +10,7 @@ java = "temurin-17"
 #
 # Padrão dos nomes: mise run <ação>:<módulo>
 #   ações:   install, dev, lint, test, build
-#   módulos: backend, web, mobile
+#   módulos: root, backend, web, mobile
 #
 # Sem o módulo, a tarefa roda em todos os módulos que têm a ação:
 #   mise run install   mise run lint   mise run test   mise run build
@@ -22,8 +22,13 @@ java = "temurin-17"
 # --- install ---------------------------------------------------------
 
 [tasks.install]
-description = "Instala as dependências do mobile e do web"
-depends = ["install:mobile", "install:web"]
+description = "Instala as dependências da raiz, do mobile, do web e do backend"
+depends = ["install:root", "install:mobile", "install:web", "install:backend"]
+
+[tasks."install:root"]
+description = "Instala as ferramentas do repositório"
+dir = "{{config_root}}"
+run = "npm ci"
 
 [tasks."install:mobile"]
 description = "Instala as dependências do mobile"
@@ -34,6 +39,11 @@ run = "npm ci"
 description = "Instala as dependências do web"
 dir = "{{config_root}}/web"
 run = "npm ci"
+
+[tasks."install:backend"]
+description = "Baixa as dependências do backend Spring"
+dir = "{{config_root}}/backend/spring"
+run = "./mvnw --batch-mode --no-transfer-progress dependency:go-offline"
 
 # --- dev (servidores de desenvolvimento) -----------------------------
 
@@ -50,9 +60,9 @@ dir = "{{config_root}}/web"
 run = "npm run dev"
 
 [tasks."dev:mobile"]
-description = "Sobe o Expo (escolha Android, iOS ou navegador no terminal)"
+description = "Sobe o Expo pela rede local (escolha Android, iOS ou navegador no terminal)"
 dir = "{{config_root}}/mobile"
-run = "npm start"
+run = "npx expo start"
 
 # --- lint (estilo e tipos) -------------------------------------------
 

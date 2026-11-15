@@ -52,7 +52,7 @@ mise install
 mise run install
 ```
 
-`mise install` instala a versão do Node.js declarada no `mise.toml`. `mise run install` instala as dependências da raiz, do app e do web.
+`mise install` instala a versão do Node.js declarada no `mise.toml`. `mise run install` instala as dependências da raiz, do app e do web, e baixa as dependências Maven do backend.
 
 Depois, inicie o Expo, também na raiz do repositório:
 
@@ -60,9 +60,19 @@ Depois, inicie o Expo, também na raiz do repositório:
 mise run dev:mobile
 ```
 
-No terminal do Expo, escolha Android, iOS ou web. Também é possível executar comandos específicos diretamente no diretório `mobile/`:
+Por padrão, o Expo usa a rede LAN. Se o celular não conseguir se conectar, tente o túnel:
 
-- `npm start` inicia o servidor de desenvolvimento do Expo.
+```bash
+mise exec --cd mobile -- npx expo start --tunnel
+```
+
+O túnel pode solicitar login em uma conta Expo.
+
+No terminal do Expo, escolha Android, iOS ou web.
+
+Também é possível executar comandos específicos diretamente no diretório `mobile/`:
+
+- `npm start` inicia o servidor do Expo pela rede LAN.
 - `npm run android` inicia para Android.
 - `npm run ios` inicia para iOS.
 - `npm run web` inicia para web.

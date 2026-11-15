@@ -7,8 +7,8 @@ O repositório usa Node 24 e npm. O app Expo e seu manifesto de pacotes ficam em
 A partir da raiz do repositório, os atalhos definidos em `mise.toml` são:
 
 ```bash
-mise run install       # executa npm ci na raiz, em mobile/ e em web/
-mise run dev:mobile    # inicia o Expo
+mise run install       # instala raiz, mobile, web e dependências Maven do backend
+mise run dev:mobile    # inicia o Expo pela rede LAN
 mise run lint:mobile   # executa Prettier, ESLint e as verificações de TypeScript do app
 ```
 

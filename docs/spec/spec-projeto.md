@@ -25,6 +25,16 @@
 - Respeite as verificações da CI do GitHub Actions
 - Não adicione hooks de commit locais - use as tarefas do mise
 
+## Configuração Mobile
+
+- Use Expo SDK 58 para desenvolvimento mobile
+- Mantenha todas as dependências do Expo na versão ~58.0.0
+- Use expo-status-bar com a propriedade `style` (e não `barStyle`) para configurar a aparência da status bar
+- Use expo-system-ui para configurar a cor de fundo da status bar
+- Execute `npx expo-doctor` para verificar compatibilidade de dependências
+- Execute `npx expo lint` para verificar linting
+- Execute `npx tsc --noEmit` para verificar tipos TypeScript
+
 ## Documentação
 
 - Mantenha a documentação de spec atualizada com as funcionalidades implementadas
