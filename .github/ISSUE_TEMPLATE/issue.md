@@ -17,5 +17,11 @@ about: Relate um problema, uma melhoria ou uma tarefa
 - [ ] CI/CD
 - [ ] Outro
 
+## Critérios de aceite
+<!-- Descreva como saberemos que a issue foi concluída. Preencha quando aplicável. -->
+
+## Validação
+<!-- Informe os testes ou verificações relevantes. Preencha quando aplicável. -->
+
 ## Anexos
 <!-- Inclua arquivos ou capturas de tela que ajudem a entender a issue. -->
