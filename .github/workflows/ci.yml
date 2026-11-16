@@ -87,9 +87,17 @@ jobs:
       - run: npx prettier --check .
       - run: npm run lint
       - run: npx tsc --noEmit
-      - run: npx expo-doctor@1.20.4
+      - name: Validar compatibilidade do Expo SDK
+        id: expo-doctor
+        continue-on-error: true
+        run: npx expo-doctor@1.20.4
       - name: Gerar bundles de produção (iOS, Android e Web)
         run: npx expo export --platform all --output-dir /tmp/expo-export
+      - name: Impedir integração se o Expo Doctor falhou
+        if: steps.expo-doctor.outcome == 'failure'
+        run: |
+          echo "O Expo Doctor encontrou incompatibilidades com a matriz do SDK."
+          exit 1
 
   web:
     name: Web — Next.js
