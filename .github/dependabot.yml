@@ -1,29 +1,50 @@
 version: 2
 updates:
-  # - package-ecosystem: "npm"
-  #   directory: "/backend/spring"
-  #   schedule:
-  #     interval: "weekly"
-  #   groups:
-  #     minor-and-patch:
-  #       update-types: ["minor", "patch"]
-
-  # - package-ecosystem: "npm"
-  #   directory: "/web"
-  #   schedule:
-  #     interval: "weekly"
-  #   groups:
-  #     minor-and-patch:
-  #       update-types: ["minor", "patch"]
-
+  # Expo SDK, React Native e bibliotecas nativas precisam permanecer compatíveis.
+  # expo e react-native ficam sob atualização coordenada/manual do SDK.
   - package-ecosystem: "npm"
     directory: "/mobile"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
     ignore:
       - dependency-name: "expo"
       - dependency-name: "react-native"
     groups:
       minor-and-patch:
+        update-types: ["minor", "patch"]
+        # Mantém dependências ligadas à matriz do Expo fora do grupo genérico.
+        # Elas geram PRs individuais e continuam sujeitas ao expo-doctor na CI.
+        exclude-patterns:
+          - "expo*"
+          - "@expo/*"
+          - "react-native*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      development-minor-and-patch:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "maven"
+    directory: "/backend/spring"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
+    groups:
+      development-minor-and-patch:
+        dependency-type: "development"
         update-types: ["minor", "patch"]
