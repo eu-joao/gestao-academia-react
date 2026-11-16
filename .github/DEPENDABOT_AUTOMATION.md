@@ -19,13 +19,12 @@ A exportação Expo é uma validação de bundle, não substitui testes automati
 
 O workflow `.github/workflows/dependabot-auto-merge.yml` apenas solicita auto-merge quando **todas** estas condições forem verdadeiras:
 
-1. O autor do PR é `dependabot[bot]` e o repositório é `eu-joao/gestao-academia-react`.
+1. O autor do PR é `dependabot[bot]`, o destino é `main` e o repositório é `eu-joao/gestao-academia-react`.
 2. A variável de repositório `DEPENDABOT_AUTO_MERGE_ENABLED` está definida como `true`.
 3. O ecossistema é npm e o diretório é `/web`.
 4. A dependência é direta e de desenvolvimento.
 5. A atualização é patch.
-6. O PR atualiza exatamente uma dependência desta allowlist:
-   - `prettier`
+6. O PR atualiza exatamente uma dependência desta allowlist, atualmente presente em `web/package.json`:
    - `eslint`
    - `typescript`
    - `@types/node`
@@ -67,6 +66,6 @@ O workflow de auto-merge usa `pull_request_target` para obter permissão de escr
 - Não faz checkout da branch do PR.
 - Não executa scripts, comandos ou artefatos fornecidos pelo PR.
 - Obtém apenas os metadados da atualização com `dependabot/fetch-metadata`, fixado em SHA.
-- Restringe a execução ao autor Dependabot, ao repositório e à allowlist descrita acima.
+- Restringe a execução ao autor Dependabot, ao destino `main`, ao repositório e à allowlist descrita acima.
 
 Qualquer ampliação da allowlist ou do escopo de diretórios exige revisão explícita.

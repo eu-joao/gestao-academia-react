@@ -13,6 +13,7 @@ jobs:
     name: Habilitar auto-merge para atualizações de baixo risco
     if: >-
       github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.base.ref == 'main' &&
       github.repository == 'eu-joao/gestao-academia-react' &&
       vars.DEPENDABOT_AUTO_MERGE_ENABLED == 'true'
     runs-on: ubuntu-latest
@@ -32,7 +33,7 @@ jobs:
           steps.metadata.outputs.directory == '/web' &&
           steps.metadata.outputs.dependency-type == 'direct:development' &&
           steps.metadata.outputs.update-type == 'version-update:semver-patch' &&
-          contains(fromJSON('["prettier","eslint","typescript","@types/node","@types/react","@types/react-dom"]'), steps.metadata.outputs.dependency-names)
+          contains(fromJSON('["eslint","typescript","@types/node","@types/react","@types/react-dom"]'), steps.metadata.outputs.dependency-names)
         env:
           GH_TOKEN: ${{ github.token }}
           PR_URL: ${{ github.event.pull_request.html_url }}
