@@ -12,6 +12,19 @@ updates:
     ignore:
       - dependency-name: "expo"
       - dependency-name: "react-native"
+      # Evita atualizar isoladamente pacotes que acompanham a versão do SDK Expo.
+      - dependency-name: "expo*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@expo*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-native*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
     groups:
       minor-and-patch:
         update-types: ["minor", "patch"]
@@ -44,6 +57,13 @@ updates:
     open-pull-requests-limit: 5
     cooldown:
       default-days: 7
+    ignore:
+      # O upgrade para Spring Boot 4 exige migração coordenada dos testes e dependências.
+      - dependency-name: "org.springframework.boot:spring-boot-starter-parent"
+        update-types: ["version-update:semver-major"]
+      # Springdoc 3.x não deve ser atualizado isoladamente enquanto o projeto usa Boot 3.x.
+      - dependency-name: "org.springdoc:springdoc-openapi-starter-webmvc-ui"
+        update-types: ["version-update:semver-major"]
     groups:
       development-minor-and-patch:
         dependency-type: "development"
