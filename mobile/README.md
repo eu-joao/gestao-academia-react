@@ -23,8 +23,8 @@ O app mobile é implementado com Expo, React Native, TypeScript e Expo Router. A
 
 ## Tecnologias
 
-- Expo SDK 57
-- React Native 0.86
+- Expo SDK 58
+- React Native 0.88.1
 - React 19
 - TypeScript
 - Expo Router

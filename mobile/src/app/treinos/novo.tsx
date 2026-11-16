@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  StatusBar,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import * as SystemUI from "expo-system-ui";
 import { Ionicons } from "@expo/vector-icons";
 import {
   adicionar,
@@ -44,6 +45,13 @@ export default function TreinoFormScreen() {
   const [carregando, setCarregando] = useState(Boolean(id));
   const [salvando, setSalvando] = useState(false);
   const [sucesso, setSucesso] = useState(false);
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync("#F8FAFC");
+    return () => {
+      SystemUI.setBackgroundColorAsync("#0F172A");
+    };
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -125,7 +133,7 @@ export default function TreinoFormScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      <StatusBar style="dark" />
 
       {/* Top Header */}
       <View style={styles.header}>
