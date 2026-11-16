@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import * as SystemUI from "expo-system-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { Treino, buscarPorId, remover } from "../../services/treinoStorage";
 
@@ -25,13 +24,6 @@ export default function TreinoDetalheScreen() {
 
   const [treino, setTreino] = useState<Treino | null>(null);
   const [carregando, setCarregando] = useState(true);
-
-  useEffect(() => {
-    SystemUI.setBackgroundColorAsync("#F8FAFC");
-    return () => {
-      SystemUI.setBackgroundColorAsync("#0F172A");
-    };
-  }, []);
 
   const carregarTreino = useCallback(async () => {
     if (!id) return;
