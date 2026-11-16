@@ -13,7 +13,7 @@ O workflow `.github/workflows/ci.yml` executa:
 - **Backend Spring:** `./mvnw verify`, incluindo compilação e testes Maven.
 - **Resultado geral:** o job `CI — resultado geral` falha se qualquer job aplicável falhar; jobs de módulos não afetados podem ser ignorados.
 
-A exportação Expo é uma validação de bundle, não substitui testes automatizados de comportamento ou testes em dispositivos.
+A exportação Expo é uma validação de bundle, não substitui testes automatizados de comportamento ou testes em dispositivos.\n\nPara alinhar dependências ao SDK instalado, use `npx expo install --fix` no diretório `mobile` e versione juntos `package.json` e `package-lock.json`. Evite atualizar pacotes Expo isoladamente pelo Dependabot: a alteração só deve ser integrada após passar pelo Expo Doctor e pela exportação dos bundles.
 
 ## Política de integração automática
 
