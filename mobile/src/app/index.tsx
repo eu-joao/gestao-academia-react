@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   ImageBackground,
   StyleSheet,
-  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useFocusEffect } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { listar, Treino } from "../services/treinoStorage";
 
@@ -42,7 +42,7 @@ export default function IndexScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar style="light" />
       <ImageBackground
         source={bgImage}
         style={styles.backgroundImage}

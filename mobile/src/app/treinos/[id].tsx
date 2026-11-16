@@ -6,13 +6,13 @@ import {
   ScrollView,
   Image,
   StyleSheet,
-  StatusBar,
   Alert,
   Platform,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { Treino, buscarPorId, remover } from "../../services/treinoStorage";
 
@@ -111,7 +111,7 @@ export default function TreinoDetalheScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      <StatusBar style="dark" />
 
       {/* Top Header */}
       <View style={styles.header}>

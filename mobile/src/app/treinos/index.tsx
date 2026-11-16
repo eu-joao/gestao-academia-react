@@ -8,12 +8,12 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  StatusBar,
   Alert,
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useFocusEffect } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { Treino, listar, remover } from "../../services/treinoStorage";
 
@@ -215,7 +215,7 @@ export default function TreinosListScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      <StatusBar style="dark" />
 
       {/* Controles e busca fixos no topo para garantir foco ininterrupto na digitação */}
       <View style={styles.fixedHeader}>
