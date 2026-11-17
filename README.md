@@ -16,12 +16,7 @@ Este repositório reúne os três módulos do projeto: a API REST, o site e o ap
 
 Os documentos de domínio do projeto estão em `docs/`:
 
-- [Documentação V6 — Gestão de Treinos para Personal Trainer](./docs/gestao-de-treinos-v6/README.md)
-- [Documentação anterior — Gestão de Academia](./docs/jdbc/):
-  - [Minimundo](./docs/jdbc/MINIMUNDO_V4.md)
-  - [Requisitos](./docs/jdbc/REQUISITOS.md)
-  - [Modelagem da entidade principal](./docs/jdbc/MODELAGEM.md)
-  - [Diagramas conceitual e lógico](./docs/jdbc/DIAGRAMAS.md), com links para os modelos interativos e imagens locais
+- [Documentação — Gestão de Treinos para Personal Trainer (V6)](./docs/gestao-de-treinos-v6/README.md)
 
 ## Estrutura
 
@@ -32,8 +27,7 @@ Os documentos de domínio do projeto estão em `docs/`:
 ├── backend/                  # API Spring Boot
 ├── docs/                     # Documentação do domínio e capturas de tela
 │   ├── capturas-de-tela/     # Capturas de tela do aplicativo
-│   ├── gestao-de-treinos-v6/ # Minimundo V6, regras, modelo e diagrama ER
-│   └── jdbc/                 # Documentação anterior do domínio
+│   └── gestao-de-treinos-v6/ # Minimundo V6, regras, modelo e diagrama ER
 ├── mobile/                   # Aplicativo Expo
 ├── web/                      # Site Next.js
 ├── mise.toml                 # Versões do Node.js e do Java, e tarefas do projeto
