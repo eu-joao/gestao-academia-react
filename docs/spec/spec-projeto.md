@@ -6,7 +6,7 @@
 - Disponibilize um portal web para o personal
 - Disponibilize um aplicativo mobile para os alunos
 - Centralize cadastros, contratos, cobranças e acompanhamento dos treinos
-- Mantenha o escopo funcional alinhado ao [minimundo V6](../gestao-de-treinos-v6/README.md)
+- Mantenha o escopo funcional alinhado ao [minimundo V6 documentado na PR #158](https://github.com/eu-joao/gestao-academia-react/pull/158)
 
 ## Modelo de Domínio
 
@@ -35,6 +35,6 @@
 ## Documentação
 
 - Mantenha as especificações em docs/spec/ alinhadas ao minimundo V6
-- Consulte os documentos complementares em docs/gestao-de-treinos-v6/
+- Consulte os documentos complementares da documentação V6
 - Atualize a documentação quando requisitos ou decisões de domínio forem alterados
 - Inclua critérios de aceitação nas especificações quando aplicável
