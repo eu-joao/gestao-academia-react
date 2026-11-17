@@ -17,7 +17,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <springdoc.version>2.8.17</springdoc.version>
+        <springdoc.version>2.10.0</springdoc.version>
         <lombok.version>1.18.48</lombok.version>
     </properties>
 
