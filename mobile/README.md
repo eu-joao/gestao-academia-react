@@ -1,59 +1,57 @@
 # Gestão Academia Mobile
 
-Aplicativo multiplataforma do projeto Gestão Academia para Android, iOS e web.
+Aplicativo do aluno do sistema Gestão Academia, desenvolvido com Expo, React Native e TypeScript. O app permite que cada aluno acompanhe seu cadastro, consulte o programa de treino atual, registre sessões concluídas e acompanhe suas cobranças.
 
-## Documentação do Projeto
+## Funcionalidades previstas
 
-A especificação completa do aplicativo, modelo de dados, justificativa técnica da persistência e roteiro de gravação do vídeo avaliativo estão disponíveis em:
+- **Cadastro e acesso:** criação de conta pelo aplicativo com autenticação Google. Nome e e-mail são obtidos do provedor de autenticação.
+- **Dados pessoais:** consulta e atualização dos próprios dados, incluindo peso, altura, nível de experiência e frequência semanal.
+- **Programa de treino:** consulta do programa atual, dos dias em sequência e dos exercícios de cada dia, com musculatura trabalhada, séries e repetições.
+- **Registro de sessões:** conclusão do próximo dia previsto do programa. O sistema reinicia a sequência após o último dia.
+- **Cobranças:** consulta das mensalidades e de seus estados (pendente, paga ou atrasada).
+- **Pagamento simulado:** confirmação de pagamento por Pix fictício, sem movimentação real de dinheiro ou integração financeira.
 
-- [Documentação do Projeto (1 a 2 páginas)](../docs/mobile/documentacao-projeto.md)
-
-## Sobre
-
-O app mobile é implementado com Expo, React Native, TypeScript e Expo Router. As telas e a navegação ficam no diretório `src/app/`.
-
-### Funcionalidades Implementadas
-
-- **CRUD Completo de Treinos (RF01):** Criação, listagem, visualização de detalhes, edição e exclusão de treinos.
-- **Persistência Local (RF02):** Armazenamento permanente offline no dispositivo utilizando `AsyncStorage`.
-- **Listagem Inteligente e Estatísticas (RF03 + Bônus):** Busca por nome, filtro por dia da semana, ordenação (duração/nome) e estatísticas simples (sessões, tempo total e média por sessão).
-- **Validação de Formulários (RF04):** Mensagens inline de erro impedindo inserção de dados incompletos ou inválidos.
-- **Navegação Declarativa (RF05):** Estrutura de rotas organizada com Expo Router.
-- **Feedback ao Usuário (RF06):** Banners e mensagens de confirmação para ações de cadastro, edição e exclusão.
+O aplicativo mostra somente os dados do aluno autenticado. A inadimplência não bloqueia o acesso ao app ou aos treinos.
 
 ## Tecnologias
 
+As versões abaixo correspondem às dependências declaradas em `package.json`.
+
 - Expo SDK 58
 - React Native 0.88.1
-- React 19
-- TypeScript
+- React 19.3
+- TypeScript 6
 - Expo Router
-- AsyncStorage
+- React Native Web
 
 ## Instalação e execução
 
-Recomendamos usar [mise](https://mise.jdx.dev/) para instalar e gerenciar o Node.js. Na raiz do repositório, execute:
+Use [mise](https://mise.jdx.dev/) para instalar as versões de Node.js e Java definidas pelo repositório. Na raiz do projeto, execute:
 
 ```bash
 mise install
 mise run install
-```
-
-`mise install` instala a versão do Node.js declarada no `mise.toml`. `mise run install` instala as dependências da raiz, do app e do web.
-
-Depois, inicie o Expo, também na raiz do repositório:
-
-```bash
 mise run dev:mobile
 ```
 
-No terminal do Expo, escolha Android, iOS ou web. Também é possível executar comandos específicos diretamente no diretório `mobile/`:
+O Expo iniciará o servidor de desenvolvimento. Siga as instruções exibidas no terminal para abrir o aplicativo em um dispositivo ou emulador.
 
-- `npm start` inicia o servidor de desenvolvimento do Expo.
-- `npm run android` inicia para Android.
-- `npm run ios` inicia para iOS.
-- `npm run web` inicia para web.
+Também é possível executar os comandos específicos dentro do diretório `mobile/`:
 
-## Contribuindo
+```bash
+npm start       # Inicia o Expo
+npm run android # Abre no Android
+npm run ios     # Abre no iOS
+npm run web     # Abre no navegador
+npm run lint    # Executa o lint
+```
 
-Consulte o [CONTRIBUTING.md da raiz](../CONTRIBUTING.md) para as orientações de contribuição do repositório.
+## Documentação relacionada
+
+- [Documentação geral e minimundo V6](../docs/gestao-de-treinos-v6/README.md)
+- [Modelo de dados](../docs/gestao-de-treinos-v6/02-modelo-de-dados.md)
+- [Regras de negócio](../docs/gestao-de-treinos-v6/03-regras-de-negocio.md)
+- [Orientações para agentes mobile](./AGENTS.md)
+- [Contribuição](../CONTRIBUTING.md)
+
+Consulte o [README da raiz](../README.md) para a visão geral do monorepositório e os comandos compartilhados.
