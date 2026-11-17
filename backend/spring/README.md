@@ -5,7 +5,7 @@ API REST do sistema de gestão de academia, desenvolvida com Spring Boot e Java 
 ## Pré-requisitos
 
 - [mise](https://mise.jdx.dev/) para instalar e selecionar o Java 17 configurado no monorepo;
-- PostgreSQL local. Docker é opcional e pode ser usado para iniciar o banco.
+- PostgreSQL instalado e em execução na máquina.
 
 Na raiz do repositório, instale os runtimes do projeto:
 
@@ -15,13 +15,7 @@ mise install
 
 ## Configuração local
 
-O backend usa PostgreSQL. Com Docker, na raiz do repositório, crie o banco com os mesmos dados de conexão do arquivo de exemplo:
-
-```bash
-docker run --name gestao-academia-db -e POSTGRES_PASSWORD=change-me -e POSTGRES_DB=gestao_academia -p 5432:5432 -d postgres:16
-```
-
-Nas próximas vezes, inicie o mesmo banco com `docker start gestao-academia-db`. Sem Docker, use uma instalação local do PostgreSQL e ajuste as variáveis abaixo para os dados desse banco.
+O backend utiliza uma instância local do PostgreSQL. Crie o banco de dados `gestao_academia` e configure um usuário com permissão de acesso. Ajuste os valores de conexão conforme sua instalação.
 
 Crie `backend/spring/.env` a partir do exemplo:
 
@@ -29,7 +23,7 @@ Crie `backend/spring/.env` a partir do exemplo:
 cp backend/spring/.env.example backend/spring/.env
 ```
 
-O exemplo define as variáveis `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`, usadas por `src/main/resources/application.properties`. O arquivo `.env` é local e está ignorado pelo Git.
+O exemplo define as variáveis `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`, usadas por `src/main/resources/application.properties`. Atualize os valores para corresponder ao PostgreSQL local. O arquivo `.env` é local e está ignorado pelo Git.
 
 ## Executar
 
@@ -59,7 +53,3 @@ mise run build:backend
 ```
 
 `test:backend` executa `./mvnw test` em `backend/spring/`. A suíte inicial cobre o serviço e o controller de alunos; os demais recursos ainda não têm cobertura automatizada. `build:backend` executa `./mvnw package` e gera os artefatos Maven em `backend/spring/target/`.
-
-## Contribuir
-
-Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações de desenvolvimento e validação do backend.
