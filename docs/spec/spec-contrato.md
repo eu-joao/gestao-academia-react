@@ -3,51 +3,37 @@
 ## Requisitos Funcionais
 
 - Crie contratos para alunos
-- Consulte contratos do sistema
-- Atualize dados de contratos existentes
-- Exclua contratos do sistema
-- Liste contratos por aluno
-- Liste contratos por status
+- Consulte contratos de um aluno
+- Consulte o contrato vigente do aluno
+- Permita ao personal cancelar um contrato
 
 ## Dados do Contrato
 
-- Associe contrato a um aluno
-- Associe contrato a um plano
-- Cadastre data de início do contrato
-- Cadastre data de término do contrato
-- Cadastre status do contrato (ATIVO, CANCELADO, FINALIZADO, PENDENTE)
-- Cadastre forma de pagamento (PIX, CARTAO, DINHEIRO, BOLETO)
-- Cadastre valor do contrato
+- Associe o contrato a um aluno
+- Associe o contrato a um plano definido no enum do backend
+- Registre data de início e data de término
+- Mantenha o status (ATIVO, CANCELADO, ENCERRADO)
 
 ## Regras de Negócio
 
-- Valide que aluno existe ao criar contrato
-- Valide que plano existe ao criar contrato
-- Valide que data de início é anterior ou igual a data de término
-- Valide que valor é positivo
-- Valide que não existe contrato ativo para o mesmo aluno
-- Calcule data de término com base no plano quando não informado
+- Permita somente um contrato ativo por aluno
+- Calcule a data de término conforme a duração do plano
+- Gere as cobranças mensais correspondentes à vigência do contrato
+- Ative o aluno quando o contrato for criado
+- Ao cancelar ou encerrar o contrato, torne o aluno inativo se não houver outro contrato vigente
+- Ao cancelar o contrato, cancele cobranças futuras ainda não pagas
+- Preserve cobranças pagas ou vencidas no cancelamento
 
 ## Critérios de Aceitação
 
-- Retorne erro 400 para dados inválidos
-- Retorne erro 404 para aluno ou plano não encontrado
-- Retorne lista paginada de contratos
-- Retorne dados completos do contrato em consultas individuais
+- Rejeite a criação de um segundo contrato ativo para o mesmo aluno
+- Registre corretamente o período de vigência e o plano contratado
+- Gere as cobranças previstas para o período
+- Atualize o status do aluno conforme as regras de negócio
+- Permita ao personal consultar e cancelar contratos
 
-## Endpoints
+## Interfaces
 
-- POST /api/contratos - Criar contrato
-- GET /api/contratos - Listar contratos
-- GET /api/contratos/{id} - Buscar contrato por ID
-- PUT /api/contratos/{id} - Atualizar contrato
-- DELETE /api/contratos/{id} - Excluir contrato
-- GET /api/alunos/{alunoId}/contratos - Listar contratos por aluno
-
-## Frontend
-
-- Exiba lista de contratos do aluno
-- Exiba formulário para criar contrato
-- Exiba status do contrato com indicação visual
-- Exiba data de vencimento do contrato
-- Permita cancelar contrato
+- Exiba o contrato vigente e seus dados no portal web
+- Disponibilize ao personal a criação e o cancelamento de contratos
+- Exiba ao aluno as informações do próprio contrato no aplicativo
