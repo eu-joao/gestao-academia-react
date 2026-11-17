@@ -14,12 +14,14 @@ Este repositório reúne os três módulos do projeto: a API REST, o site e o ap
 
 ## Documentação do domínio
 
-Os documentos de domínio do projeto estão em [`docs/jdbc/`](./docs/jdbc/):
+Os documentos de domínio do projeto estão em `docs/`:
 
-- [Minimundo](./docs/jdbc/MINIMUNDO_V4.md)
-- [Requisitos](./docs/jdbc/REQUISITOS.md)
-- [Modelagem da entidade principal](./docs/jdbc/MODELAGEM.md)
-- [Diagramas conceitual e lógico](./docs/jdbc/DIAGRAMAS.md), com links para os modelos interativos e imagens locais
+- [Documentação V6 — Gestão de Treinos para Personal Trainer](./docs/gestao-de-treinos-v6/README.md)
+- [Documentação anterior — Gestão de Academia](./docs/jdbc/):
+  - [Minimundo](./docs/jdbc/MINIMUNDO_V4.md)
+  - [Requisitos](./docs/jdbc/REQUISITOS.md)
+  - [Modelagem da entidade principal](./docs/jdbc/MODELAGEM.md)
+  - [Diagramas conceitual e lógico](./docs/jdbc/DIAGRAMAS.md), com links para os modelos interativos e imagens locais
 
 ## Estrutura
 
@@ -30,7 +32,8 @@ Os documentos de domínio do projeto estão em [`docs/jdbc/`](./docs/jdbc/):
 ├── backend/                  # API Spring Boot
 ├── docs/                     # Documentação do domínio e capturas de tela
 │   ├── capturas-de-tela/     # Capturas de tela do aplicativo
-│   └── jdbc/                 # Minimundo, requisitos, modelagem e diagramas
+│   ├── gestao-de-treinos-v6/ # Minimundo V6, regras, modelo e diagrama ER
+│   └── jdbc/                 # Documentação anterior do domínio
 ├── mobile/                   # Aplicativo Expo
 ├── web/                      # Site Next.js
 ├── mise.toml                 # Versões do Node.js e do Java, e tarefas do projeto
@@ -101,6 +104,7 @@ Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações gerais de co
 ## Orientações para agentes
 
 As regras gerais para trabalhar no monorepo estão em [`docs/agent-guidelines.md`](./docs/agent-guidelines.md). As instruções operacionais para agentes ficam em [`AGENTS.md`](./AGENTS.md).
+
 ## Skills dos agentes
 
 As skills compartilhadas ficam em [`.agents/skills/`](./.agents/skills/). O Gemini CLI e o Mistral Vibe descobrem as skills nesse caminho; cada skill tem sua própria pasta com um arquivo `SKILL.md`.
