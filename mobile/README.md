@@ -69,4 +69,4 @@ No terminal do Expo, escolha Android, iOS ou web. Também é possível executar 
 
 ## Contribuindo
 
-Consulte [CONTRIBUTING.md](./CONTRIBUTING.md) para as orientações específicas do app mobile. As regras gerais de branch, commit e pull request estão em [../CONTRIBUTING.md](../CONTRIBUTING.md).
+Consulte o [CONTRIBUTING.md da raiz](../CONTRIBUTING.md) para as orientações de contribuição do repositório.
