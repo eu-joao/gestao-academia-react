@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gestão Academia Web
 
-## Getting Started
+Aplicação web do projeto Gestão Academia, desenvolvida com Next.js, React e TypeScript.
 
-First, run the development server:
+## Capturas de tela
+
+**Tela inicial**
+
+![Tela inicial](../docs/capturas-de-tela/web/tela%20inicial.png)
+
+**Listagem de alunos**
+
+![Listagem de alunos](../docs/capturas-de-tela/web/listagem%20de%20alunos.png)
+
+**Busca por nome**
+
+![Busca por nome](../docs/capturas-de-tela/web/Busca%20por%20nome.png)
+
+**Cadastro de aluno**
+
+![Formulário de cadastro](../docs/capturas-de-tela/web/formulario%20cadastro.png)
+
+**Edição de aluno**
+
+![Formulário de edição](../docs/capturas-de-tela/web/formulario%20edi%C3%A7%C3%A3o.png)
+
+**Exclusão de aluno**
+
+![Tela de exclusão](../docs/capturas-de-tela/web/tela%20de%20exclus%C3%A3o.png)
+
+## Desenvolvimento
+
+Na raiz do repositório, use:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+mise install
+mise run install
+mise run dev:web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A aplicação estará disponível em [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Consulte o [README da raiz](../README.md) para a visão geral do projeto e os comandos compartilhados.
