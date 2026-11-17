@@ -2,45 +2,26 @@
 
 ## Requisitos Funcionais
 
-- Crie planos para a academia
-- Consulte planos cadastrados
-- Atualize dados de planos
-- Exclua planos do sistema
+- Disponibilize três opções fixas de plano para contratação
+- Consulte as opções e seus valores durante a criação de um contrato
 
 ## Dados do Plano
 
-- Cadastre nome do plano
-- Cadastre descrição do plano
-- Cadastre valor do plano
-- Cadastre tipo do plano (MENSAL, TRIMESTRAL, SEMESTRAL, ANUAL)
-- Cadastre duração em dias do plano
+- Defina o tipo do plano (MENSAL, TRIMESTRAL, SEMESTRAL)
+- Defina a duração em meses
+- Defina o valor mensal
 
 ## Regras de Negócio
 
-- Valide que nome é único
-- Valide que valor é positivo
-- Valide que duração é válida para o tipo
-- Calcule duração automaticamente quando tipo for informado
+- Represente os planos como enum no backend
+- Não crie tabela ou entidade persistida para planos
+- Não disponibilize operações de cadastro, edição ou exclusão no portal
+- Utilize o valor mensal do plano para gerar as cobranças
+- Exija alteração no enum e nova versão do backend para modificar opções ou valores
 
 ## Critérios de Aceitação
 
-- Retorne erro 400 para dados inválidos
-- Retorne erro 404 para plano não encontrado
-- Retorne lista de todos os planos ativos
-- Retorne dados completos do plano em consultas individuais
-
-## Endpoints
-
-- POST /api/planos - Criar plano
-- GET /api/planos - Listar planos
-- GET /api/planos/{id} - Buscar plano por ID
-- PUT /api/planos/{id} - Atualizar plano
-- DELETE /api/planos/{id} - Excluir plano
-
-## Frontend
-
-- Exiba lista de planos em tabela
-- Exiba formulário para criar plano
-- Exiba formulário para editar plano
-- Exiba valor e tipo do plano
-- Permita associar plano a novos contratos
+- Disponibilize somente os planos mensal, trimestral e semestral
+- Informe a duração e o valor mensal de cada opção
+- Associe o plano escolhido ao contrato
+- Utilize o valor mensal definido no enum em todas as cobranças do contrato
