@@ -2,7 +2,7 @@
 
 Aplicativo do aluno do sistema Gestão Academia, desenvolvido com Expo, React Native e TypeScript. O app permite que cada aluno acompanhe seu cadastro, consulte o programa de treino atual, registre sessões concluídas e acompanhe suas cobranças.
 
-## Funcionalidades previstas
+## Funcionalidades
 
 - **Cadastro e acesso:** criação de conta pelo aplicativo com autenticação Google. Nome e e-mail são obtidos do provedor de autenticação.
 - **Dados pessoais:** consulta e atualização dos próprios dados, incluindo peso, altura, nível de experiência e frequência semanal.
