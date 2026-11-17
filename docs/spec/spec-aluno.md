@@ -2,55 +2,41 @@
 
 ## Requisitos Funcionais
 
-- Crie alunos no sistema com dados completos
-- Consulte alunos cadastrados no sistema
-- Atualize dados de alunos existentes
-- Exclua alunos do sistema
-- Liste alunos com filtros opcionais
+- Cadastre alunos pelo aplicativo mobile
+- Consulte os dados do próprio aluno
+- Permita que o aluno atualize seu peso atual
+- Permita que o personal consulte e administre todos os alunos
+- Liste alunos no portal web com os indicadores necessários ao acompanhamento
 
 ## Dados do Aluno
 
-- Cadastre nome completo do aluno
-- Cadastre email do aluno
-- Cadastre CPF do aluno
-- Cadastre data de nascimento do aluno
-- Cadastre telefone do aluno
-- Cadastre status do aluno (ATIVO, INATIVO, PENDENTE)
-- Cadastre data de cadastro do aluno
+- Obtenha nome e email a partir da autenticação Google
+- Cadastre peso e altura
+- Cadastre nível de experiência (INICIANTE, INTERMEDIARIO, AVANCADO)
+- Cadastre frequência semanal desejada (3, 4, 5 ou 6 dias)
+- Mantenha status do aluno (ATIVO ou INATIVO)
+- Associe o aluno ao seu programa de treino atual
 
 ## Regras de Negócio
 
-- Valide que email do aluno é único
-- Valide que CPF do aluno é único
-- Valide que CPF é válido
-- Valide que email é válido
-- Valide que data de nascimento é válida
-- Valide que telefone é válido
+- Selecione o programa inicial pela combinação de nível de experiência e frequência semanal
+- Ative o aluno quando um contrato for criado
+- Torne o aluno inativo quando o contrato for cancelado ou encerrado e não houver outro contrato vigente
+- Armazene somente o peso atual, sem histórico de medições nesta versão
+- Restrinja o aluno aos próprios dados
+- Permita ao personal acessar os dados de todos os alunos
 
 ## Critérios de Aceitação
 
-- Retorne erro 400 para dados inválidos
-- Retorne erro 404 para aluno não encontrado
-- Retorne lista paginada de alunos
-- Retorne dados completos do aluno em consultas individuais
+- Cadastre o aluno com os dados exigidos pelo minimundo V6
+- Retorne os dados do aluno autenticado no aplicativo
+- Permita ao personal consultar e atualizar os dados dos alunos
+- Rejeite tentativas de acesso de um aluno aos dados de outro
+- Atualize o status conforme as regras de contrato
 
-## Endpoints
+## Interfaces
 
-- POST /api/alunos - Criar aluno
-- GET /api/alunos - Listar alunos
-- GET /api/alunos/{id} - Buscar aluno por ID
-- PUT /api/alunos/{id} - Atualizar aluno
-- DELETE /api/alunos/{id} - Excluir aluno
-
-## Frontend Web
-
-- Exiba lista de alunos em tabela
-- Exiba formulário para criar aluno
-- Exiba formulário para editar aluno
-- Exiba botão para excluir aluno com confirmação
-
-## Frontend Mobile
-
-- Exiba lista de alunos do usuário logado
-- Exiba detalhes do aluno
-- Permita navegação entre telas de alunos
+- Exiba os dados pessoais e físicos do aluno no aplicativo mobile
+- Permita atualizar o peso atual
+- Exiba a listagem de alunos no portal web
+- Permita consultar os detalhes de cada aluno no portal web
