@@ -30,19 +30,6 @@ O app mobile é implementado com Expo, React Native, TypeScript e Expo Router. A
 - Expo Router
 - AsyncStorage
 
-## Estrutura
-
-```text
-mobile/
-├── assets/       # Imagens e recursos visuais
-├── src/
-│   ├── app/      # Rotas e telas do aplicativo (Expo Router)
-│   ├── services/ # Camada de persistência (AsyncStorage)
-│   └── utils/    # Validação e helpers
-├── app.json      # Configuração do Expo
-└── package.json  # Dependências e comandos do app
-```
-
 ## Instalação e execução
 
 Recomendamos usar [mise](https://mise.jdx.dev/) para instalar e gerenciar o Node.js. Na raiz do repositório, execute:
