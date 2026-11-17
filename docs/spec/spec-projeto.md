@@ -1,33 +1,40 @@
 # Spec do Projeto Gestão Academia
 
+## Contexto e Escopo
+
+- Atenda um único personal trainer e seus alunos
+- Disponibilize um portal web para o personal
+- Disponibilize um aplicativo mobile para os alunos
+- Centralize cadastros, contratos, cobranças e acompanhamento dos treinos
+- Mantenha o escopo funcional alinhado ao [minimundo V6](../gestao-de-treinos-v6/README.md)
+
+## Modelo de Domínio
+
+- Utilize as entidades Aluno, Contrato, Cobranca, ProgramaTreino, DiaTreino, ItemTreino e SessaoTreino
+- Represente Plano como enum no backend, sem tabela própria
+- Armazene o programa atual diretamente em Aluno
+- Represente exercícios como itens vinculados a DiaTreino
+- Armazene somente o peso atual do aluno
+- Não implemente unidades, catálogo global de exercícios, TreinoAtivo ou histórico de medições na primeira versão
+
 ## Práticas de Desenvolvimento
 
 - Use conventional commits para todos os commits do projeto
-- Faça atribuição de co-autoria para todos os commits com assistência de agentes de código
-- Use o gh para fazer acompanhamento do PR antes de finalizar a task
-- Verifique se o PR foi aprovado pela CI remota
-- Se o PR não for aprovado pela CI remota, investigue o problema e retorne um pequeno relatório para aprovação sobre como o problema pode ser resolvido
-- Siga as convenções de naming do CONTRIBUTING.md para branches e commits
+- Faça atribuição de coautoria para commits com assistência de agentes de código
+- Siga as convenções de branches, commits e pull requests do CONTRIBUTING.md
 - Use o mise para gerenciar versões de runtime e executar tarefas do projeto
-
-## Estrutura do Projeto
-
-- Mantenha a estrutura de pasta conforme definido no README.md
-- Organize nova documentação em docs/spec/ com documentos separados por funcionalidade
-- Atualize o README.md quando adicionar novos módulos ou funcionalidades
-- Mantenha os arquivos de configuração na raiz do repositório
+- Use a skill de validação do repositório para escolher verificações locais e acompanhar a CI remota
+- Registre os comandos executados e seus resultados; informe verificações não executadas ou bloqueadas
 
 ## Verificações e Qualidade
 
-- Execute mise run lint antes de abrir PRs para verificar formatação e lint
-- Execute mise run test:backend para validar testes do backend
-- Execute mise run build para validar build de produção
+- Execute as verificações pertinentes aos módulos alterados
 - Respeite as verificações da CI do GitHub Actions
-- Não adicione hooks de commit locais - use as tarefas do mise
+- Não declare uma verificação aprovada sem evidência de execução
 
 ## Documentação
 
-- Mantenha a documentação de spec atualizada com as funcionalidades implementadas
-- Use frases no imperativo nos documentos de spec
-- Organize specs por funcionalidade/entidade
-- Inclua critérios de aceitação em cada spec quando aplicável
+- Mantenha as especificações em docs/spec/ alinhadas ao minimundo V6
+- Consulte os documentos complementares em docs/gestao-de-treinos-v6/
+- Atualize a documentação quando requisitos ou decisões de domínio forem alterados
+- Inclua critérios de aceitação nas especificações quando aplicável
