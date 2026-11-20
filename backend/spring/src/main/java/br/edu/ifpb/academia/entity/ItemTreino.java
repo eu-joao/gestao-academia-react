@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,8 +17,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class DiaTreinoExercicio {
-
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "diaTreino_id", "ordem" }))
+public class ItemTreino {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -24,14 +26,17 @@ public class DiaTreinoExercicio {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private DiaTreino diaTreino;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	private Exercicio exercicio;
+	@Column(nullable = false)
+	private String nomeExercicio;
+
+	@Column(nullable = false)
+	private String musculaturaAlvo;
 
 	@Column(nullable = false)
 	private Integer series;
 
 	@Column(nullable = false)
-	private Integer repeticoes;
+	private String repeticoes;
 
 	@Column(nullable = false)
 	private Integer ordem;

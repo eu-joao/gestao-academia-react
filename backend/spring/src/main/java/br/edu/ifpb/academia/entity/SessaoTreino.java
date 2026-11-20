@@ -1,12 +1,9 @@
 package br.edu.ifpb.academia.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,8 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class TreinoAtivo {
-
+public class SessaoTreino {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,12 +28,9 @@ public class TreinoAtivo {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private ProgramaTreino programaTreino;
 
-	@Column(nullable = false)
-	private LocalDate dataInicio;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	private DiaTreino diaTreino;
 
-	private LocalDate dataFim;
-
-	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private StatusTreinoAtivo status = StatusTreinoAtivo.ATIVO;
+	private LocalDateTime dataHoraConclusao;
 }
