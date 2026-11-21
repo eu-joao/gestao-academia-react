@@ -2,6 +2,12 @@
 
 API REST do sistema de gestão de academia, desenvolvida com Spring Boot e Java 17. O código da aplicação fica em `src/`, e o projeto inclui o Maven Wrapper (`mvnw`) para executar tarefas Maven.
 
+## Capturas de tela
+
+**Documentação Swagger UI**
+
+![Documentação Swagger UI](../../docs/capturas-de-tela/backend/swagger-ui.png)
+
 ## Pré-requisitos
 
 - [mise](https://mise.jdx.dev/) para instalar e selecionar o Java 17 configurado no monorepo;
