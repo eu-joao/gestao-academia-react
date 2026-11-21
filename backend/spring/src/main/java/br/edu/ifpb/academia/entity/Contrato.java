@@ -3,6 +3,7 @@ package br.edu.ifpb.academia.entity;
 import java.time.LocalDate;
 
 import br.edu.ifpb.academia.enums.StatusContrato;
+import br.edu.ifpb.academia.enums.TipoPlano;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,11 +30,9 @@ public class Contrato {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	private Aluno aluno;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	private Unidade unidade;
-
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	private Plano plano;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, length = 20)
+	private TipoPlano plano;
 
 	@Column(nullable = false)
 	private LocalDate dataInicio;
@@ -45,7 +44,7 @@ public class Contrato {
 	@Column(nullable = false)
 	private StatusContrato status = StatusContrato.ATIVO;
 
-	public void setPlano(Plano plano) {
+	public void setPlano(TipoPlano plano) {
 		this.plano = plano;
 		recalcularDataTermino();
 	}
@@ -60,8 +59,8 @@ public class Contrato {
 	}
 
 	private void recalcularDataTermino() {
-		if (dataInicio != null && plano != null && plano.getDuracao() != null) {
-			dataTermino = dataInicio.plusDays(plano.getDuracao());
+		if (dataInicio != null && plano != null) {
+			dataTermino = dataInicio.plusMonths(plano.getDuracaoMeses());
 		}
 	}
 }

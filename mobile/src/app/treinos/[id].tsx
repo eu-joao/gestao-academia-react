@@ -15,11 +15,14 @@ import { useRouter, useLocalSearchParams, useFocusEffect } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { Treino, buscarPorId, remover } from "../../services/treinoStorage";
+import { useTheme } from "../../contexts/ThemeContext";
+import { ThemeToggle } from "../../components/ThemeToggle";
 
 const detailImage = require("../../../assets/images/inicio_treino.jpg");
 
 export default function TreinoDetalheScreen() {
   const router = useRouter();
+  const { colors, isDark } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [treino, setTreino] = useState<Treino | null>(null);
@@ -67,10 +70,15 @@ export default function TreinoDetalheScreen() {
 
   if (carregando) {
     return (
-      <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+        edges={["top", "bottom"]}
+      >
         <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#0284C7" />
-          <Text style={styles.loadingText}>Carregando treino...</Text>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+            Carregando treino...
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -78,27 +86,50 @@ export default function TreinoDetalheScreen() {
 
   if (!treino) {
     return (
-      <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: colors.background }]}
+        edges={["top", "bottom"]}
+      >
         <View style={styles.header}>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[
+              styles.backButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
             onPress={() => router.replace("/treinos")}
             activeOpacity={0.7}
           >
-            <Ionicons name="arrow-back-outline" size={20} color="#0F172A" />
+            <Ionicons
+              name="arrow-back-outline"
+              size={20}
+              color={colors.textPrimary}
+            />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Detalhes do Treino</Text>
-          <View style={{ width: 38 }} />
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
+            Detalhes do Treino
+          </Text>
+          <ThemeToggle size={18} />
         </View>
 
         <View style={styles.centerContainer}>
-          <Ionicons name="alert-circle-outline" size={48} color="#94A3B8" />
-          <Text style={styles.notFoundTitle}>Treino não encontrado</Text>
-          <Text style={styles.notFoundSubtitle}>
+          <Ionicons
+            name="alert-circle-outline"
+            size={48}
+            color={colors.textMuted}
+          />
+          <Text style={[styles.notFoundTitle, { color: colors.textPrimary }]}>
+            Treino não encontrado
+          </Text>
+          <Text
+            style={[styles.notFoundSubtitle, { color: colors.textSecondary }]}
+          >
             Este treino pode ter sido removido ou o identificador é inválido.
           </Text>
           <TouchableOpacity
-            style={styles.backToListButton}
+            style={[
+              styles.backToListButton,
+              { backgroundColor: colors.primary },
+            ]}
             onPress={() => router.replace("/treinos")}
             activeOpacity={0.8}
           >
@@ -110,33 +141,54 @@ export default function TreinoDetalheScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <StatusBar style="dark" />
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={["top", "bottom"]}
+    >
+      <StatusBar style={isDark ? "light" : "dark"} />
 
       {/* Top Header */}
       <View style={styles.header}>
         <TouchableOpacity
-          style={styles.backButton}
+          style={[
+            styles.backButton,
+            { backgroundColor: colors.surface, borderColor: colors.border },
+          ]}
           onPress={() => router.replace("/treinos")}
           activeOpacity={0.7}
           accessibilityLabel="Voltar"
         >
-          <Ionicons name="arrow-back-outline" size={20} color="#0F172A" />
+          <Ionicons
+            name="arrow-back-outline"
+            size={20}
+            color={colors.textPrimary}
+          />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Detalhes do Treino</Text>
-        <TouchableOpacity
-          style={styles.headerEditButton}
-          onPress={() =>
-            router.push({
-              pathname: "/treinos/novo",
-              params: { id: treino.id },
-            })
-          }
-          activeOpacity={0.7}
-          accessibilityLabel="Editar treino"
-        >
-          <Ionicons name="pencil-outline" size={18} color="#0284C7" />
-        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
+          Detalhes do Treino
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+          <TouchableOpacity
+            style={[
+              styles.headerEditButton,
+              {
+                backgroundColor: colors.primaryLight,
+                borderColor: colors.border,
+              },
+            ]}
+            onPress={() =>
+              router.push({
+                pathname: "/treinos/novo",
+                params: { id: treino.id },
+              })
+            }
+            activeOpacity={0.7}
+            accessibilityLabel="Editar treino"
+          >
+            <Ionicons name="pencil-outline" size={18} color={colors.primary} />
+          </TouchableOpacity>
+          <ThemeToggle size={18} />
+        </View>
       </View>
 
       <ScrollView
@@ -144,14 +196,30 @@ export default function TreinoDetalheScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Card Principal */}
-        <View style={styles.mainCard}>
+        <View
+          style={[
+            styles.mainCard,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
           <Image source={detailImage} style={styles.heroImage} />
 
           <View style={styles.cardContent}>
             <View style={styles.badgeRow}>
-              <View style={styles.activeBadge}>
-                <Ionicons name="fitness-outline" size={13} color="#0284C7" />
-                <Text style={styles.activeBadgeText}>
+              <View
+                style={[
+                  styles.activeBadge,
+                  { backgroundColor: colors.primaryLight },
+                ]}
+              >
+                <Ionicons
+                  name="fitness-outline"
+                  size={13}
+                  color={colors.primary}
+                />
+                <Text
+                  style={[styles.activeBadgeText, { color: colors.primary }]}
+                >
                   {treino.categoria
                     ? treino.categoria.toUpperCase()
                     : "ROTINA ATIVA"}
@@ -159,43 +227,95 @@ export default function TreinoDetalheScreen() {
               </View>
             </View>
 
-            <Text style={styles.workoutName}>{treino.nome}</Text>
+            <Text style={[styles.workoutName, { color: colors.textPrimary }]}>
+              {treino.nome}
+            </Text>
 
             {/* Informações em grade */}
             <View style={styles.infoGrid}>
               {treino.categoria ? (
                 <View style={styles.infoItem}>
-                  <View style={styles.infoIconBox}>
+                  <View
+                    style={[
+                      styles.infoIconBox,
+                      { backgroundColor: colors.primaryLight },
+                    ]}
+                  >
                     <Ionicons
                       name="pricetag-outline"
                       size={20}
-                      color="#0284C7"
+                      color={colors.primary}
                     />
                   </View>
                   <View>
-                    <Text style={styles.infoLabel}>Categoria do treino</Text>
-                    <Text style={styles.infoValue}>{treino.categoria}</Text>
+                    <Text
+                      style={[
+                        styles.infoLabel,
+                        { color: colors.textSecondary },
+                      ]}
+                    >
+                      Categoria do treino
+                    </Text>
+                    <Text
+                      style={[styles.infoValue, { color: colors.textPrimary }]}
+                    >
+                      {treino.categoria}
+                    </Text>
                   </View>
                 </View>
               ) : null}
 
               <View style={styles.infoItem}>
-                <View style={styles.infoIconBox}>
-                  <Ionicons name="calendar-outline" size={20} color="#0284C7" />
+                <View
+                  style={[
+                    styles.infoIconBox,
+                    { backgroundColor: colors.primaryLight },
+                  ]}
+                >
+                  <Ionicons
+                    name="calendar-outline"
+                    size={20}
+                    color={colors.primary}
+                  />
                 </View>
                 <View>
-                  <Text style={styles.infoLabel}>Dia programado</Text>
-                  <Text style={styles.infoValue}>{treino.diaSemana}</Text>
+                  <Text
+                    style={[styles.infoLabel, { color: colors.textSecondary }]}
+                  >
+                    Dia programado
+                  </Text>
+                  <Text
+                    style={[styles.infoValue, { color: colors.textPrimary }]}
+                  >
+                    {treino.diaSemana}
+                  </Text>
                 </View>
               </View>
 
               <View style={styles.infoItem}>
-                <View style={styles.infoIconBox}>
-                  <Ionicons name="time-outline" size={20} color="#0284C7" />
+                <View
+                  style={[
+                    styles.infoIconBox,
+                    { backgroundColor: colors.primaryLight },
+                  ]}
+                >
+                  <Ionicons
+                    name="time-outline"
+                    size={20}
+                    color={colors.primary}
+                  />
                 </View>
                 <View>
-                  <Text style={styles.infoLabel}>Duração prevista</Text>
-                  <Text style={styles.infoValue}>{treino.duracaoMin} min</Text>
+                  <Text
+                    style={[styles.infoLabel, { color: colors.textSecondary }]}
+                  >
+                    Duração prevista
+                  </Text>
+                  <Text
+                    style={[styles.infoValue, { color: colors.textPrimary }]}
+                  >
+                    {treino.duracaoMin} min
+                  </Text>
                 </View>
               </View>
             </View>
@@ -203,12 +323,23 @@ export default function TreinoDetalheScreen() {
         </View>
 
         {/* Card de Recomendações */}
-        <View style={styles.recommendationCard}>
+        <View
+          style={[
+            styles.recommendationCard,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
           <View style={styles.recHeader}>
-            <Ionicons name="checkmark-done-outline" size={18} color="#0284C7" />
-            <Text style={styles.recTitle}>Orientações da sessão</Text>
+            <Ionicons
+              name="checkmark-done-outline"
+              size={18}
+              color={colors.primary}
+            />
+            <Text style={[styles.recTitle, { color: colors.textPrimary }]}>
+              Orientações da sessão
+            </Text>
           </View>
-          <Text style={styles.recText}>
+          <Text style={[styles.recText, { color: colors.textSecondary }]}>
             Realize aquecimento articular prévio antes de iniciar as séries
             principais e mantenha a hidratação constante ao longo do treino.
           </Text>
@@ -217,7 +348,7 @@ export default function TreinoDetalheScreen() {
         {/* Botões de Ação */}
         <View style={styles.actionButtonsContainer}>
           <TouchableOpacity
-            style={styles.editButton}
+            style={[styles.editButton, { backgroundColor: colors.primary }]}
             onPress={() =>
               router.push({
                 pathname: "/treinos/novo",
@@ -231,12 +362,20 @@ export default function TreinoDetalheScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.deleteButton}
+            style={[
+              styles.deleteButton,
+              {
+                backgroundColor: colors.surface,
+                borderColor: colors.danger,
+              },
+            ]}
             onPress={confirmarExclusao}
             activeOpacity={0.7}
           >
-            <Ionicons name="trash-outline" size={18} color="#DC2626" />
-            <Text style={styles.deleteButtonText}>Excluir Treino</Text>
+            <Ionicons name="trash-outline" size={18} color={colors.danger} />
+            <Text style={[styles.deleteButtonText, { color: colors.danger }]}>
+              Excluir Treino
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -247,7 +386,6 @@ export default function TreinoDetalheScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
   },
   header: {
     flexDirection: "row",
@@ -260,26 +398,21 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 10,
-    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#E2E8F0",
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#0F172A",
   },
   headerEditButton: {
     width: 38,
     height: 38,
     borderRadius: 10,
-    backgroundColor: "#EFF6FF",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#BFDBFE",
   },
   scrollContent: {
     paddingHorizontal: 16,
@@ -294,22 +427,18 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 14,
-    color: "#64748B",
   },
   notFoundTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#0F172A",
     marginTop: 8,
   },
   notFoundSubtitle: {
     fontSize: 13,
-    color: "#64748B",
     textAlign: "center",
     lineHeight: 18,
   },
   backToListButton: {
-    backgroundColor: "#0F172A",
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 12,
@@ -321,11 +450,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   mainCard: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#E2E8F0",
     marginBottom: 16,
   },
   heroImage: {
@@ -342,7 +469,6 @@ const styles = StyleSheet.create({
   activeBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#E0F2FE",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -351,53 +477,40 @@ const styles = StyleSheet.create({
   activeBadgeText: {
     fontSize: 11,
     fontWeight: "700",
-    color: "#0284C7",
     letterSpacing: 0.8,
   },
   workoutName: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "800",
-    color: "#0F172A",
     marginBottom: 20,
-    lineHeight: 28,
   },
   infoGrid: {
-    gap: 14,
-    borderTopWidth: 1,
-    borderTopColor: "#F1F5F9",
-    paddingTop: 16,
+    gap: 16,
   },
   infoItem: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: 14,
   },
   infoIconBox: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     borderRadius: 12,
-    backgroundColor: "#F0F9FF",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#E0F2FE",
   },
   infoLabel: {
     fontSize: 12,
-    color: "#64748B",
+    marginBottom: 2,
   },
   infoValue: {
     fontSize: 15,
-    fontWeight: "700",
-    color: "#0F172A",
-    marginTop: 2,
+    fontWeight: "600",
   },
   recommendationCard: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
     marginBottom: 20,
   },
   recHeader: {
@@ -409,43 +522,37 @@ const styles = StyleSheet.create({
   recTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#0F172A",
   },
   recText: {
     fontSize: 13,
-    color: "#64748B",
     lineHeight: 19,
   },
   actionButtonsContainer: {
-    gap: 10,
+    gap: 12,
   },
   editButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#0F172A",
-    height: 48,
-    borderRadius: 12,
+    height: 50,
+    borderRadius: 14,
     gap: 8,
   },
   editButtonText: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
   },
   deleteButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FEF2F2",
     height: 48,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#FECACA",
     gap: 8,
   },
   deleteButtonText: {
-    color: "#DC2626",
     fontSize: 14,
     fontWeight: "600",
   },

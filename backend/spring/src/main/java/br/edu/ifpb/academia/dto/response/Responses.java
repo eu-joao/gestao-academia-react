@@ -2,58 +2,44 @@ package br.edu.ifpb.academia.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
-import br.edu.ifpb.academia.enums.FormaPagamento;
 import br.edu.ifpb.academia.enums.NivelExperiencia;
 import br.edu.ifpb.academia.enums.StatusAluno;
 import br.edu.ifpb.academia.enums.StatusCobranca;
 import br.edu.ifpb.academia.enums.StatusContrato;
-import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
 import br.edu.ifpb.academia.enums.TipoEstrutural;
 import br.edu.ifpb.academia.enums.TipoPlano;
 
 public final class Responses {
-	private Responses() {
-	}
+	private Responses() { }
 
-	public record UnidadeResponse(Long id, String nome, String endereco, String cnpj, String telefone) {
-	}
+	public record AlunoResponse(Long id, String nome, String email, BigDecimal peso, BigDecimal altura,
+			NivelExperiencia nivelExperiencia, Integer frequenciaSemanal, StatusAluno status,
+			Long programaAtualId) { }
 
-	public record AlunoResponse(Long id, String nome, String cpf, String telefone, String email,
-			LocalDate dataNascimento, BigDecimal peso, BigDecimal altura, NivelExperiencia nivelExperiencia,
-			Integer frequenciaSemanal, StatusAluno status) {
-	}
-
-	public record PlanoResponse(Long id, TipoPlano tipo, BigDecimal valor, Integer duracao,
-			BigDecimal percentualDesconto, String descricao) {
-	}
+	public record PlanoResponse(TipoPlano tipo, Integer duracaoMeses, BigDecimal valorMensal) { }
 
 	public record ProgramaTreinoResponse(Long id, NivelExperiencia nivelExperiencia, Integer frequenciaSemanal,
-			TipoEstrutural tipoEstrutural, String descricao) {
-	}
+			TipoEstrutural tipoEstrutural, String descricao, List<DiaTreinoResponse> dias) { }
 
-	public record DiaTreinoResponse(Long id, Long programaTreinoId, String nomeDia, Integer ordem) {
-	}
+	public record DiaTreinoResponse(Long id, Long programaTreinoId, String nome, Integer ordem,
+			List<ItemTreinoResponse> itens) { }
 
-	public record ExercicioResponse(Long id, String nome, String musculaturaAlvo) {
-	}
+	public record ItemTreinoResponse(Long id, Long diaTreinoId, String nomeExercicio, String musculaturaAlvo,
+			Integer series, String repeticoes, Integer ordem) { }
 
-	public record DiaTreinoExercicioResponse(Long id, Long diaTreinoId, Long exercicioId, String exercicioNome,
-			Integer series, Integer repeticoes, Integer ordem) {
-	}
+	public record ContratoResponse(Long id, Long alunoId, TipoPlano plano, LocalDate dataInicio,
+			LocalDate dataTermino, StatusContrato status) { }
 
-	public record TreinoAtivoResponse(Long id, Long alunoId, String alunoNome, Long programaTreinoId,
-			String programaDescricao, LocalDate dataInicio, LocalDate dataFim, StatusTreinoAtivo status) {
-	}
+	public record CobrancaResponse(Long id, Long contratoId, Integer numeroParcela, LocalDate dataVencimento,
+			BigDecimal valor, StatusCobranca status, LocalDate dataPagamento) { }
 
-	public record ContratoResponse(Long id, Long alunoId, String alunoNome, Long unidadeId, String unidadeNome,
-			Long planoId, TipoPlano planoTipo, LocalDate dataInicio, LocalDate dataTermino, StatusContrato status) {
-	}
+	public record SessaoTreinoResponse(Long id, Long alunoId, Long programaTreinoId, Long diaTreinoId,
+			LocalDateTime dataHoraConclusao) { }
 
-	public record CobrancaResponse(Long id, Long contratoId, LocalDate dataVencimento, BigDecimal valor,
-			LocalDate dataPagamento, FormaPagamento formaPagamento, StatusCobranca status) {
-	}
-
-	public record AcessoResponse(Long alunoId, boolean liberado, String motivo) {
-	}
+	public record TreinoResponse(UUID id, String nome, String categoria, String diaSemana,
+			Integer duracaoMin, Long alunoId, LocalDateTime criadoEm, LocalDateTime atualizadoEm) { }
 }

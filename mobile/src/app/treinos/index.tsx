@@ -13,9 +13,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useFocusEffect } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { Treino, listar, remover } from "../../services/treinoStorage";
+import { SyncBadge } from "../../components/SyncBadge";
+import { ThemeToggle } from "../../components/ThemeToggle";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const heroImage = require("../../../assets/images/inicio_treino.jpg");
 const emptyImage = require("../../../assets/images/homem_treinando_modelo.jpg");
@@ -33,6 +35,8 @@ const FILTROS_DIAS = [
 
 export default function TreinosListScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
+
   const [treinos, setTreinos] = useState<Treino[]>([]);
   const [busca, setBusca] = useState("");
   const [diaFiltro, setDiaFiltro] = useState("Todos");
@@ -140,13 +144,25 @@ export default function TreinosListScreen() {
       <View style={styles.heroWrapper}>
         {/* Mensagem de Feedback de Exclusão (RF06) */}
         {feedbackMsg && (
-          <View style={styles.feedbackBanner}>
+          <View
+            style={[
+              styles.feedbackBanner,
+              {
+                backgroundColor: colors.successLight,
+                borderColor: colors.success,
+              },
+            ]}
+          >
             <Ionicons
               name="checkmark-circle-outline"
               size={18}
-              color="#16A34A"
+              color={colors.success}
             />
-            <Text style={styles.feedbackBannerText}>{feedbackMsg}</Text>
+            <Text
+              style={[styles.feedbackBannerText, { color: colors.success }]}
+            >
+              {feedbackMsg}
+            </Text>
           </View>
         )}
 
@@ -167,8 +183,12 @@ export default function TreinosListScreen() {
                 Acompanhe e organize sua programação semanal
               </Text>
 
-              {/* Estatísticas simples (RF03 + Bônus) */}
-              <View style={styles.statsRow}>
+              {/* Estatísticas simples */}
+              <TouchableOpacity
+                style={styles.statsRow}
+                onPress={() => router.push("/estatisticas" as any)}
+                activeOpacity={0.85}
+              >
                 <View style={styles.statItem}>
                   <Text style={styles.statValue}>{treinos.length}</Text>
                   <Text style={styles.statLabel}>Sessões</Text>
@@ -183,7 +203,7 @@ export default function TreinosListScreen() {
                   <Text style={styles.statValue}>{mediaMinutos} min</Text>
                   <Text style={styles.statLabel}>Média / sessão</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
           </ImageBackground>
         </View>
@@ -193,16 +213,23 @@ export default function TreinosListScreen() {
 
   function renderEmpty() {
     return (
-      <View style={styles.emptyContainer}>
+      <View
+        style={[
+          styles.emptyContainer,
+          { backgroundColor: colors.card, borderColor: colors.border },
+        ]}
+      >
         <Image source={emptyImage} style={styles.emptyImage} />
-        <Text style={styles.emptyTitle}>Nenhum treino encontrado</Text>
-        <Text style={styles.emptySubtitle}>
+        <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
+          Nenhum treino encontrado
+        </Text>
+        <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
           {busca.trim() || diaFiltro !== "Todos"
             ? "Tente ajustar a busca ou o filtro de dia para visualizar outros treinos."
             : "Você ainda não possui treinos cadastrados. Clique no botão 'Novo' para criar sua primeira sessão."}
         </Text>
         <TouchableOpacity
-          style={styles.emptyAddButton}
+          style={[styles.emptyAddButton, { backgroundColor: colors.primary }]}
           onPress={() => router.push("/treinos/novo")}
           activeOpacity={0.8}
         >
@@ -214,47 +241,94 @@ export default function TreinosListScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
-      <StatusBar style="dark" />
-
-      {/* Controles e busca fixos no topo para garantir foco ininterrupto na digitação */}
-      <View style={styles.fixedHeader}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+      edges={["top", "bottom"]}
+    >
+      {/* Controles e busca fixos no topo */}
+      <View
+        style={[styles.fixedHeader, { backgroundColor: colors.background }]}
+      >
         {/* Barra superior de navegação */}
         <View style={styles.topBar}>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[
+              styles.backButton,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
             onPress={() => router.push("/")}
             activeOpacity={0.7}
             accessibilityLabel="Voltar ao início"
           >
-            <Ionicons name="arrow-back-outline" size={20} color="#0F172A" />
+            <Ionicons
+              name="arrow-back-outline"
+              size={20}
+              color={colors.textPrimary}
+            />
           </TouchableOpacity>
-          <Text style={styles.topBarTitle}>Meus Treinos</Text>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => router.push("/treinos/novo")}
-            activeOpacity={0.8}
-            accessibilityLabel="Novo treino"
-          >
-            <Ionicons name="add" size={20} color="#FFFFFF" />
-            <Text style={styles.addButtonText}>Novo</Text>
-          </TouchableOpacity>
+
+          <View style={{ alignItems: "center" }}>
+            <Text style={[styles.topBarTitle, { color: colors.textPrimary }]}>
+              Meus Treinos
+            </Text>
+            <SyncBadge />
+          </View>
+
+          <View style={styles.topRightActions}>
+            <TouchableOpacity
+              style={[
+                styles.iconButton,
+                { backgroundColor: colors.surface, borderColor: colors.border },
+              ]}
+              onPress={() => router.push("/estatisticas" as any)}
+              activeOpacity={0.7}
+              accessibilityLabel="Estatísticas e Gráficos"
+            >
+              <Ionicons
+                name="stats-chart-outline"
+                size={17}
+                color={colors.primary}
+              />
+            </TouchableOpacity>
+
+            <ThemeToggle size={17} />
+
+            <TouchableOpacity
+              style={[styles.addButton, { backgroundColor: colors.primary }]}
+              onPress={() => router.push("/treinos/novo")}
+              activeOpacity={0.8}
+              accessibilityLabel="Novo treino"
+            >
+              <Ionicons name="add" size={18} color="#FFFFFF" />
+              <Text style={styles.addButtonText}>Novo</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* RF03: Controles de Busca e Filtro */}
-        <View style={styles.controlsCard}>
+        <View
+          style={[
+            styles.controlsCard,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
           {/* Campo de Busca */}
-          <View style={styles.searchWrapper}>
+          <View
+            style={[
+              styles.searchWrapper,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
             <Ionicons
               name="search-outline"
               size={18}
-              color="#64748B"
+              color={colors.textSecondary}
               style={styles.searchIcon}
             />
             <TextInput
-              style={styles.searchInput}
+              style={[styles.searchInput, { color: colors.textPrimary }]}
               placeholder="Buscar por nome do treino..."
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={colors.textMuted}
               value={busca}
               onChangeText={setBusca}
               autoCorrect={false}
@@ -262,7 +336,11 @@ export default function TreinosListScreen() {
             />
             {busca.length > 0 && (
               <TouchableOpacity onPress={() => setBusca("")}>
-                <Ionicons name="close-circle" size={18} color="#94A3B8" />
+                <Ionicons
+                  name="close-circle"
+                  size={18}
+                  color={colors.textMuted}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -274,12 +352,22 @@ export default function TreinosListScreen() {
               return (
                 <TouchableOpacity
                   key={dia}
-                  style={[styles.chip, ativo && styles.chipActive]}
+                  style={[
+                    styles.chip,
+                    {
+                      backgroundColor: ativo ? colors.primary : colors.surface,
+                      borderColor: ativo ? colors.primary : colors.border,
+                    },
+                  ]}
                   onPress={() => setDiaFiltro(dia)}
                   activeOpacity={0.7}
                 >
                   <Text
-                    style={[styles.chipText, ativo && styles.chipTextActive]}
+                    style={[
+                      styles.chipText,
+                      { color: ativo ? "#FFFFFF" : colors.textSecondary },
+                      ativo && { fontWeight: "700" },
+                    ]}
                   >
                     {dia}
                   </Text>
@@ -289,7 +377,7 @@ export default function TreinosListScreen() {
           </View>
 
           {/* Botão de Ordenação */}
-          <View style={styles.sortRow}>
+          <View style={[styles.sortRow, { borderTopColor: colors.border }]}>
             <TouchableOpacity
               style={styles.sortButton}
               onPress={alternarOrdem}
@@ -298,14 +386,16 @@ export default function TreinosListScreen() {
               <Ionicons
                 name="swap-vertical-outline"
                 size={16}
-                color="#0284C7"
+                color={colors.primary}
               />
-              <Text style={styles.sortButtonText}>
+              <Text style={[styles.sortButtonText, { color: colors.primary }]}>
                 Ordenar: {getOrdemLabel()}
               </Text>
             </TouchableOpacity>
 
-            <Text style={styles.resultsCount}>
+            <Text
+              style={[styles.resultsCount, { color: colors.textSecondary }]}
+            >
               {treinosFiltrados.length}{" "}
               {treinosFiltrados.length === 1 ? "encontrado" : "encontrados"}
             </Text>
@@ -323,7 +413,12 @@ export default function TreinosListScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <View
+            style={[
+              styles.card,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
+          >
             <View style={styles.cardHeader}>
               <TouchableOpacity
                 style={styles.cardClickArea}
@@ -335,20 +430,40 @@ export default function TreinosListScreen() {
                   })
                 }
               >
-                <View style={styles.cardIconBox}>
-                  <Ionicons name="barbell-outline" size={18} color="#0284C7" />
+                <View
+                  style={[
+                    styles.cardIconBox,
+                    { backgroundColor: colors.primaryLight },
+                  ]}
+                >
+                  <Ionicons
+                    name="barbell-outline"
+                    size={18}
+                    color={colors.primary}
+                  />
                 </View>
                 <View style={styles.cardInfo}>
-                  <Text style={styles.cardTitle} numberOfLines={1}>
+                  <Text
+                    style={[styles.cardTitle, { color: colors.textPrimary }]}
+                    numberOfLines={1}
+                  >
                     {item.nome}
                   </Text>
-                  <Text style={styles.cardHint}>Toque para ver detalhes</Text>
+                  <Text style={[styles.cardHint, { color: colors.textMuted }]}>
+                    Toque para ver detalhes
+                  </Text>
                 </View>
               </TouchableOpacity>
 
               <View style={styles.cardActions}>
                 <TouchableOpacity
-                  style={styles.actionButtonEdit}
+                  style={[
+                    styles.actionButtonEdit,
+                    {
+                      backgroundColor: colors.primaryLight,
+                      borderColor: colors.border,
+                    },
+                  ]}
                   onPress={() =>
                     router.push({
                       pathname: "/treinos/novo",
@@ -358,21 +473,35 @@ export default function TreinosListScreen() {
                   activeOpacity={0.7}
                   accessibilityLabel="Editar treino"
                 >
-                  <Ionicons name="pencil-outline" size={16} color="#0284C7" />
+                  <Ionicons
+                    name="pencil-outline"
+                    size={16}
+                    color={colors.primary}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.actionButtonDelete}
+                  style={[
+                    styles.actionButtonDelete,
+                    {
+                      backgroundColor: colors.dangerLight,
+                      borderColor: colors.border,
+                    },
+                  ]}
                   onPress={() => confirmarExclusao(item)}
                   activeOpacity={0.7}
                   accessibilityLabel="Excluir treino"
                 >
-                  <Ionicons name="trash-outline" size={16} color="#DC2626" />
+                  <Ionicons
+                    name="trash-outline"
+                    size={16}
+                    color={colors.danger}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
 
             <TouchableOpacity
-              style={styles.cardFooter}
+              style={[styles.cardFooter, { borderTopColor: colors.border }]}
               activeOpacity={0.7}
               onPress={() =>
                 router.push({
@@ -382,26 +511,70 @@ export default function TreinosListScreen() {
               }
             >
               {item.categoria ? (
-                <View style={styles.categoryTag}>
-                  <Ionicons name="pricetag-outline" size={12} color="#0284C7" />
-                  <Text style={styles.categoryTagText}>{item.categoria}</Text>
+                <View
+                  style={[
+                    styles.categoryTag,
+                    {
+                      backgroundColor: colors.primaryLight,
+                      borderColor: colors.border,
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name="pricetag-outline"
+                    size={12}
+                    color={colors.primary}
+                  />
+                  <Text
+                    style={[styles.categoryTagText, { color: colors.primary }]}
+                  >
+                    {item.categoria}
+                  </Text>
                 </View>
               ) : null}
 
-              <View style={styles.tag}>
-                <Ionicons name="calendar-outline" size={13} color="#475569" />
-                <Text style={styles.tagText}>{item.diaSemana}</Text>
+              <View
+                style={[
+                  styles.tag,
+                  {
+                    backgroundColor: colors.surface,
+                    borderColor: colors.border,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="calendar-outline"
+                  size={13}
+                  color={colors.textSecondary}
+                />
+                <Text style={[styles.tagText, { color: colors.textSecondary }]}>
+                  {item.diaSemana}
+                </Text>
               </View>
 
-              <View style={styles.tag}>
-                <Ionicons name="time-outline" size={13} color="#475569" />
-                <Text style={styles.tagText}>{item.duracaoMin} min</Text>
+              <View
+                style={[
+                  styles.tag,
+                  {
+                    backgroundColor: colors.surface,
+                    borderColor: colors.border,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="time-outline"
+                  size={13}
+                  color={colors.textSecondary}
+                />
+                <Text style={[styles.tagText, { color: colors.textSecondary }]}>
+                  {item.duracaoMin} min
+                </Text>
               </View>
 
               <Ionicons
                 name="chevron-forward-outline"
                 size={16}
-                color="#CBD5E1"
+                color={colors.textMuted}
                 style={{ marginLeft: "auto" }}
               />
             </TouchableOpacity>
@@ -415,12 +588,10 @@ export default function TreinosListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
   },
   fixedHeader: {
     paddingHorizontal: 16,
     paddingTop: 4,
-    backgroundColor: "#F8FAFC",
   },
   topBar: {
     flexDirection: "row",
@@ -429,27 +600,36 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingVertical: 2,
   },
+  topRightActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
   backButton: {
-    width: 38,
-    height: 38,
+    width: 36,
+    height: 36,
     borderRadius: 10,
-    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+  },
+  iconButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
   },
   topBarTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "700",
-    color: "#0F172A",
   },
   addButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#0F172A",
-    paddingHorizontal: 14,
-    height: 38,
+    paddingHorizontal: 12,
+    height: 36,
     borderRadius: 10,
     gap: 4,
   },
@@ -459,19 +639,15 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   controlsCard: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 16,
-    padding: 14,
+    padding: 12,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    marginBottom: 12,
+    marginBottom: 10,
   },
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F8FAFC",
     borderWidth: 1,
-    borderColor: "#CBD5E1",
     borderRadius: 10,
     paddingHorizontal: 12,
     marginBottom: 10,
@@ -481,9 +657,8 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    height: 40,
+    height: 38,
     fontSize: 13,
-    color: "#0F172A",
   },
   chipsContainer: {
     flexDirection: "row",
@@ -495,30 +670,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 8,
-    backgroundColor: "#F1F5F9",
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-  },
-  chipActive: {
-    backgroundColor: "#0284C7",
-    borderColor: "#0284C7",
   },
   chipText: {
     fontSize: 12,
     fontWeight: "500",
-    color: "#475569",
-  },
-  chipTextActive: {
-    color: "#FFFFFF",
-    fontWeight: "600",
   },
   sortRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     borderTopWidth: 1,
-    borderTopColor: "#F1F5F9",
-    paddingTop: 10,
+    paddingTop: 8,
   },
   sortButton: {
     flexDirection: "row",
@@ -528,11 +691,9 @@ const styles = StyleSheet.create({
   sortButtonText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#0284C7",
   },
   resultsCount: {
     fontSize: 12,
-    color: "#64748B",
   },
   heroWrapper: {
     paddingTop: 4,
@@ -541,9 +702,7 @@ const styles = StyleSheet.create({
   feedbackBanner: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F0FDF4",
     borderWidth: 1,
-    borderColor: "#BBF7D0",
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -551,7 +710,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   feedbackBannerText: {
-    color: "#166534",
     fontSize: 13,
     fontWeight: "600",
   },
@@ -633,12 +791,10 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   card: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 14,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
   },
   cardHeader: {
     flexDirection: "row",
@@ -655,7 +811,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: "#E0F2FE",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
@@ -666,11 +821,9 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#0F172A",
   },
   cardHint: {
     fontSize: 11,
-    color: "#94A3B8",
     marginTop: 2,
   },
   cardActions: {
@@ -683,71 +836,58 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: "#F0F9FF",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#BAE6FD",
   },
   actionButtonDelete: {
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: "#FEF2F2",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#FECACA",
   },
   cardFooter: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     borderTopWidth: 1,
-    borderTopColor: "#F1F5F9",
     paddingTop: 10,
   },
   categoryTag: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F0F9FF",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: "#BAE6FD",
     gap: 4,
   },
   categoryTagText: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#0284C7",
   },
   tag: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F8FAFC",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
     gap: 4,
   },
   tagText: {
     fontSize: 11,
     fontWeight: "500",
-    color: "#475569",
   },
   emptyContainer: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 32,
     paddingHorizontal: 20,
-    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
     marginTop: 6,
   },
   emptyImage: {
@@ -759,13 +899,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#0F172A",
     marginBottom: 4,
     textAlign: "center",
   },
   emptySubtitle: {
     fontSize: 12,
-    color: "#64748B",
     textAlign: "center",
     lineHeight: 18,
     maxWidth: 260,
@@ -774,7 +912,6 @@ const styles = StyleSheet.create({
   emptyAddButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#0284C7",
     paddingHorizontal: 16,
     height: 40,
     borderRadius: 10,

@@ -2,21 +2,21 @@ package br.edu.ifpb.academia.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifpb.academia.dto.request.AlunoRequest;
+import br.edu.ifpb.academia.dto.request.PesoAlunoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
 import br.edu.ifpb.academia.service.AlunoService;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -24,41 +24,45 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/alunos")
 @RequiredArgsConstructor
 public class AlunoController {
+	private final AlunoService service;
 
-    private final AlunoService service;
+	@GetMapping("/me")
+	@PreAuthorize("hasRole('ALUNO')")
+	public AlunoResponse meuCadastro(@AuthenticationPrincipal Jwt jwt) {
+		return service.buscarMeuCadastro(jwt.getSubject());
+	}
 
-    @Operation(summary = "Lista alunos")
-    @GetMapping
-    public List<AlunoResponse> listar() {
-        return service.listar();
-    }
+	@PostMapping("/me")
+	@PreAuthorize("hasRole('ALUNO')")
+	public AlunoResponse cadastrar(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AlunoRequest request) {
+		return service.registrar(jwt.getSubject(), jwt.getClaimAsString("email"),
+				jwt.getClaimAsString("name"), request);
+	}
 
-    @Operation(summary = "Busca aluno por ID")
-    @GetMapping("/{id}")
-    public AlunoResponse buscar(@PathVariable Long id) {
-        return service.buscar(id);
-    }
+	@PutMapping("/me/peso")
+	@PreAuthorize("hasRole('ALUNO')")
+	public AlunoResponse atualizarMeuPeso(@AuthenticationPrincipal Jwt jwt,
+			@Valid @RequestBody PesoAlunoRequest request) {
+		return service.atualizarPeso(jwt.getSubject(), request);
+	}
 
-    @Operation(summary = "Cria aluno e treino ativo automaticamente")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public AlunoResponse criar(
-            @Valid @RequestBody AlunoRequest request) {
-        return service.criar(request);
-    }
+	@GetMapping
+	@PreAuthorize("hasRole('PERSONAL')")
+	public List<AlunoResponse> listar() { return service.listar(); }
 
-    @Operation(summary = "Atualiza aluno e recria treino ativo quando o perfil muda")
-    @PutMapping("/{id}")
-    public AlunoResponse atualizar(
-            @PathVariable Long id,
-            @Valid @RequestBody AlunoRequest request) {
-        return service.atualizar(id, request);
-    }
+	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('PERSONAL')")
+	public AlunoResponse buscar(@PathVariable Long id) { return service.buscar(id); }
 
-    @Operation(summary = "Remove aluno")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    public void excluir(@PathVariable Long id) {
-        service.excluir(id);
-    }
+	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('PERSONAL')")
+	public AlunoResponse atualizar(@PathVariable Long id, @Valid @RequestBody AlunoRequest request) {
+		return service.atualizarComoPersonal(id, request);
+	}
+
+	@PutMapping("/{alunoId}/programa/{programaId}")
+	@PreAuthorize("hasRole('PERSONAL')")
+	public AlunoResponse atribuirPrograma(@PathVariable Long alunoId, @PathVariable Long programaId) {
+		return service.atribuirPrograma(alunoId, programaId);
+	}
 }
