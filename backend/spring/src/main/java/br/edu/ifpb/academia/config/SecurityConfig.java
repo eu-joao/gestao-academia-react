@@ -1,13 +1,14 @@
 package br.edu.ifpb.academia.config;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +22,9 @@ import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableMethodSecurity
@@ -76,10 +80,28 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http,
 			Converter<Jwt, ? extends AbstractAuthenticationToken> googleAuthenticationConverter) throws Exception {
-		http.csrf(csrf -> csrf.disable())
-			.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+		http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+			.csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(authorize -> authorize
+					.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+					.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+					.requestMatchers("/actuator/**").permitAll()
+					.requestMatchers("/treinos/**").permitAll()
+					.anyRequest().authenticated())
 			.oauth2ResourceServer(resourceServer -> resourceServer
 					.jwt(jwt -> jwt.jwtAuthenticationConverter(googleAuthenticationConverter)));
 		return http.build();
+	}
+
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowedOriginPatterns(List.of("*"));
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+		config.setAllowedHeaders(List.of("*"));
+		config.setAllowCredentials(true);
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 }

@@ -10,6 +10,7 @@ import br.edu.ifpb.academia.dto.response.Responses.ItemTreinoResponse;
 import br.edu.ifpb.academia.dto.response.Responses.PlanoResponse;
 import br.edu.ifpb.academia.dto.response.Responses.ProgramaTreinoResponse;
 import br.edu.ifpb.academia.dto.response.Responses.SessaoTreinoResponse;
+import br.edu.ifpb.academia.dto.response.Responses.TreinoResponse;
 import br.edu.ifpb.academia.entity.Aluno;
 import br.edu.ifpb.academia.entity.Cobranca;
 import br.edu.ifpb.academia.entity.Contrato;
@@ -17,6 +18,7 @@ import br.edu.ifpb.academia.entity.DiaTreino;
 import br.edu.ifpb.academia.entity.ItemTreino;
 import br.edu.ifpb.academia.entity.ProgramaTreino;
 import br.edu.ifpb.academia.entity.SessaoTreino;
+import br.edu.ifpb.academia.entity.Treino;
 import br.edu.ifpb.academia.enums.TipoPlano;
 
 public final class Mapper {
@@ -59,5 +61,11 @@ public final class Mapper {
 	public static SessaoTreinoResponse toResponse(SessaoTreino sessao) {
 		return new SessaoTreinoResponse(sessao.getId(), sessao.getAluno().getId(), sessao.getProgramaTreino().getId(),
 				sessao.getDiaTreino().getId(), sessao.getDataHoraConclusao());
+	}
+
+	public static TreinoResponse toResponse(Treino treino) {
+		return new TreinoResponse(treino.getId(), treino.getNome(), treino.getCategoria(), treino.getDiaSemana(),
+				treino.getDuracaoMin(), treino.getAluno() == null ? null : treino.getAluno().getId(),
+				treino.getCriadoEm(), treino.getAtualizadoEm());
 	}
 }

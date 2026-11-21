@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import br.edu.ifpb.academia.enums.NivelExperiencia;
 import br.edu.ifpb.academia.enums.StatusAluno;
@@ -38,4 +39,7 @@ public final class Responses {
 
 	public record SessaoTreinoResponse(Long id, Long alunoId, Long programaTreinoId, Long diaTreinoId,
 			LocalDateTime dataHoraConclusao) { }
+
+	public record TreinoResponse(UUID id, String nome, String categoria, String diaSemana,
+			Integer duracaoMin, Long alunoId, LocalDateTime criadoEm, LocalDateTime atualizadoEm) { }
 }
