@@ -11,7 +11,7 @@ Aplicativo do aluno do sistema Gestão Academia, desenvolvido com Expo, React Na
 - **Exportação de dados:** compartilhamento nativo (`Share.share`) da ficha de treinos formatada em texto (para WhatsApp e bloco de notas) e backup estruturado em formato JSON.
 - **Notificações locais e lembretes:** card dinâmico _"Treino de Hoje"_ na tela inicial identificando o treino do dia atual e agendamento de lembretes diários com seletor de horários via `expo-notifications`.
 - **Formulário responsivo:** interface adaptada com `KeyboardAvoidingView` e `ScrollView` para prevenir sobreposição de campos (como duração) pelo teclado virtual.
-- **Cadastro e acesso:** criação de conta com autenticação Google. Nome e e-mail são obtidos do provedor de autenticação.
+- **Acesso:** o aplicativo não possui login nesta versão e consome a API do backend sem autenticação.
 - **Programa de treino e sessões:** consulta do programa predefinido, dos dias em sequência e registro de sessões concluídas.
 - **Cobranças e pagamento simulado:** consulta de mensalidades e simulação de pagamento via Pix fictício.
 

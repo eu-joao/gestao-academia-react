@@ -19,9 +19,9 @@ O sistema atende **um único personal trainer**, previamente cadastrado. Não co
 
 ### 3.1 Alunos e acesso
 
-O aluno cria sua conta pelo aplicativo, utilizando autenticação Google. O nome e o e-mail são obtidos do provedor de autenticação. No cadastro, informa peso, altura, nível de experiência (Iniciante, Intermediário ou Avançado) e frequência semanal desejada (3, 4, 5 ou 6 dias).
+O aluno é cadastrado com nome, e-mail, peso, altura, nível de experiência (Iniciante, Intermediário ou Avançado) e frequência semanal desejada (3, 4, 5 ou 6 dias).
 
-O aluno acessa somente os próprios dados. O personal utiliza o portal web e pode consultar e administrar todos os alunos.
+Nesta versão não há autenticação de aluno: o aplicativo mobile utiliza a API sem login. O personal utiliza o portal web, protegido por um login simulado, e pode consultar e administrar todos os alunos.
 
 O cadastro do aluno possui um status que indica se ele está ativo. Para esta versão, o status pode ser atualizado quando um contrato é criado, cancelado ou encerrado.
 

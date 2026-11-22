@@ -32,6 +32,8 @@ mise run build
 
 Para consultar todas as tarefas disponíveis, execute `mise tasks`.
 
+O portal web exige login. Em desenvolvimento, use o usuário `admin` e a senha `admin123`; para alterá-los, consulte as [variáveis de ambiente do web](./web/README.md#variáveis-de-ambiente).
+
 ## Protótipo mobile
 
 O protótipo da interface mobile está disponível no [Figma](https://www.figma.com/proto/yjRxhNBA2eSLiNGXFwswcn/Aplicativo-de-rede-de-academias?node-id=0-1&t=wmaNHiS11XvZoqm8-1).

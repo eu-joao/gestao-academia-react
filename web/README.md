@@ -28,6 +28,24 @@ Aplicação web do projeto Gestão Academia, desenvolvida com Next.js, React e T
 
 ![Tela de exclusão](../docs/capturas-de-tela/web/tela%20de%20exclus%C3%A3o.png)
 
+## Funcionalidades
+
+- **Alunos:** listagem, busca, cadastro, edição e exclusão.
+- **Treinos:** listagem dos treinos sincronizados pelo aplicativo mobile, com edição e exclusão. Os dados vêm de `GET /treinos` da API.
+- **Acesso:** login simulado do personal. Todas as telas, exceto `/login`, exigem sessão; sem ela, o acesso é redirecionado para a tela de login. O botão **Sair** encerra a sessão.
+
+## Variáveis de ambiente
+
+Defina-as no ambiente do servidor Next.js (por exemplo, em `web/.env.local`, que não é versionado):
+
+| Variável     | Padrão                  | Uso                                  |
+| ------------ | ----------------------- | ------------------------------------ |
+| `API_URL`    | `http://localhost:8080` | Endereço do backend Spring Boot.     |
+| `ADMIN_USER` | `admin`                 | Usuário do login simulado do personal. |
+| `ADMIN_PASS` | `admin123`              | Senha do login simulado do personal.   |
+
+Os valores padrão servem apenas para desenvolvimento. O login é simulado: a sessão é um cookie `httpOnly` validado pelo `proxy.ts` e a API não exige autenticação. Consulte a [spec de acesso](../docs/spec/spec-acesso.md).
+
 ## Desenvolvimento
 
 Na raiz do repositório, use:

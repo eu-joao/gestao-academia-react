@@ -10,7 +10,7 @@
 
 ## Dados do Aluno
 
-- Obtenha nome e email a partir da autenticação Google
+- Cadastre nome e email do aluno
 - Cadastre peso e altura
 - Cadastre nível de experiência (INICIANTE, INTERMEDIARIO, AVANCADO)
 - Cadastre frequência semanal desejada (3, 4, 5 ou 6 dias)
@@ -23,15 +23,14 @@
 - Ative o aluno quando um contrato for criado
 - Torne o aluno inativo quando o contrato for cancelado ou encerrado e não houver outro contrato vigente
 - Armazene somente o peso atual, sem histórico de medições nesta versão
-- Restrinja o aluno aos próprios dados
+- Exiba no aplicativo apenas os dados do próprio aluno; a API não restringe o acesso por aluno nesta versão (ver spec-acesso)
 - Permita ao personal acessar os dados de todos os alunos
 
 ## Critérios de Aceitação
 
 - Cadastre o aluno com os dados exigidos pelo minimundo V6
-- Retorne os dados do aluno autenticado no aplicativo
+- Retorne os dados do aluno no aplicativo
 - Permita ao personal consultar e atualizar os dados dos alunos
-- Rejeite tentativas de acesso de um aluno aos dados de outro
 - Atualize o status conforme as regras de contrato
 
 ## Interfaces
