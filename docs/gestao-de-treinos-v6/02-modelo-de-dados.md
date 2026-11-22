@@ -2,19 +2,20 @@
 
 **Versão:** V6
 
-O modelo inicial utiliza sete entidades persistidas. `Plano` é um enum do backend, não uma entidade/tabela. Os exercícios são representados por itens pertencentes a um dia de treino.
+O modelo utiliza entidades persistidas para a administração do personal e para o gerenciamento de treinos offline-first no aplicativo móvel. `Plano` é um enum do backend, não uma entidade/tabela. Os exercícios do programa predefinido são representados por itens pertencentes a um dia de treino.
 
 ## 1. Entidades e atributos
 
-| Entidade | Principais atributos |
-|---|---|
-| **Aluno** | id, nome, email, peso, altura, nivelExperiencia, frequenciaSemanal, status, programaAtual |
-| **Contrato** | id, aluno, plano (enum), dataInicio, dataTermino, status |
-| **Cobranca** | id, contrato, numeroParcela, dataVencimento, valor, status, dataPagamento |
-| **ProgramaTreino** | id, nivelExperiencia, frequenciaSemanal, tipoEstrutural, descricao |
-| **DiaTreino** | id, programa, nome, ordem |
-| **ItemTreino** | id, diaTreino, nomeExercicio, musculaturaAlvo, series, repeticoes, ordem |
-| **SessaoTreino** | id, aluno, programa, diaTreino, dataHoraConclusao |
+| Entidade           | Principais atributos                                                                                  |
+| ------------------ | ----------------------------------------------------------------------------------------------------- |
+| **Aluno**          | id, nome, email, peso, altura, nivelExperiencia, frequenciaSemanal, status, programaAtual             |
+| **Contrato**       | id, aluno, plano (enum), dataInicio, dataTermino, status                                              |
+| **Cobranca**       | id, contrato, numeroParcela, dataVencimento, valor, status, dataPagamento                             |
+| **ProgramaTreino** | id, nivelExperiencia, frequenciaSemanal, tipoEstrutural, descricao                                    |
+| **DiaTreino**      | id, programa, nome, ordem                                                                             |
+| **ItemTreino**     | id, diaTreino, nomeExercicio, musculaturaAlvo, series, repeticoes, ordem                              |
+| **SessaoTreino**   | id, aluno, programa, diaTreino, dataHoraConclusao                                                     |
+| **Treino**         | id (UUID), aluno (FK opcional), nome, categoria, diaSemana, duracaoMin, ativo, criadoEm, atualizadoEm |
 
 ## 2. Decisões de modelagem
 
@@ -33,6 +34,12 @@ Não haverá entidade global `Exercicio`. Cada `ItemTreino` guarda o nome, a mus
 ### Sessões
 
 `SessaoTreino` referencia aluno, programa e dia realizados, além da data/hora de conclusão. A referência ao programa registra qual programa foi executado, mesmo que o programa atual do aluno seja alterado depois.
+
+### Treinos mobile e chave primária UUID
+
+A entidade `Treino` atende à gestão de treinos do aplicativo móvel com persistência na nuvem e suporte à arquitetura offline-first. Para viabilizar a criação de registros no dispositivo do aluno sem conexão com a internet e sem conflitos de concorrência com o servidor, sua chave primária é do tipo `UUID` (RFC 4122 v4), gerada no próprio cliente antes da sincronização.
+
+A exclusão de treinos no servidor é lógica (`ativo = false`), garantindo idempotência no processamento da fila de sincronização em lote e preservando a integridade referencial com os dados do aluno.
 
 ### Peso
 

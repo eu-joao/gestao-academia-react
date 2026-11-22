@@ -1,6 +1,6 @@
 # Diagrama Entidade-Relacionamento (ER)
 
-Diagrama do modelo de dados da versão V6. O conteúdo está em Mermaid para facilitar a visualização em editores compatíveis.
+Diagrama do modelo de dados da versão V6 com suporte à gestão de treinos mobile e persistência na nuvem. O conteúdo está em Mermaid para facilitar a visualização em editores compatíveis.
 
 ```mermaid
 erDiagram
@@ -68,6 +68,18 @@ erDiagram
         datetime dataHoraConclusao
     }
 
+    TREINO {
+        uuid id PK
+        bigint alunoId FK
+        string nome
+        string categoria
+        string diaSemana
+        int duracaoMin
+        boolean ativo
+        datetime criadoEm
+        datetime atualizadoEm
+    }
+
     PROGRAMA_TREINO ||--o{ ALUNO : "programa atual"
     ALUNO ||--o{ CONTRATO : possui
     CONTRATO ||--|{ COBRANCA : gera
@@ -76,4 +88,5 @@ erDiagram
     ALUNO ||--o{ SESSAO_TREINO : realiza
     PROGRAMA_TREINO ||--o{ SESSAO_TREINO : identifica
     DIA_TREINO ||--o{ SESSAO_TREINO : registra
+    ALUNO ||--o{ TREINO : cadastra
 ```
