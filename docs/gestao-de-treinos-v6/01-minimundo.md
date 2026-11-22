@@ -9,7 +9,7 @@ Um personal trainer que acompanha vários alunos precisa controlar cadastros, pl
 O sistema centraliza essas atividades em duas interfaces:
 
 - **Portal web do personal:** gerenciamento dos alunos, contratos, cobranças e programas de treino, além de indicadores básicos.
-- **Aplicativo mobile do aluno:** acesso ao próprio cadastro, consulta do treino atual e registro das sessões concluídas. O aluno também pode simular o pagamento de suas mensalidades.
+- **Aplicativo mobile do aluno:** gerenciamento de treinos personalizados com funcionamento **offline-first**, consulta do programa predefinido, registro de sessões concluídas e simulação de pagamento de mensalidades.
 
 ## 2. Limites do sistema
 
@@ -74,6 +74,18 @@ O portal web apresenta uma listagem de alunos e indicadores básicos:
 - valores recebidos e previstos no período.
 
 A evolução histórica do peso não faz parte desta versão. O sistema mantém apenas o peso atual informado no cadastro ou atualizado pelo aluno.
+
+### 3.7 Rotina de treinos mobile e arquitetura offline-first
+
+Para garantir usabilidade ininterrupta mesmo em ambientes com oscilação ou ausência total de conexão à internet, o aplicativo implementa uma arquitetura **offline-first** para a gestão da rotina de treinos do aluno.
+
+O aluno pode cadastrar, consultar, filtrar, editar e excluir treinos semanais, informando nome, categoria (como Musculação, Cardio ou Funcional), dia da semana e duração estimada em minutos. Cada treino pode ser associado opcionalmente ao aluno autenticado.
+
+Todas as mutações (criação, edição e exclusão) são persistidas imediatamente no armazenamento local do dispositivo (`AsyncStorage`) com latência zero (0ms), garantindo resposta instantânea na interface. Cada treino recebe um identificador único universal (UUID v4) gerado no próprio dispositivo móvel, eliminando a dependência de sequências de banco de dados e prevenindo colisões de chaves primárias.
+
+Em segundo plano, as mutações alimentam uma fila de requisições persistida localmente (Outbox Pattern). Assim que uma conexão ativa com a internet e com a API Spring Boot é estabelecida, o aplicativo processa a fila e envia as alterações pendentes em lote (`POST /treinos/sincronizar`). O backend executa o processamento de forma idempotente: insere novos treinos, atualiza os modificados e aplica exclusão lógica (`ativo = false`) aos removidos.
+
+O aplicativo fornece feedback em tempo real sobre a sincronização com um selo interativo no cabeçalho (Nuvem sincronizada, Sincronizando ou Offline com contador de pendências). A interface também disponibiliza suporte a tema claro e escuro persistido, painel de estatísticas com gráfico semanal de volume, exportação e compartilhamento de ficha de treinos (texto e JSON) e lembretes diários com notificações locais.
 
 ## 4. Documentos complementares
 

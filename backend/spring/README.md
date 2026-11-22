@@ -5,7 +5,7 @@ API REST do sistema de gestão de academia, desenvolvida com Spring Boot e Java 
 ## Pré-requisitos
 
 - [mise](https://mise.jdx.dev/) para instalar e selecionar o Java 17 configurado no monorepo;
-- PostgreSQL instalado e em execução na máquina.
+- PostgreSQL instalado localmente ou banco na nuvem (ex.: Neon PostgreSQL).
 
 Na raiz do repositório, instale os runtimes do projeto:
 
@@ -15,7 +15,7 @@ mise install
 
 ## Configuração local
 
-O backend utiliza uma instância local do PostgreSQL. Crie o banco de dados `gestao_academia` e configure um usuário com permissão de acesso. Ajuste os valores de conexão conforme sua instalação.
+O backend utiliza o PostgreSQL e suporta carregamento automático de variáveis a partir do arquivo `.env` local via `spring.config.import`.
 
 Crie `backend/spring/.env` a partir do exemplo:
 
@@ -23,7 +23,30 @@ Crie `backend/spring/.env` a partir do exemplo:
 cp backend/spring/.env.example backend/spring/.env
 ```
 
-O exemplo define as variáveis `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`, usadas por `src/main/resources/application.properties`. Atualize os valores para corresponder ao PostgreSQL local. O arquivo `.env` é local e está ignorado pelo Git.
+O exemplo define as variáveis `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`, usadas por `src/main/resources/application.properties`. Configure os dados de conexão com o banco local ou na nuvem (Neon com parâmetros SSL `sslmode=require&channelbinding=require`). O arquivo `.env` é local e está estritamente protegido pelo Git.
+
+Configure também `GOOGLE_CLIENT_IDS` com os client IDs usados pelos clientes Google, separados por vírgula, e `ACADEMIA_PERSONAL_EMAIL` com o e-mail Google previamente autorizado para o personal.
+
+## Migração do banco
+
+O Flyway gerencia as migrações automáticas do banco de dados na inicialização:
+
+- **`V1__create_v6_schema.sql`**: cria o esquema V6 básico (aluno, programa de treino, dia de treino, item de treino, contrato, cobrança e sessão de treino).
+- **`V2__migrate_legacy_v5_data.sql`**: converte dados legados da versão V5 para o modelo V6.
+- **`V3__create_treino_pdm.sql`**: cria a tabela `treino` com chave primária UUID, soft-delete (`ativo`), índices por aluno e dia da semana, e timestamps de auditoria para suporte à persistência na nuvem e offline-first do módulo mobile.
+
+O Hibernate valida o esquema contra as tabelas criadas pelo Flyway (`spring.jpa.hibernate.ddl-auto=validate`).
+
+## Acesso da API
+
+- **Alunos e Administração:** O aluno consulta `/alunos/me`, `/alunos/me/peso`, `/contratos/me`, `/cobrancas/me`, `/programas-treino/me` e `/sessoes-treino/me`. Pagamento fictício em `POST /cobrancas/{id}/pagar` e conclusão de sessões em `POST /sessoes-treino/me`.
+- **Treinos Mobile (PDM):** CRUD completo e sincronização offline-first:
+  - `GET /treinos`: lista treinos ativos (com filtros opcionais por aluno e dia da semana).
+  - `GET /treinos/{id}`: busca um treino por identificador UUID.
+  - `POST /treinos`: cria um novo treino.
+  - `PUT /treinos/{id}`: atualiza os dados de um treino existente.
+  - `DELETE /treinos/{id}`: executa a exclusão lógica (`ativo = false`).
+  - `POST /treinos/sincronizar`: processa um lote de mutações da fila offline do mobile (`CRIAR`, `ATUALIZAR`, `EXCLUIR`) de forma idempotente.
 
 ## Executar
 
@@ -33,23 +56,24 @@ Na raiz do monorepo:
 mise run dev:backend
 ```
 
-A tarefa carrega `backend/spring/.env`, verifica se o arquivo existe e executa `./mvnw spring-boot:run` em `backend/spring/`. A API fica disponível em http://localhost:8080 e a documentação Swagger em http://localhost:8080/swagger-ui.html.
-
-Se preferir executar o Maven Wrapper sem mise, rode da raiz do repositório:
+Ou dentro de `backend/spring/`:
 
 ```bash
-(set -a; . backend/spring/.env; set +a; cd backend/spring && ./mvnw spring-boot:run)
+./mvnw spring-boot:run
 ```
 
-Na IDE, configure as mesmas três variáveis de ambiente para a aplicação Spring Boot.
+A API fica disponível em http://localhost:8080 e a documentação interativa Swagger/OpenAPI em http://localhost:8080/swagger-ui.html.
 
 ## Testar e empacotar
-
-Os comandos também são executados na raiz do monorepo:
 
 ```bash
 mise run test:backend
 mise run build:backend
 ```
 
-`test:backend` executa `./mvnw test` em `backend/spring/`. A suíte inicial cobre o serviço e o controller de alunos; os demais recursos ainda não têm cobertura automatizada. `build:backend` executa `./mvnw package` e gera os artefatos Maven em `backend/spring/target/`.
+Ou no diretório do backend:
+
+```bash
+./mvnw test
+./mvnw package
+```

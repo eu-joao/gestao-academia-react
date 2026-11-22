@@ -7,27 +7,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.ifpb.academia.dto.Mapper;
 import br.edu.ifpb.academia.dto.request.AlunoRequest;
+import br.edu.ifpb.academia.dto.request.PesoAlunoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
 import br.edu.ifpb.academia.entity.Aluno;
-import br.edu.ifpb.academia.enums.StatusTreinoAtivo;
 import br.edu.ifpb.academia.enums.StatusAluno;
-import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
+import br.edu.ifpb.academia.exception.RegraDeNegocioException;
 import br.edu.ifpb.academia.repository.AlunoRepository;
 import br.edu.ifpb.academia.repository.ContratoRepository;
-import br.edu.ifpb.academia.repository.TreinoAtivoRepository;
+import br.edu.ifpb.academia.repository.ProgramaTreinoRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@SuppressWarnings("null")
 @RequiredArgsConstructor
 public class AlunoService {
-
 	private final AlunoRepository repository;
-	private final TreinoAtivoService treinoAtivoService;
 	private final ContratoRepository contratoRepository;
-	private final TreinoAtivoRepository treinoAtivoRepository;
-
+	private final ProgramaTreinoRepository programaRepository;
 
 	@Transactional(readOnly = true)
 	public List<AlunoResponse> listar() {
@@ -40,56 +36,69 @@ public class AlunoService {
 	}
 
 	@Transactional
-	public AlunoResponse criar(AlunoRequest request) {
-		if (repository.existsByCpf(request.cpf())) {
-			throw new RegraDeNegocioException("Ja existe aluno com este CPF.");
+	public AlunoResponse registrar(String googleSubject, String email, String nome, AlunoRequest request) {
+		if (repository.findByGoogleSubject(googleSubject).isPresent()) {
+			throw new RegraDeNegocioException("Esta conta Google já possui cadastro.");
 		}
-		if (repository.existsByEmail(request.email())) {
-			throw new RegraDeNegocioException("Ja existe aluno com este e-mail.");
+		Aluno existente = repository.findByEmail(email).orElse(null);
+		if (existente != null) {
+			if (existente.getGoogleSubject() != null) {
+				throw new RegraDeNegocioException("Este e-mail já está associado a outra identidade Google.");
+			}
+			existente.setGoogleSubject(googleSubject);
+			existente.setNome(nome);
+			aplicar(existente, request);
+			if (existente.getProgramaAtual() == null) existente.setProgramaAtual(programa(request));
+			return Mapper.toResponse(repository.save(existente));
 		}
 		Aluno aluno = new Aluno();
+		aluno.setGoogleSubject(googleSubject);
+		aluno.setEmail(email);
+		aluno.setNome(nome);
+		aluno.setStatus(StatusAluno.INATIVO);
 		aplicar(aluno, request);
-		aluno = repository.save(aluno);
-		treinoAtivoService.sincronizar(aluno);
-		return Mapper.toResponse(aluno);
+		aluno.setProgramaAtual(programa(request));
+		return Mapper.toResponse(repository.save(aluno));
 	}
 
 	@Transactional
-	public AlunoResponse atualizar(Long id, AlunoRequest request) {
+	public AlunoResponse atualizarPeso(String googleSubject, PesoAlunoRequest request) {
+		Aluno aluno = buscarPorGoogleSubject(googleSubject);
+		aluno.setPeso(request.peso());
+		return Mapper.toResponse(repository.save(aluno));
+	}
+
+	@Transactional
+	public AlunoResponse atualizarComoPersonal(Long id, AlunoRequest request) {
 		Aluno aluno = buscarEntidade(id);
-		boolean perfilMudou = !aluno.getNivelExperiencia().equals(request.nivelExperiencia())
-				|| !aluno.getFrequenciaSemanal().equals(request.frequenciaSemanal());
-		if (!aluno.getCpf().equals(request.cpf()) && repository.existsByCpf(request.cpf())) {
-			throw new RegraDeNegocioException("Ja existe aluno com este CPF.");
-		}
-		if (!aluno.getEmail().equals(request.email()) && repository.existsByEmail(request.email())) {
-			throw new RegraDeNegocioException("Ja existe aluno com este e-mail.");
-		}
 		aplicar(aluno, request);
-		aluno = repository.save(aluno);
-		if (perfilMudou) {
-			treinoAtivoService.sincronizar(aluno);
-		}
-		return Mapper.toResponse(aluno);
+		aluno.setProgramaAtual(programa(request));
+		return Mapper.toResponse(repository.save(aluno));
 	}
 
 	@Transactional
-	public void excluir(Long id) {
-	Aluno aluno = buscarEntidade(id);
-
-	if (contratoRepository.existsByAlunoId(id)) {
-		throw new RegraDeNegocioException("Aluno possui contratos e nao pode ser excluido.");
-	}
-	if (treinoAtivoRepository.existsByAlunoIdAndStatusNot(id, StatusTreinoAtivo.ATIVO)) {
-		throw new RegraDeNegocioException("Aluno possui historico de treinos encerrados e nao pode ser excluido.");
+	public AlunoResponse atribuirPrograma(Long alunoId, Long programaId) {
+		Aluno aluno = buscarEntidade(alunoId);
+		aluno.setProgramaAtual(programaRepository.findById(programaId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Programa de treino não encontrado: " + programaId)));
+		return Mapper.toResponse(repository.save(aluno));
 	}
 
-	treinoAtivoRepository.deleteByAlunoIdAndStatus(id, StatusTreinoAtivo.ATIVO);
-	repository.delete(aluno);
+	@Transactional(readOnly = true)
+	public Aluno buscarPorGoogleSubject(String subject) {
+		return repository.findByGoogleSubject(subject)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Aluno autenticado não possui cadastro."));
 	}
 
+	@Transactional(readOnly = true)
+	public AlunoResponse buscarMeuCadastro(String subject) {
+		return Mapper.toResponse(buscarPorGoogleSubject(subject));
+	}
+
+	@Transactional(readOnly = true)
 	public Aluno buscarEntidade(Long id) {
-		return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Aluno não encontrado com ID: " + id));
+		return repository.findById(id)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Aluno não encontrado com ID: " + id));
 	}
 
 	public void ativar(Aluno aluno) {
@@ -102,18 +111,16 @@ public class AlunoService {
 		repository.save(aluno);
 	}
 
+	private br.edu.ifpb.academia.entity.ProgramaTreino programa(AlunoRequest request) {
+		return programaRepository.findByNivelExperienciaAndFrequenciaSemanal(request.nivelExperiencia(),
+				request.frequenciaSemanal()).orElseThrow(() -> new RegraDeNegocioException(
+						"Não há programa para o nível e a frequência informados."));
+	}
+
 	private void aplicar(Aluno aluno, AlunoRequest request) {
-		aluno.setNome(request.nome());
-		aluno.setCpf(request.cpf());
-		aluno.setTelefone(request.telefone());
-		aluno.setEmail(request.email());
-		aluno.setDataNascimento(request.dataNascimento());
 		aluno.setPeso(request.peso());
 		aluno.setAltura(request.altura());
 		aluno.setNivelExperiencia(request.nivelExperiencia());
 		aluno.setFrequenciaSemanal(request.frequenciaSemanal());
-		aluno.setStatus(request.status() == null ? StatusAluno.ATIVO : request.status());
 	}
 }
-
-

@@ -1,17 +1,19 @@
 # Gestão Academia Mobile
 
-Aplicativo do aluno do sistema Gestão Academia, desenvolvido com Expo, React Native e TypeScript. O app permite que cada aluno acompanhe seu cadastro, consulte o programa de treino atual, registre sessões concluídas e acompanhe suas cobranças.
+Aplicativo do aluno do sistema Gestão Academia, desenvolvido com Expo, React Native e TypeScript. O app permite que cada aluno gerencie seus treinos com arquitetura **Offline-First**, consulte o programa predefinido, registre sessões concluídas e acompanhe cobranças.
 
 ## Funcionalidades
 
-- **Cadastro e acesso:** criação de conta pelo aplicativo com autenticação Google. Nome e e-mail são obtidos do provedor de autenticação.
-- **Dados pessoais:** consulta e atualização dos próprios dados, incluindo peso, altura, nível de experiência e frequência semanal.
-- **Programa de treino:** consulta do programa atual, dos dias em sequência e dos exercícios de cada dia, com musculatura trabalhada, séries e repetições.
-- **Registro de sessões:** conclusão do próximo dia previsto do programa. O sistema reinicia a sequência após o último dia.
-- **Cobranças:** consulta das mensalidades e de seus estados (pendente, paga ou atrasada).
-- **Pagamento simulado:** confirmação de pagamento por Pix fictício, sem movimentação real de dinheiro ou integração financeira.
-
-O aplicativo mostra somente os dados do aluno autenticado. A inadimplência não bloqueia o acesso ao app ou aos treinos.
+- **Persistência na nuvem e Offline-First:** gestão completa de treinos (criação, edição, listagem, filtros por dia e exclusão). Gravação imediata no armazenamento local (`AsyncStorage`) com latência 0ms e sincronização em segundo plano via fila outbox com o backend Spring Boot e banco Neon PostgreSQL.
+- **Feedback visual de sincronização:** indicador no cabeçalho em tempo real (`SyncBadge`) exibindo o estado da conexão (Nuvem sincronizada, Sincronizando ou Offline com contador de pendências) e permitindo retentativa manual.
+- **Tema Claro / Escuro:** alternância dinâmica entre temas claro e escuro persistida localmente (`ThemeContext` e `ThemeToggle`), com adaptação imediata da barra de status e cores de fundo do sistema.
+- **Estatísticas e gráficos:** painel dedicado (`/estatisticas`) com gráfico de barras semanais em React Native puro, distribuição percentual por modalidade (Musculação, Cardio, Funcional, etc.) e métricas de volume de treino.
+- **Exportação de dados:** compartilhamento nativo (`Share.share`) da ficha de treinos formatada em texto (para WhatsApp e bloco de notas) e backup estruturado em formato JSON.
+- **Notificações locais e lembretes:** card dinâmico _"Treino de Hoje"_ na tela inicial identificando o treino do dia atual e agendamento de lembretes diários com seletor de horários via `expo-notifications`.
+- **Formulário responsivo:** interface adaptada com `KeyboardAvoidingView` e `ScrollView` para prevenir sobreposição de campos (como duração) pelo teclado virtual.
+- **Cadastro e acesso:** criação de conta com autenticação Google. Nome e e-mail são obtidos do provedor de autenticação.
+- **Programa de treino e sessões:** consulta do programa predefinido, dos dias em sequência e registro de sessões concluídas.
+- **Cobranças e pagamento simulado:** consulta de mensalidades e simulação de pagamento via Pix fictício.
 
 ## Tecnologias
 
@@ -22,7 +24,9 @@ As versões abaixo correspondem às dependências declaradas em `package.json`.
 - React 19.3
 - TypeScript 6
 - Expo Router
+- Expo Notifications (`expo-notifications`)
 - React Native Web
+- AsyncStorage (`@react-native-async-storage/async-storage`)
 
 ## Instalação e execução
 
@@ -34,7 +38,7 @@ mise run install
 mise run dev:mobile
 ```
 
-O Expo iniciará o servidor de desenvolvimento. Siga as instruções exibidas no terminal para abrir o aplicativo em um dispositivo ou emulador.
+O Expo iniciará o servidor de desenvolvimento Metro. Siga as instruções exibidas no terminal para abrir o aplicativo em um dispositivo físico ou emulador.
 
 Também é possível executar os comandos específicos dentro do diretório `mobile/`:
 
@@ -43,7 +47,7 @@ npm start       # Inicia o Expo
 npm run android # Abre no Android
 npm run ios     # Abre no iOS
 npm run web     # Abre no navegador
-npm run lint    # Executa o lint
+npm run lint    # Executa o lint (expo lint)
 ```
 
 ## Documentação relacionada
@@ -51,6 +55,7 @@ npm run lint    # Executa o lint
 - [Documentação geral e minimundo V6](../docs/gestao-de-treinos-v6/README.md)
 - [Modelo de dados](../docs/gestao-de-treinos-v6/02-modelo-de-dados.md)
 - [Regras de negócio](../docs/gestao-de-treinos-v6/03-regras-de-negocio.md)
+- [Diagrama ER](../docs/gestao-de-treinos-v6/diagrama-er.md)
 - [Orientações para agentes mobile](./AGENTS.md)
 - [Contribuição](../CONTRIBUTING.md)
 

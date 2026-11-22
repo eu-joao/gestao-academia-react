@@ -6,26 +6,26 @@ Este documento separa o que deve compor a primeira entrega do que pode permanece
 
 ## 1. Entregas essenciais — primeira versão
 
-| Ordem | Issue sugerida | Resultado esperado |
-|---|---|---|
-| 1 | Adequar cadastro e autenticação do aluno ao minimundo V6 | Cadastro com dados físicos, nível, frequência e autenticação Google. |
-| 2 | Implementar planos fixos e contratos | Enum de planos, criação de contrato, vigência e restrição de contrato ativo duplicado. |
-| 3 | Implementar geração e controle de cobranças | Geração das parcelas, consulta de status e identificação de atrasos. |
-| 4 | Implementar pagamento fictício no aplicativo | Aluno consegue simular o pagamento de uma cobrança própria. |
-| 5 | Estruturar os programas e dias de treino | Carga inicial dos doze programas, dias e itens de treino. |
-| 6 | Implementar atribuição e consulta do programa atual | Seleção automática e substituição manual pelo personal. |
-| 7 | Implementar registro e sequência das sessões | Consulta do próximo dia, conclusão e histórico de sessões. |
-| 8 | Implementar painel de acompanhamento do personal | Listagem de alunos e indicadores de assiduidade e financeiro. |
+| Ordem | Issue sugerida                                           | Resultado esperado                                                                     |
+| ----- | -------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| 1     | Adequar cadastro e autenticação do aluno ao minimundo V6 | Cadastro com dados físicos, nível, frequência e autenticação Google.                   |
+| 2     | Implementar planos fixos e contratos                     | Enum de planos, criação de contrato, vigência e restrição de contrato ativo duplicado. |
+| 3     | Implementar geração e controle de cobranças              | Geração das parcelas, consulta de status e identificação de atrasos.                   |
+| 4     | Implementar pagamento fictício no aplicativo             | Aluno consegue simular o pagamento de uma cobrança própria.                            |
+| 5     | Estruturar os programas e dias de treino                 | Carga inicial dos doze programas, dias e itens de treino.                              |
+| 6     | Implementar atribuição e consulta do programa atual      | Seleção automática e substituição manual pelo personal.                                |
+| 7     | Implementar registro e sequência das sessões             | Consulta do próximo dia, conclusão e histórico de sessões.                             |
+| 8     | Implementar painel de acompanhamento do personal         | Listagem de alunos e indicadores de assiduidade e financeiro.                          |
 
 ## 2. Funcionalidades opcionais — backlog
 
-| Issue sugerida | Resultado esperado |
-|---|---|
-| Adicionar histórico de peso e gráfico de evolução | Registrar medições e visualizar a evolução corporal. |
-| Implementar histórico de programas do aluno | Consultar programas anteriores e períodos de utilização. |
-| Implementar notificações internas | Avisos de vencimento, atraso, pagamento e novo treino. |
-| Permitir personalização dos exercícios | Personal edita itens, séries e repetições dos programas/alunos. |
-| Registrar carga por exercício | Aluno informa a carga utilizada em cada sessão. |
+| Issue sugerida                                    | Resultado esperado                                              |
+| ------------------------------------------------- | --------------------------------------------------------------- |
+| Adicionar histórico de peso e gráfico de evolução | Registrar medições e visualizar a evolução corporal.            |
+| Implementar histórico de programas do aluno       | Consultar programas anteriores e períodos de utilização.        |
+| Implementar notificações internas                 | Avisos de vencimento, atraso, pagamento e novo treino.          |
+| Permitir personalização dos exercícios            | Personal edita itens, séries e repetições dos programas/alunos. |
+| Registrar carga por exercício                     | Aluno informa a carga utilizada em cada sessão.                 |
 
 ## 3. Organização das issues
 

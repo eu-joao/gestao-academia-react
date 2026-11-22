@@ -1,8 +1,10 @@
 package br.edu.ifpb.academia.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.ifpb.academia.dto.Mapper;
@@ -13,25 +15,25 @@ import br.edu.ifpb.academia.entity.Contrato;
 import br.edu.ifpb.academia.enums.StatusContrato;
 import br.edu.ifpb.academia.exception.RecursoNaoEncontradoException;
 import br.edu.ifpb.academia.exception.RegraDeNegocioException;
+import br.edu.ifpb.academia.repository.AlunoRepository;
 import br.edu.ifpb.academia.repository.ContratoRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@SuppressWarnings("null")
 @RequiredArgsConstructor
 public class ContratoService {
-
 	private final ContratoRepository repository;
-	private final AlunoService alunoService;
-	private final UnidadeService unidadeService;
-	private final PlanoService planoService;
+	private final AlunoRepository alunoRepository;
 	private final CobrancaService cobrancaService;
-	private final TreinoAtivoService treinoAtivoService;
-
 
 	@Transactional(readOnly = true)
 	public List<ContratoResponse> listar() {
 		return repository.findAll().stream().map(Mapper::toResponse).toList();
+	}
+
+	@Transactional(readOnly = true)
+	public List<ContratoResponse> listarDoAluno(Long alunoId) {
+		return repository.findByAlunoIdOrderByDataInicioDesc(alunoId).stream().map(Mapper::toResponse).toList();
 	}
 
 	@Transactional(readOnly = true)
@@ -41,56 +43,62 @@ public class ContratoService {
 
 	@Transactional
 	public ContratoResponse criar(ContratoRequest request) {
-		if (repository.existsByAlunoIdAndStatus(request.alunoId(), StatusContrato.ATIVO)) {
+		encerrarVencidos();
+		if (!request.dataInicio().plusMonths(request.plano().getDuracaoMeses()).isAfter(LocalDate.now())) {
+			throw new RegraDeNegocioException("A vigência do contrato já teria terminado na data informada.");
+		}
+		Aluno aluno = alunoRepository.findByIdForUpdate(request.alunoId()).orElseThrow(
+				() -> new RecursoNaoEncontradoException("Aluno não encontrado: " + request.alunoId()));
+		if (repository.existsByAlunoIdAndStatusAndDataTerminoAfter(aluno.getId(), StatusContrato.ATIVO, LocalDate.now())) {
 			throw new RegraDeNegocioException("Aluno já possui um contrato ativo.");
 		}
 		Contrato contrato = new Contrato();
-		aplicar(contrato, request);
+		contrato.setAluno(aluno);
+		contrato.setPlano(request.plano());
+		contrato.setDataInicio(request.dataInicio());
+		contrato.setStatus(StatusContrato.ATIVO);
 		contrato = repository.save(contrato);
 		cobrancaService.gerarParaContrato(contrato);
-		alunoService.ativar(contrato.getAluno());
-		treinoAtivoService.sincronizar(contrato.getAluno());
+		aluno.setStatus(br.edu.ifpb.academia.enums.StatusAluno.ATIVO);
+		alunoRepository.save(aluno);
 		return Mapper.toResponse(contrato);
-	}
-
-	@Transactional
-	public ContratoResponse atualizar(Long id, ContratoRequest request) {
-		Contrato contrato = buscarEntidade(id);
-		if (!contrato.getAluno().getId().equals(request.alunoId())
-				&& repository.existsByAlunoIdAndStatus(request.alunoId(), StatusContrato.ATIVO)) {
-			throw new RegraDeNegocioException("Aluno já possui um contrato ativo.");
-		}
-		aplicar(contrato, request);
-		return Mapper.toResponse(repository.save(contrato));
 	}
 
 	@Transactional
 	public ContratoResponse cancelar(Long id) {
 		Contrato contrato = buscarEntidade(id);
+		alunoRepository.findByIdForUpdate(contrato.getAluno().getId())
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Aluno do contrato não encontrado."));
 		if (!contrato.isAtivo()) {
-			throw new RegraDeNegocioException("Este contrato já está¡ cancelado.");
+			throw new RegraDeNegocioException("Somente contratos ativos podem ser cancelados.");
 		}
 		contrato.setStatus(StatusContrato.CANCELADO);
-		alunoService.inativar(contrato.getAluno());
+		cobrancaService.cancelarFuturas(contrato);
+		boolean outroVigente = repository.existsByAlunoIdAndStatusAndDataTerminoAfter(
+				contrato.getAluno().getId(), StatusContrato.ATIVO, LocalDate.now());
+		if (!outroVigente) {
+			contrato.getAluno().setStatus(br.edu.ifpb.academia.enums.StatusAluno.INATIVO);
+		}
 		return Mapper.toResponse(repository.save(contrato));
 	}
 
 	@Transactional
-	public void excluir(Long id) {
-		repository.delete(buscarEntidade(id));
+	@Scheduled(cron = "0 1 0 * * *")
+	public void encerrarVencidos() {
+		List<Contrato> vencidos = repository.findByStatusAndDataTerminoLessThanEqual(StatusContrato.ATIVO, LocalDate.now());
+		for (Contrato contrato : vencidos) {
+			contrato.setStatus(StatusContrato.ENCERRADO);
+			boolean outroVigente = repository.existsByAlunoIdAndStatusAndDataTerminoAfter(
+					contrato.getAluno().getId(), StatusContrato.ATIVO, LocalDate.now());
+			if (!outroVigente) {
+				contrato.getAluno().setStatus(br.edu.ifpb.academia.enums.StatusAluno.INATIVO);
+			}
+		}
 	}
 
+	@Transactional(readOnly = true)
 	public Contrato buscarEntidade(Long id) {
 		return repository.findById(id)
 				.orElseThrow(() -> new RecursoNaoEncontradoException("Contrato não encontrado com ID: " + id));
-	}
-
-	private void aplicar(Contrato contrato, ContratoRequest request) {
-		Aluno aluno = alunoService.buscarEntidade(request.alunoId());
-		contrato.setAluno(aluno);
-		contrato.setUnidade(unidadeService.buscarEntidade(request.unidadeId()));
-		contrato.setPlano(planoService.buscarEntidade(request.planoId()));
-		contrato.setDataInicio(request.dataInicio());
-		contrato.setStatus(request.status() == null ? StatusContrato.ATIVO : request.status());
 	}
 }
