@@ -20,8 +20,8 @@
 | RN14   | O aluno só pode registrar sessões referentes ao seu programa atual e ao próximo dia previsto da sequência.                                                                                            |
 | RN15   | Cada sessão concluída registra aluno, programa, dia e data/hora da conclusão.                                                                                                                         |
 | RN16   | O peso armazenado no cadastro representa o peso atual do aluno, sem histórico de medições nesta versão.                                                                                               |
-| RN17   | O aluno acessa somente os próprios dados; o personal acessa os dados de todos os alunos.                                                                                                              |
-| RN18   | O aluno autentica-se pelo Google; o personal utiliza uma conta administrativa previamente cadastrada.                                                                                                 |
+| RN17   | O portal web é de uso exclusivo do personal, que acessa os dados de todos os alunos. A API não impõe isolamento entre os dados de cada aluno nesta versão, pois não há autenticação de aluno. |
+| RN18   | O acesso ao portal web é protegido por um login simulado do personal, com usuário e senha definidos em variáveis de ambiente do servidor web. A API e o aplicativo mobile não exigem autenticação. |
 | RN19   | Os treinos do aluno são persistidos imediatamente no armazenamento local do dispositivo móvel (`AsyncStorage`), operando com latência nula e independência total de conexão de rede.                  |
 | RN20   | A sincronização de treinos com o servidor na nuvem utiliza processamento idempotente em lote (Outbox Pattern), garantindo que mutações offline sejam reconciliadas na ordem correta após a reconexão. |
 | RN21   | A exclusão de treinos no servidor é lógica (`ativo = false`), preservando histórico e evitando violações de integridade referencial.                                                                  |
