@@ -2,11 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import {
-  COOKIE_SESSAO,
-  credenciaisEsperadas,
-  valorDaSessao,
-} from "@/lib/sessao";
+import { COOKIE_SESSAO, verifyCredentials, createSessionCookie, SESSION_TTL_SECONDS } from "@/lib/session";
 
 export type LoginState =
   | { status: "idle" }
@@ -18,18 +14,18 @@ export async function entrar(
 ): Promise<LoginState> {
   const usuario = String(formData.get("usuario") ?? "").trim();
   const senha = String(formData.get("senha") ?? "");
-  const esperadas = credenciaisEsperadas();
 
-  if (usuario !== esperadas.usuario || senha !== esperadas.senha) {
+  if (!verifyCredentials(usuario, senha)) {
     return { status: "error", message: "Usuário ou senha inválidos." };
   }
 
-  (await cookies()).set(COOKIE_SESSAO, await valorDaSessao(), {
+  const sessionCookie = createSessionCookie();
+  (await cookies()).set(COOKIE_SESSAO, sessionCookie, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 8, // 8 horas
+    maxAge: SESSION_TTL_SECONDS,
   });
 
   redirect("/");

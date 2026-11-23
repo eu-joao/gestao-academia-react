@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { COOKIE_SESSAO, valorDaSessao } from "@/lib/sessao";
+import { COOKIE_SESSAO, isSessionValid } from "@/lib/session";
 
 // Protege todas as telas do portal: sem sessão válida, redireciona para /login.
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const autenticado =
-    request.cookies.get(COOKIE_SESSAO)?.value === (await valorDaSessao());
+  const autenticado = isSessionValid(request.cookies.get(COOKIE_SESSAO)?.value);
 
   if (pathname === "/login") {
     return autenticado

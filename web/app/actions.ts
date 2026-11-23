@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { mensagemErroApi } from "@/lib/api-error";
 import type { AlunoRequest } from "@/types/aluno";
+import { requireAuth } from "@/lib/require-auth";
 
 export type CadastroAlunoState =
   | { status: "idle" }
@@ -14,6 +15,7 @@ export async function cadastrarAluno(
   _previousState: CadastroAlunoState,
   formData: FormData,
 ): Promise<CadastroAlunoState> {
+  await requireAuth();
   return salvarAluno("POST", "/alunos", formData);
 }
 
@@ -22,6 +24,7 @@ export async function atualizarAluno(
   _previousState: CadastroAlunoState,
   formData: FormData,
 ): Promise<CadastroAlunoState> {
+  await requireAuth();
   return salvarAluno("PUT", `/alunos/${id}`, formData);
 }
 
@@ -81,6 +84,7 @@ export async function excluirAluno(
   _previousState: CadastroAlunoState,
   _formData: FormData,
 ): Promise<CadastroAlunoState> {
+  await requireAuth();
   void _previousState;
   void _formData;
 
