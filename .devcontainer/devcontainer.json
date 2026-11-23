@@ -1,0 +1,19 @@
+{
+  "name": "gestao-academia",
+  "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+  },
+  "forwardPorts": [8080, 3000, 8081],
+  "portsAttributes": {
+    "8080": { "label": "API (Spring)", "onAutoForward": "silent" },
+    "3000": { "label": "Web (Next.js)", "onAutoForward": "notify" },
+    "8081": { "label": "Mobile (Expo)", "onAutoForward": "silent" }
+  },
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y tmux && sudo npm install -g @expo/ngrok && (cd web && npm ci) && (cd mobile && npm ci) && (cd backend/spring && ./mvnw -q -DskipTests dependency:go-offline)",
+  "customizations": {
+    "vscode": {
+      "extensions": ["vscjava.vscode-java-pack", "GitHub.copilot", "GitHub.copilot-chat"]
+    }
+  }
+}
