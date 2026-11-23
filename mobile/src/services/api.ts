@@ -56,12 +56,51 @@ export interface RespostaApi<T> {
   erro?: string;
 }
 
+let modoOfflineSimulado = false;
+
+export function definirModoOfflineSimulado(ativo: boolean): void {
+  modoOfflineSimulado = ativo;
+}
+
+export function obterModoOfflineSimulado(): boolean {
+  return modoOfflineSimulado;
+}
+
+export async function testarConexao(): Promise<boolean> {
+  if (modoOfflineSimulado) {
+    return false;
+  }
+  const baseUrl = obterBaseUrl();
+  const url = `${baseUrl}/treinos`;
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const resposta = await fetch(url, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return resposta.ok || resposta.status === 200;
+  } catch {
+    return false;
+  }
+}
+
 export async function requisicao<T>(
   endpoint: string,
   metodo: "GET" | "POST" | "PUT" | "DELETE" = "GET",
   corpo?: unknown,
   token?: string,
 ): Promise<RespostaApi<T>> {
+  if (modoOfflineSimulado) {
+    return {
+      sucesso: false,
+      status: 0,
+      erro: "Modo offline ativo (simulação)",
+    };
+  }
+
   const baseUrl = obterBaseUrl();
   const url = `${baseUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
 

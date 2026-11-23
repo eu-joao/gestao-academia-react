@@ -1,5 +1,10 @@
 import asyncStorage from "@react-native-async-storage/async-storage";
-import { requisicao } from "./api";
+import {
+  requisicao,
+  testarConexao,
+  definirModoOfflineSimulado,
+  obterModoOfflineSimulado,
+} from "./api";
 
 const FILA_KEY = "@academia:fila_sync";
 
@@ -166,4 +171,54 @@ export async function processarFila(): Promise<void> {
   } finally {
     processando = false;
   }
+}
+
+export async function verificarConexaoAtiva(): Promise<boolean> {
+  const online = await testarConexao();
+  const fila = await obterItensFila();
+
+  if (online) {
+    if (fila.length > 0) {
+      processarFila();
+    } else {
+      notificar("sincronizado", 0);
+    }
+  } else {
+    notificar("offline", fila.length);
+  }
+
+  return online;
+}
+
+export async function alternarModoOfflineSimulado(): Promise<boolean> {
+  const novoEstado = !obterModoOfflineSimulado();
+  definirModoOfflineSimulado(novoEstado);
+  await verificarConexaoAtiva();
+  return novoEstado;
+}
+
+export function estaEmModoOfflineSimulado(): boolean {
+  return obterModoOfflineSimulado();
+}
+
+let intervaloHeartbeat: ReturnType<typeof setInterval> | null = null;
+let contagemAtivos = 0;
+
+export function iniciarMonitorConexao(): () => void {
+  contagemAtivos += 1;
+  verificarConexaoAtiva();
+
+  if (!intervaloHeartbeat) {
+    intervaloHeartbeat = setInterval(() => {
+      verificarConexaoAtiva();
+    }, 8000);
+  }
+
+  return () => {
+    contagemAtivos = Math.max(0, contagemAtivos - 1);
+    if (contagemAtivos === 0 && intervaloHeartbeat) {
+      clearInterval(intervaloHeartbeat);
+      intervaloHeartbeat = null;
+    }
+  };
 }
