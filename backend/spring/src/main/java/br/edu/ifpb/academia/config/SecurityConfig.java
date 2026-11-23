@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.OAuth2Error;
@@ -27,7 +26,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableMethodSecurity
 public class SecurityConfig {
 	private static final String GOOGLE_ISSUER = "https://accounts.google.com";
 	private static final String GOOGLE_KEYS = "https://www.googleapis.com/oauth2/v3/certs";
@@ -86,8 +84,7 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 					.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
 					.requestMatchers("/actuator/**").permitAll()
-					.requestMatchers("/treinos/**").permitAll()
-					.anyRequest().authenticated())
+					.anyRequest().permitAll())
 			.oauth2ResourceServer(resourceServer -> resourceServer
 					.jwt(jwt -> jwt.jwtAuthenticationConverter(googleAuthenticationConverter)));
 		return http.build();

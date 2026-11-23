@@ -2,38 +2,37 @@
 
 ## Requisitos Funcionais
 
-- Autentique o aluno pelo provedor Google
-- Permita o acesso do personal por uma conta administrativa previamente cadastrada
-- Identifique o papel do usuário autenticado
-- Valide a identidade e as permissões do usuário em cada operação protegida
+- Restrinja o portal web ao personal por meio de um login simulado
+- Redirecione para a tela de login qualquer acesso ao portal sem sessão válida
+- Permita ao personal encerrar a sessão
+- Mantenha a API e o aplicativo mobile sem autenticação nesta versão
 
 ## Dados de Acesso
 
-- Obtenha nome e email do aluno a partir da autenticação Google
-- Associe a identidade autenticada ao cadastro do aluno
-- Mantenha uma conta administrativa previamente cadastrada para o personal
+- Defina o usuário e a senha do personal nas variáveis de ambiente `ADMIN_USER` e `ADMIN_PASS` do servidor web
+- Use `admin` e `admin123` como valores padrão apenas em desenvolvimento
+- Grave a sessão em um cookie `httpOnly` com validade de 8 horas
 
 ## Regras de Negócio
 
-- Restrinja o aluno aos próprios dados e operações
-- Permita ao personal consultar e administrar os dados de todos os alunos
-- Não disponibilize cadastro público de contas administrativas
-- Não permita que um aluno acesse dados de outro aluno
+- Não envie usuário nem senha ao navegador; a validação ocorre no servidor web
+- Não disponibilize cadastro público de contas
+- Não use os valores padrão em ambiente de produção
+- Reconheça que a API não impõe isolamento entre os dados de cada aluno, pois não há autenticação de aluno nesta versão
 
 ## Critérios de Aceitação
 
-- Autentique o aluno por meio do Google
-- Permita o acesso administrativo somente à conta previamente cadastrada
-- Retorne erro 401 para usuário não autenticado
-- Retorne erro 403 para usuário autenticado sem permissão
-- Preserve a identificação do usuário nas operações realizadas
+- Redirecione para `/login` o acesso sem sessão a qualquer tela do portal
+- Rejeite credenciais inválidas com mensagem de erro na tela de login
+- Libere o portal após o login com credenciais válidas
+- Redirecione para o portal o acesso à tela de login com sessão ativa
+- Remova a sessão e volte para `/login` ao acionar o botão Sair
 
 ## Interfaces
 
-- Disponibilize o fluxo de autenticação Google no aplicativo mobile
-- Disponibilize o acesso administrativo do personal no portal web
-- Exiba mensagens adequadas para falhas de autenticação e autorização
+- Disponibilize a tela de login no portal web
+- Disponibilize o botão Sair no cabeçalho do portal web
 
 ## Ponto para validação
 
-- Confirme com a equipe se a autenticação do aluno será exclusivamente Google, conforme a RN18 do minimundo V6.
+- Confirme com o professor se o login simulado é suficiente para o requisito de controle de acesso. Para uma versão em produção, a evolução prevista é armazenar as credenciais no banco de dados, emitir um token JWT no login e reativar a segurança por método (`@PreAuthorize`) já anotada nos controllers do backend.
