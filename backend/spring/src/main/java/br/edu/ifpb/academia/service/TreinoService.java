@@ -26,12 +26,27 @@ public class TreinoService {
 
 	@Transactional(readOnly = true)
 	public List<TreinoResponse> listar(Long alunoId, String busca, String diaSemana) {
-		String buscaTratada = (busca != null && !busca.isBlank()) ? busca.trim() : null;
+		String buscaTratada = (busca != null && !busca.isBlank()) ? busca.trim().toLowerCase() : null;
 		String diaTratado = (diaSemana != null && !diaSemana.isBlank() && !diaSemana.equalsIgnoreCase("Todos"))
 				? diaSemana.trim() : null;
 
-		return repository.buscarFiltrados(alunoId, diaTratado, buscaTratada)
-				.stream()
+		List<Treino> treinos = (alunoId != null)
+				? repository.findByAlunoIdAndAtivoTrueOrderByCriadoEmDesc(alunoId)
+				: repository.findByAtivoTrueOrderByCriadoEmDesc();
+
+		if (diaTratado != null) {
+			treinos = treinos.stream()
+					.filter(t -> t.getDiaSemana() != null && t.getDiaSemana().equalsIgnoreCase(diaTratado))
+					.toList();
+		}
+
+		if (buscaTratada != null) {
+			treinos = treinos.stream()
+					.filter(t -> t.getNome() != null && t.getNome().toLowerCase().contains(buscaTratada))
+					.toList();
+		}
+
+		return treinos.stream()
 				.map(Mapper::toResponse)
 				.toList();
 	}

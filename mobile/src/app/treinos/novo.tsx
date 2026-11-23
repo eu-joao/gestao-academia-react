@@ -9,8 +9,6 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -176,349 +174,329 @@ export default function TreinoFormScreen() {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
         >
-          <TouchableWithoutFeedback
-            onPress={Keyboard.dismiss}
-            accessible={false}
-          >
-            <View>
-              {/* Banner de Sucesso (RF06) */}
-              {sucesso && (
+          <View>
+            {/* Banner de Sucesso (RF06) */}
+            {sucesso && (
+              <View
+                style={[
+                  styles.successBanner,
+                  {
+                    backgroundColor: colors.successLight,
+                    borderColor: colors.success,
+                  },
+                ]}
+              >
+                <Ionicons
+                  name="checkmark-circle"
+                  size={20}
+                  color={colors.success}
+                />
+                <Text
+                  style={[styles.successBannerText, { color: colors.success }]}
+                >
+                  Treino {isEditing ? "atualizado" : "cadastrado"} com sucesso!
+                </Text>
+              </View>
+            )}
+
+            {/* Card do Formulário */}
+            <View
+              style={[
+                styles.formCard,
+                { backgroundColor: colors.card, borderColor: colors.border },
+              ]}
+            >
+              <Text
+                style={[styles.formSubtitle, { color: colors.textSecondary }]}
+              >
+                {isEditing
+                  ? "Modifique os dados da sessão selecionada."
+                  : "Preencha as informações para adicionar um novo treino à sua rotina."}
+              </Text>
+
+              {/* Campo Nome */}
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>
+                  Nome do treino <Text style={styles.required}>*</Text>
+                </Text>
                 <View
                   style={[
-                    styles.successBanner,
+                    styles.inputWrapper,
                     {
-                      backgroundColor: colors.successLight,
-                      borderColor: colors.success,
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
                     },
+                    Boolean(erros.nome) && styles.inputWrapperError,
                   ]}
                 >
                   <Ionicons
-                    name="checkmark-circle"
-                    size={20}
-                    color={colors.success}
+                    name="barbell-outline"
+                    size={18}
+                    color={erros.nome ? colors.danger : colors.textSecondary}
+                    style={styles.inputIcon}
                   />
-                  <Text
-                    style={[
-                      styles.successBannerText,
-                      { color: colors.success },
-                    ]}
-                  >
-                    Treino {isEditing ? "atualizado" : "cadastrado"} com
-                    sucesso!
-                  </Text>
-                </View>
-              )}
-
-              {/* Card do Formulário */}
-              <View
-                style={[
-                  styles.formCard,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
-                <Text
-                  style={[styles.formSubtitle, { color: colors.textSecondary }]}
-                >
-                  {isEditing
-                    ? "Modifique os dados da sessão selecionada."
-                    : "Preencha as informações para adicionar um novo treino à sua rotina."}
-                </Text>
-
-                {/* Campo Nome */}
-                <View style={styles.fieldGroup}>
-                  <Text style={[styles.label, { color: colors.textPrimary }]}>
-                    Nome do treino <Text style={styles.required}>*</Text>
-                  </Text>
-                  <View
-                    style={[
-                      styles.inputWrapper,
-                      {
-                        backgroundColor: colors.surface,
-                        borderColor: colors.border,
-                      },
-                      Boolean(erros.nome) && styles.inputWrapperError,
-                    ]}
-                  >
-                    <Ionicons
-                      name="barbell-outline"
-                      size={18}
-                      color={erros.nome ? colors.danger : colors.textSecondary}
-                      style={styles.inputIcon}
-                    />
-                    <TextInput
-                      style={[styles.input, { color: colors.textPrimary }]}
-                      placeholder="Ex: Treino A - Peito e Tríceps"
-                      placeholderTextColor={colors.textMuted}
-                      value={nome}
-                      onChangeText={(val) => {
-                        setNome(val);
-                        if (erros.nome) {
-                          setErros((prev) => ({ ...prev, nome: undefined }));
-                        }
-                      }}
-                    />
-                  </View>
-                  {erros.nome && (
-                    <View style={styles.errorRow}>
-                      <Ionicons
-                        name="alert-circle-outline"
-                        size={14}
-                        color={colors.danger}
-                      />
-                      <Text
-                        style={[styles.errorText, { color: colors.danger }]}
-                      >
-                        {erros.nome}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-
-                {/* Campo Categoria */}
-                <View style={styles.fieldGroup}>
-                  <Text style={[styles.label, { color: colors.textPrimary }]}>
-                    Categoria
-                  </Text>
-                  <View style={styles.chipsContainer}>
-                    {CATEGORIAS_OPCOES.map((cat) => {
-                      const ativo = categoria === cat;
-                      return (
-                        <TouchableOpacity
-                          key={cat}
-                          style={[
-                            styles.chip,
-                            {
-                              backgroundColor: ativo
-                                ? colors.primary
-                                : colors.surface,
-                              borderColor: ativo
-                                ? colors.primary
-                                : colors.border,
-                            },
-                          ]}
-                          onPress={() => setCategoria(cat)}
-                          activeOpacity={0.7}
-                        >
-                          <Text
-                            style={[
-                              styles.chipText,
-                              {
-                                color: ativo ? "#FFFFFF" : colors.textSecondary,
-                              },
-                              ativo && { fontWeight: "700" },
-                            ]}
-                          >
-                            {cat}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-                </View>
-
-                {/* Campo Dia da Semana */}
-                <View style={styles.fieldGroup}>
-                  <Text style={[styles.label, { color: colors.textPrimary }]}>
-                    Dia da semana <Text style={styles.required}>*</Text>
-                  </Text>
-
-                  {/* Chips de seleção rápida */}
-                  <View style={styles.chipsContainer}>
-                    {DIAS_OPCOES.map((dia) => {
-                      const ativo =
-                        diaSemana.toLowerCase() === dia.toLowerCase();
-                      return (
-                        <TouchableOpacity
-                          key={dia}
-                          style={[
-                            styles.chip,
-                            {
-                              backgroundColor: ativo
-                                ? colors.primary
-                                : colors.surface,
-                              borderColor: ativo
-                                ? colors.primary
-                                : colors.border,
-                            },
-                          ]}
-                          onPress={() => handleSelectDia(dia)}
-                          activeOpacity={0.7}
-                        >
-                          <Text
-                            style={[
-                              styles.chipText,
-                              {
-                                color: ativo ? "#FFFFFF" : colors.textSecondary,
-                              },
-                              ativo && { fontWeight: "700" },
-                            ]}
-                          >
-                            {dia}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-
-                  <View
-                    style={[
-                      styles.inputWrapper,
-                      {
-                        backgroundColor: colors.surface,
-                        borderColor: colors.border,
-                      },
-                      Boolean(erros.diaSemana) && styles.inputWrapperError,
-                    ]}
-                  >
-                    <Ionicons
-                      name="calendar-outline"
-                      size={18}
-                      color={
-                        erros.diaSemana ? colors.danger : colors.textSecondary
+                  <TextInput
+                    style={[styles.input, { color: colors.textPrimary }]}
+                    placeholder="Ex: Treino A - Peito e Tríceps"
+                    placeholderTextColor={colors.textMuted}
+                    value={nome}
+                    onChangeText={(val) => {
+                      setNome(val);
+                      if (erros.nome) {
+                        setErros((prev) => ({ ...prev, nome: undefined }));
                       }
-                      style={styles.inputIcon}
-                    />
-                    <TextInput
-                      style={[styles.input, { color: colors.textPrimary }]}
-                      placeholder="Ou digite o dia da semana"
-                      placeholderTextColor={colors.textMuted}
-                      value={diaSemana}
-                      onChangeText={(val) => {
-                        setDiaSemana(val);
-                        if (erros.diaSemana) {
-                          setErros((prev) => ({
-                            ...prev,
-                            diaSemana: undefined,
-                          }));
-                        }
-                      }}
-                    />
-                  </View>
-                  {erros.diaSemana && (
-                    <View style={styles.errorRow}>
-                      <Ionicons
-                        name="alert-circle-outline"
-                        size={14}
-                        color={colors.danger}
-                      />
-                      <Text
-                        style={[styles.errorText, { color: colors.danger }]}
-                      >
-                        {erros.diaSemana}
-                      </Text>
-                    </View>
-                  )}
+                    }}
+                  />
                 </View>
-
-                {/* Campo Duração */}
-                <View style={styles.fieldGroup}>
-                  <Text style={[styles.label, { color: colors.textPrimary }]}>
-                    Duração estimada (minutos){" "}
-                    <Text style={styles.required}>*</Text>
-                  </Text>
-                  <View
-                    style={[
-                      styles.inputWrapper,
-                      {
-                        backgroundColor: colors.surface,
-                        borderColor: colors.border,
-                      },
-                      Boolean(erros.duracaoMin) && styles.inputWrapperError,
-                    ]}
-                  >
+                {erros.nome && (
+                  <View style={styles.errorRow}>
                     <Ionicons
-                      name="time-outline"
-                      size={18}
-                      color={
-                        erros.duracaoMin ? colors.danger : colors.textSecondary
-                      }
-                      style={styles.inputIcon}
+                      name="alert-circle-outline"
+                      size={14}
+                      color={colors.danger}
                     />
-                    <TextInput
-                      style={[styles.input, { color: colors.textPrimary }]}
-                      placeholder="Ex: 50 (entre 1 e 300)"
-                      placeholderTextColor={colors.textMuted}
-                      keyboardType="numeric"
-                      value={duracaoMin}
-                      onChangeText={(val) => {
-                        setDuracaoMin(val);
-                        if (erros.duracaoMin) {
-                          setErros((prev) => ({
-                            ...prev,
-                            duracaoMin: undefined,
-                          }));
-                        }
-                      }}
-                    />
-                  </View>
-                  {erros.duracaoMin && (
-                    <View style={styles.errorRow}>
-                      <Ionicons
-                        name="alert-circle-outline"
-                        size={14}
-                        color={colors.danger}
-                      />
-                      <Text
-                        style={[styles.errorText, { color: colors.danger }]}
-                      >
-                        {erros.duracaoMin}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-
-                {/* Ações */}
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={[
-                      styles.saveButton,
-                      { backgroundColor: colors.primary },
-                      salvando && styles.saveButtonDisabled,
-                    ]}
-                    onPress={handleSalvar}
-                    disabled={salvando}
-                    activeOpacity={0.8}
-                  >
-                    {salvando ? (
-                      <ActivityIndicator size="small" color="#FFFFFF" />
-                    ) : (
-                      <>
-                        <Ionicons
-                          name={isEditing ? "checkmark-outline" : "add-outline"}
-                          size={18}
-                          color="#FFFFFF"
-                        />
-                        <Text style={styles.saveButtonText}>
-                          {isEditing ? "Salvar alterações" : "Adicionar treino"}
-                        </Text>
-                      </>
-                    )}
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[
-                      styles.cancelButton,
-                      {
-                        backgroundColor: colors.surface,
-                        borderColor: colors.border,
-                      },
-                    ]}
-                    onPress={() => router.back()}
-                    activeOpacity={0.7}
-                  >
-                    <Text
-                      style={[
-                        styles.cancelButtonText,
-                        { color: colors.textSecondary },
-                      ]}
-                    >
-                      Cancelar
+                    <Text style={[styles.errorText, { color: colors.danger }]}>
+                      {erros.nome}
                     </Text>
-                  </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+
+              {/* Campo Categoria */}
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>
+                  Categoria
+                </Text>
+                <View style={styles.chipsContainer}>
+                  {CATEGORIAS_OPCOES.map((cat) => {
+                    const ativo = categoria === cat;
+                    return (
+                      <TouchableOpacity
+                        key={cat}
+                        style={[
+                          styles.chip,
+                          {
+                            backgroundColor: ativo
+                              ? colors.primary
+                              : colors.surface,
+                            borderColor: ativo ? colors.primary : colors.border,
+                          },
+                        ]}
+                        onPress={() => setCategoria(cat)}
+                        activeOpacity={0.7}
+                      >
+                        <Text
+                          style={[
+                            styles.chipText,
+                            {
+                              color: ativo ? "#FFFFFF" : colors.textSecondary,
+                            },
+                            ativo && { fontWeight: "700" },
+                          ]}
+                        >
+                          {cat}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </View>
+
+              {/* Campo Dia da Semana */}
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>
+                  Dia da semana <Text style={styles.required}>*</Text>
+                </Text>
+
+                {/* Chips de seleção rápida */}
+                <View style={styles.chipsContainer}>
+                  {DIAS_OPCOES.map((dia) => {
+                    const ativo = diaSemana.toLowerCase() === dia.toLowerCase();
+                    return (
+                      <TouchableOpacity
+                        key={dia}
+                        style={[
+                          styles.chip,
+                          {
+                            backgroundColor: ativo
+                              ? colors.primary
+                              : colors.surface,
+                            borderColor: ativo ? colors.primary : colors.border,
+                          },
+                        ]}
+                        onPress={() => handleSelectDia(dia)}
+                        activeOpacity={0.7}
+                      >
+                        <Text
+                          style={[
+                            styles.chipText,
+                            {
+                              color: ativo ? "#FFFFFF" : colors.textSecondary,
+                            },
+                            ativo && { fontWeight: "700" },
+                          ]}
+                        >
+                          {dia}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                    },
+                    Boolean(erros.diaSemana) && styles.inputWrapperError,
+                  ]}
+                >
+                  <Ionicons
+                    name="calendar-outline"
+                    size={18}
+                    color={
+                      erros.diaSemana ? colors.danger : colors.textSecondary
+                    }
+                    style={styles.inputIcon}
+                  />
+                  <TextInput
+                    style={[styles.input, { color: colors.textPrimary }]}
+                    placeholder="Ou digite o dia da semana"
+                    placeholderTextColor={colors.textMuted}
+                    value={diaSemana}
+                    onChangeText={(val) => {
+                      setDiaSemana(val);
+                      if (erros.diaSemana) {
+                        setErros((prev) => ({
+                          ...prev,
+                          diaSemana: undefined,
+                        }));
+                      }
+                    }}
+                  />
+                </View>
+                {erros.diaSemana && (
+                  <View style={styles.errorRow}>
+                    <Ionicons
+                      name="alert-circle-outline"
+                      size={14}
+                      color={colors.danger}
+                    />
+                    <Text style={[styles.errorText, { color: colors.danger }]}>
+                      {erros.diaSemana}
+                    </Text>
+                  </View>
+                )}
+              </View>
+
+              {/* Campo Duração */}
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>
+                  Duração estimada (minutos){" "}
+                  <Text style={styles.required}>*</Text>
+                </Text>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                    },
+                    Boolean(erros.duracaoMin) && styles.inputWrapperError,
+                  ]}
+                >
+                  <Ionicons
+                    name="time-outline"
+                    size={18}
+                    color={
+                      erros.duracaoMin ? colors.danger : colors.textSecondary
+                    }
+                    style={styles.inputIcon}
+                  />
+                  <TextInput
+                    style={[styles.input, { color: colors.textPrimary }]}
+                    placeholder="Ex: 50 (entre 1 e 300)"
+                    placeholderTextColor={colors.textMuted}
+                    keyboardType="numeric"
+                    value={duracaoMin}
+                    onChangeText={(val) => {
+                      setDuracaoMin(val);
+                      if (erros.duracaoMin) {
+                        setErros((prev) => ({
+                          ...prev,
+                          duracaoMin: undefined,
+                        }));
+                      }
+                    }}
+                  />
+                </View>
+                {erros.duracaoMin && (
+                  <View style={styles.errorRow}>
+                    <Ionicons
+                      name="alert-circle-outline"
+                      size={14}
+                      color={colors.danger}
+                    />
+                    <Text style={[styles.errorText, { color: colors.danger }]}>
+                      {erros.duracaoMin}
+                    </Text>
+                  </View>
+                )}
+              </View>
+
+              {/* Ações */}
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.saveButton,
+                    { backgroundColor: colors.primary },
+                    salvando && styles.saveButtonDisabled,
+                  ]}
+                  onPress={handleSalvar}
+                  disabled={salvando}
+                  activeOpacity={0.8}
+                >
+                  {salvando ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                  ) : (
+                    <>
+                      <Ionicons
+                        name={isEditing ? "checkmark-outline" : "add-outline"}
+                        size={18}
+                        color="#FFFFFF"
+                      />
+                      <Text style={styles.saveButtonText}>
+                        {isEditing ? "Salvar alterações" : "Adicionar treino"}
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.cancelButton,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                    },
+                  ]}
+                  onPress={() => router.back()}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.cancelButtonText,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Cancelar
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </TouchableWithoutFeedback>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
