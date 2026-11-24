@@ -74,4 +74,19 @@ public class CobrancaService {
 			}
 		}
 	}
+
+	@Transactional
+	public CobrancaResponse confirmarPagamentoComoPersonal(Long cobrancaId) {
+		Cobranca cobranca = repository.findById(cobrancaId)
+				.orElseThrow(() -> new RecursoNaoEncontradoException("Cobrança não encontrada: " + cobrancaId));
+		if (cobranca.getStatus() == StatusCobranca.PAGO) {
+			throw new RegraDeNegocioException("Esta cobrança já foi paga.");
+		}
+		if (cobranca.getStatus() == StatusCobranca.CANCELADO) {
+			throw new RegraDeNegocioException("Cobranças canceladas não podem ser pagas.");
+		}
+		cobranca.setStatus(StatusCobranca.PAGO);
+		cobranca.setDataPagamento(LocalDate.now());
+		return Mapper.toResponse(repository.save(cobranca));
+	}
 }
