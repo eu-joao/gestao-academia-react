@@ -20,8 +20,8 @@ public interface TreinoRepository extends JpaRepository<Treino, UUID> {
 
 	@Query("SELECT t FROM Treino t WHERE t.ativo = true "
 			+ "AND (:alunoId IS NULL OR t.aluno.id = :alunoId) "
-			+ "AND (:diaSemana IS NULL OR LOWER(t.diaSemana) = LOWER(:diaSemana)) "
-			+ "AND (:busca IS NULL OR LOWER(t.nome) LIKE LOWER(CONCAT('%', :busca, '%'))) "
+			+ "AND (:diaSemana IS NULL OR LOWER(t.diaSemana) = LOWER(CAST(:diaSemana AS STRING))) "
+			+ "AND (:busca IS NULL OR LOWER(t.nome) LIKE LOWER(CONCAT('%', CAST(:busca AS STRING), '%'))) "
 			+ "ORDER BY t.criadoEm DESC")
 	List<Treino> buscarFiltrados(@Param("alunoId") Long alunoId,
 			@Param("diaSemana") String diaSemana,

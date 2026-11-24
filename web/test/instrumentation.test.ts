@@ -60,8 +60,21 @@ describe("instrumentation", () => {
     });
   }
 
+  function setupDevEnvNoPhase() {
+    setEnv({
+      // NEXT_PHASE não definido - simula cenário onde next dev não define a variável
+      NODE_ENV: "development",
+    });
+  }
+
   it("não lança em desenvolvimento (phase-development-server)", async () => {
     setupDevEnv();
+    const { register } = await import("@/instrumentation");
+    await expect(register()).resolves.not.toThrow();
+  });
+
+  it("não lança em desenvolvimento quando NEXT_PHASE undefined mas NODE_ENV=development", async () => {
+    setupDevEnvNoPhase();
     const { register } = await import("@/instrumentation");
     await expect(register()).resolves.not.toThrow();
   });
@@ -224,9 +237,9 @@ describe("instrumentation", () => {
     consoleLogSpy.mockRestore();
   });
 
-  it("FALHA em produção Node.js quando NEXT_PHASE ausente", async () => {
+  it("valida em produção Node.js quando NEXT_PHASE ausente (Next.js não define no server)", async () => {
     setEnv({
-      // NEXT_PHASE não definido
+      // NEXT_PHASE não definido - Next.js não define em next start
       NODE_ENV: "production",
       SESSION_SECRET: VALID_SECRET,
       ADMIN_USER: VALID_USER,
@@ -235,10 +248,10 @@ describe("instrumentation", () => {
       NEXT_RUNTIME: "nodejs",
     });
     const { register } = await import("@/instrumentation");
-    await expect(register()).rejects.toThrow("NEXT_PHASE ausente ou inválido");
+    await expect(register()).resolves.not.toThrow();
   });
 
-  it("FALHA em produção Node.js quando NEXT_PHASE tem valor desconhecido", async () => {
+  it("valida em produção Node.js quando NEXT_PHASE tem valor desconhecido (usa NODE_ENV)", async () => {
     setEnv({
       NEXT_PHASE: "unknown-phase",
       NODE_ENV: "production",
@@ -249,10 +262,10 @@ describe("instrumentation", () => {
       NEXT_RUNTIME: "nodejs",
     });
     const { register } = await import("@/instrumentation");
-    await expect(register()).rejects.toThrow("NEXT_PHASE ausente ou inválido");
+    await expect(register()).resolves.not.toThrow();
   });
 
-  it("FALHA em produção Node.js quando NEXT_PHASE é phase-test", async () => {
+  it("valida em produção Node.js quando NEXT_PHASE é phase-test (usa NODE_ENV)", async () => {
     setEnv({
       NEXT_PHASE: "phase-test",
       NODE_ENV: "production",
@@ -263,7 +276,7 @@ describe("instrumentation", () => {
       NEXT_RUNTIME: "nodejs",
     });
     const { register } = await import("@/instrumentation");
-    await expect(register()).rejects.toThrow("NEXT_PHASE ausente ou inválido");
+    await expect(register()).resolves.not.toThrow();
   });
 
   it("FALHA em phase-production-server com NEXT_RUNTIME=custom", async () => {
@@ -310,9 +323,10 @@ describe("instrumentation", () => {
 
   it("não valida em runtime não-Node desconhecido em fase não-reconhecida (fail-safe com warning)", async () => {
     const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    // NODE_ENV não é production nem development - cenário atípico
     setEnv({
       NEXT_PHASE: "unknown-phase",
-      NODE_ENV: "production",
+      NODE_ENV: "test",
       SESSION_SECRET: VALID_SECRET,
       ADMIN_USER: VALID_USER,
       ADMIN_PASS: VALID_PASS,
