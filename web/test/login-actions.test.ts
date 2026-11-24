@@ -44,7 +44,7 @@ describe("login actions", () => {
       delete: vi.fn(),
       get: vi.fn(),
     };
-    vi.mocked(cookies).mockResolvedValue(mockCookies as any);
+    vi.mocked(cookies).mockResolvedValue(mockCookies as unknown as Awaited<ReturnType<typeof cookies>>);
   });
 
   afterEach(() => {

@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_SESSAO, createSessionCookie, isSessionValid, SESSION_TTL_SECONDS } from "@/lib/session";
-import { base64UrlEncode, base64UrlDecode } from "@/lib/crypto-utils";
+import { base64UrlEncode } from "@/lib/crypto-utils";
+import { createHmac } from "node:crypto";
 
 // Helpers para manipular variáveis de ambiente nos testes
 const originalEnv = { ...process.env };
@@ -57,7 +58,6 @@ function createExpiredCookie(): string {
   const payloadB64 = base64UrlEncode(payloadBytes);
 
   const secret = Buffer.from(VALID_SECRET, "hex");
-  const { createHmac } = require("node:crypto");
   const hmac = createHmac("sha256", secret);
   hmac.update(payloadBytes);
   const signature = base64UrlEncode(hmac.digest());
@@ -73,7 +73,6 @@ function createFutureIatCookie(): string {
   const payloadB64 = base64UrlEncode(payloadBytes);
 
   const secret = Buffer.from(VALID_SECRET, "hex");
-  const { createHmac } = require("node:crypto");
   const hmac = createHmac("sha256", secret);
   hmac.update(payloadBytes);
   const signature = base64UrlEncode(hmac.digest());
@@ -90,7 +89,6 @@ function createExcessiveDurationCookie(): string {
   const payloadB64 = base64UrlEncode(payloadBytes);
 
   const secret = Buffer.from(VALID_SECRET, "hex");
-  const { createHmac } = require("node:crypto");
   const hmac = createHmac("sha256", secret);
   hmac.update(payloadBytes);
   const signature = base64UrlEncode(hmac.digest());
