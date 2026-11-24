@@ -182,7 +182,7 @@ describe("crypto-utils", () => {
 
     it("round-trip com padding na entrada", () => {
       const original = Buffer.from("a");
-      const encoded = base64UrlEncode(original); // "YQ"
+      base64UrlEncode(original); // "YQ" - usado para demonstrar round-trip
       const withPadding = "YQ==";
       const decoded = base64UrlDecode(withPadding);
       expect(decoded).toEqual(original);

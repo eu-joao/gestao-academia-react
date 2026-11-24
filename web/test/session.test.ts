@@ -9,6 +9,7 @@ import {
   SESSION_TTL_SECONDS,
   COOKIE_SESSAO,
 } from "@/lib/session";
+import { createHmac } from "node:crypto";
 
 // Helpers para manipular variáveis de ambiente nos testes
 const originalEnv = { ...process.env };
@@ -244,7 +245,7 @@ describe("session", () => {
       const futureIat = Math.floor(Date.now() / 1000) + 120; // 2 minutos no futuro
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: futureIat, exp: futureIat + 3600 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
@@ -256,7 +257,7 @@ describe("session", () => {
       const futureIat = Math.floor(Date.now() / 1000) + 30; // 30s no futuro
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: futureIat, exp: futureIat + 3600 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
@@ -268,7 +269,7 @@ describe("session", () => {
       const now = Math.floor(Date.now() / 1000);
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: now, exp: now })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
@@ -281,7 +282,7 @@ describe("session", () => {
       const excessiveExp = now + SESSION_TTL_SECONDS + 120; // 8h + 2min
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: now, exp: excessiveExp })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
@@ -294,7 +295,7 @@ describe("session", () => {
       const maxExp = now + SESSION_TTL_SECONDS + 60; // 8h + 60s
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: now, exp: maxExp })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
@@ -306,7 +307,7 @@ describe("session", () => {
       const past = Math.floor(Date.now() / 1000) - 100;
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: past, exp: past + 10 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
@@ -374,7 +375,7 @@ describe("session", () => {
       const past = Math.floor(Date.now() / 1000) - 100;
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: past, exp: past + 10 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
@@ -386,7 +387,7 @@ describe("session", () => {
       const futureIat = Math.floor(Date.now() / 1000) + 120;
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: futureIat, exp: futureIat + 3600 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
-      const hmac = require("node:crypto").createHmac("sha256", secret);
+      const hmac = createHmac("sha256", secret);
       hmac.update(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64"));
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;

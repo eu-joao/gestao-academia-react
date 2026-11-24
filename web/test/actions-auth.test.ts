@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { COOKIE_SESSAO, createSessionCookie, isSessionValid, SESSION_TTL_SECONDS } from "@/lib/session";
+import { COOKIE_SESSAO, createSessionCookie } from "@/lib/session";
 import { base64UrlEncode } from "@/lib/crypto-utils";
+import { createHmac } from "node:crypto";
 
 // Mock do server-only (usado por require-auth.ts)
 vi.mock("server-only", () => ({}));
@@ -50,7 +51,6 @@ function createExpiredCookie(): string {
   const payloadB64 = base64UrlEncode(payloadBytes);
 
   const secret = Buffer.from(VALID_SECRET, "hex");
-  const { createHmac } = require("node:crypto");
   const hmac = createHmac("sha256", secret);
   hmac.update(payloadBytes);
   const signature = base64UrlEncode(hmac.digest());
@@ -76,10 +76,14 @@ global.fetch = mockFetch;
 
 // Mock do redirect do Next.js - lança erro especial
 const REDIRECT_ERROR = "NEXT_REDIRECT";
-function createRedirectError(url: string) {
-  const error = new Error(REDIRECT_ERROR);
-  (error as any).digest = REDIRECT_ERROR;
-  (error as any).url = url;
+interface RedirectError extends Error {
+  digest: string;
+  url: string;
+}
+function createRedirectError(url: string): RedirectError {
+  const error = new Error(REDIRECT_ERROR) as RedirectError;
+  error.digest = REDIRECT_ERROR;
+  error.url = url;
   return error;
 }
 
@@ -130,7 +134,7 @@ describe("Server Actions - autenticação", () => {
   }
 
   // Helper para verificar se redirect foi para /login
-  function expectRedirectToLogin(promise: Promise<any>) {
+  function expectRedirectToLogin(promise: Promise<unknown>) {
     return expect(promise).rejects.toMatchObject({
       digest: REDIRECT_ERROR,
       url: expect.stringContaining("/login"),
