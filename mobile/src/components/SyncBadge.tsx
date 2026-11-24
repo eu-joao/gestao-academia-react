@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
   adicionarOuvinteStatus,
-  processarFila,
+  verificarConexaoAtiva,
+  iniciarMonitorConexao,
+  alternarModoOfflineSimulado,
+  estaEmModoOfflineSimulado,
   StatusSincronizacao,
 } from "../services/syncQueue";
 import { useTheme } from "../contexts/ThemeContext";
@@ -12,20 +15,38 @@ export function SyncBadge() {
   const { isDark } = useTheme();
   const [status, setStatus] = useState<StatusSincronizacao>("sincronizado");
   const [pendentes, setPendentes] = useState(0);
+  const [simulado, setSimulado] = useState(false);
 
   useEffect(() => {
+    const pararMonitor = iniciarMonitorConexao();
     const removerOuvinte = adicionarOuvinteStatus((novoStatus, qtd) => {
       setStatus(novoStatus);
       setPendentes(qtd);
+      setSimulado(estaEmModoOfflineSimulado());
     });
-    return removerOuvinte;
+    return () => {
+      removerOuvinte();
+      pararMonitor();
+    };
   }, []);
 
   function handlePress() {
-    processarFila();
+    verificarConexaoAtiva();
   }
 
-  if (status === "sincronizado" && pendentes === 0) {
+  function handleLongPress() {
+    alternarModoOfflineSimulado().then((ativo) => {
+      setSimulado(ativo);
+      Alert.alert(
+        ativo ? "Modo Offline Ativado" : "Modo Online Restaurado",
+        ativo
+          ? "O app agora está em modo offline simulado. As alterações ficarão pendentes no aparelho sem tentar enviar à nuvem (ideal para demonstração sem risco ao Expo Go)."
+          : "O app voltou a se conectar normalmente com a nuvem e processará a fila.",
+      );
+    });
+  }
+
+  if (status === "sincronizado" && pendentes === 0 && !simulado) {
     return (
       <TouchableOpacity
         style={[
@@ -38,6 +59,8 @@ export function SyncBadge() {
             : styles.badgeSynced,
         ]}
         onPress={handlePress}
+        onLongPress={handleLongPress}
+        delayLongPress={1000}
         activeOpacity={0.7}
       >
         <Ionicons
@@ -87,6 +110,12 @@ export function SyncBadge() {
     );
   }
 
+  const textoOffline = simulado
+    ? `Offline simulado (${pendentes})`
+    : pendentes === 0
+      ? "Offline (sem rede)"
+      : `Offline (${pendentes} ${pendentes === 1 ? "pendente" : "pendentes"})`;
+
   return (
     <TouchableOpacity
       style={[
@@ -99,6 +128,8 @@ export function SyncBadge() {
           : styles.badgeOffline,
       ]}
       onPress={handlePress}
+      onLongPress={handleLongPress}
+      delayLongPress={1000}
       activeOpacity={0.7}
     >
       <Ionicons
@@ -112,7 +143,7 @@ export function SyncBadge() {
           isDark ? { color: "#FBBF24" } : styles.textOffline,
         ]}
       >
-        Offline ({pendentes} {pendentes === 1 ? "pendente" : "pendentes"})
+        {textoOffline}
       </Text>
     </TouchableOpacity>
   );
