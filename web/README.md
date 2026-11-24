@@ -30,7 +30,7 @@ Aplicação web do projeto Gestão Academia, desenvolvida com Next.js, React e T
 
 ## Funcionalidades
 
-- **Alunos:** listagem, busca, cadastro, edição e exclusão.
+- **Alunos:** listagem, busca, cadastro, edição e exclusão. A altura pode ser informada em metros (por exemplo, `1.80`) ou centímetros (por exemplo, `180`).
 - **Treinos:** listagem dos treinos sincronizados pelo aplicativo mobile, com edição e exclusão. Os dados vêm de `GET /treinos` da API.
 - **Acesso:** autenticação do personal trainer via sessão HMAC-SHA256. Todas as rotas, exceto `/login`, exigem sessão válida; sem ela, o acesso é redirecionado para a tela de login. O botão **Sair** encerra a sessão removendo o cookie.
 

@@ -267,6 +267,36 @@ describe("Server Actions - autenticação", () => {
         })
       );
     });
+
+    it("apresenta a mensagem de validação retornada pela API", async () => {
+      setMockCookie(createValidCookie());
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({
+          erros: [
+            "altura: Informe a altura em metros (até 3,00) ou em centímetros (de 30 a 300)",
+          ],
+        }),
+      });
+
+      const { cadastrarAluno } = await import("@/app/actions");
+      const formData = new FormData();
+      formData.append("nome", "Teste");
+      formData.append("email", "teste@teste.com");
+      formData.append("peso", "70");
+      formData.append("altura", "301");
+      formData.append("nivelExperiencia", "INICIANTE");
+      formData.append("frequenciaSemanal", "3");
+
+      const result = await cadastrarAluno({ status: "idle" }, formData);
+
+      expect(result).toEqual({
+        status: "error",
+        message:
+          "altura: Informe a altura em metros (até 3,00) ou em centímetros (de 30 a 300)",
+      });
+    });
   });
 
   describe("atualizarAluno", () => {

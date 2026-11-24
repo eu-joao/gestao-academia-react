@@ -3,6 +3,7 @@ package br.edu.ifpb.academia.dto.request;
 import java.math.BigDecimal;
 
 import br.edu.ifpb.academia.enums.NivelExperiencia;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,6 +28,9 @@ public record AlunoAdminRequest(
 
 		@NotNull(message = "A altura é obrigatória")
 		@Positive(message = "A altura deve ser maior que zero")
+		@DecimalMax(
+				value = "3.00",
+				message = "Informe a altura em metros (até 3,00) ou em centímetros (de 30 a 300)")
 		BigDecimal altura,
 
 		@NotNull(message = "O nível de experiência é obrigatório")
@@ -36,4 +40,8 @@ public record AlunoAdminRequest(
 		@Min(value = 3, message = "A frequência mínima é 3 dias")
 		@Max(value = 6, message = "A frequência máxima é 6 dias")
 		Integer frequenciaSemanal) {
+
+	public AlunoAdminRequest {
+		altura = AlturaEmMetros.normalizar(altura);
+	}
 }

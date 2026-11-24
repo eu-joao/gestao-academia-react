@@ -48,6 +48,8 @@ O Hibernate valida o esquema contra as tabelas criadas pelo Flyway (`spring.jpa.
   - `DELETE /treinos/{id}`: executa a exclusão lógica (`ativo = false`).
   - `POST /treinos/sincronizar`: processa um lote de mutações da fila offline do mobile (`CRIAR`, `ATUALIZAR`, `EXCLUIR`) de forma idempotente.
 
+Nos requests de cadastro e atualização de aluno, a altura pode ser informada em metros (por exemplo, `1.80`) ou centímetros (por exemplo, `180`, entre `30` e `300`). Valores em centímetros são normalizados para metros antes da persistência; alturas acima de `3.00 m` são rejeitadas com erro de validação.
+
 ## Executar
 
 Na raiz do monorepo:
