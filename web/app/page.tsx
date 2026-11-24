@@ -66,32 +66,7 @@ async function AlunosLista() {
   return <ListaAlunos alunos={alunos} />;
 }
 
-async function FeedbackExclusao({
-  searchParams,
-}: {
-  searchParams: Promise<{ alunoExcluido?: string }>;
-}) {
-  const { alunoExcluido } = await searchParams;
-
-  if (alunoExcluido !== "sucesso") return null;
-
-  return (
-    <p
-      role="status"
-      aria-live="polite"
-      className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 shadow-sm"
-    >
-      Aluno excluído com sucesso.
-    </p>
-  );
-}
-
-export default function AlunosPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ alunoExcluido?: string }>;
-}) {
-
+export default function AlunosPage() {
   return (
     <main className="flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
       <div className="mx-auto max-w-7xl">
@@ -111,10 +86,6 @@ export default function AlunosPage({
             <AlunoForm />
           </div>
         </header>
-
-        <Suspense fallback={null}>
-          <FeedbackExclusao searchParams={searchParams} />
-        </Suspense>
 
         <Suspense
           fallback={
