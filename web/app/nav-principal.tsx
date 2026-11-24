@@ -6,6 +6,7 @@ import { sair } from "@/app/login/actions";
 
 const links = [
   { href: "/", rotulo: "Alunos" },
+  { href: "/contratos", rotulo: "Contratos" },
   { href: "/treinos", rotulo: "Treinos" },
 ];
 

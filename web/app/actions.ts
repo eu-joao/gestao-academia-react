@@ -133,6 +133,111 @@ export type ContratoState =
   | { status: "success"; message: string }
   | { status: "error"; message: string };
 
+// Tipos para as listagens
+export type ContratoComAluno = {
+  id: number;
+  alunoId: number;
+  alunoNome: string;
+  plano: "MENSAL" | "TRIMESTRAL" | "SEMESTRAL";
+  dataInicio: string;
+  dataTermino: string;
+  status: "ATIVO" | "CANCELADO" | "ENCERRADO";
+};
+
+export type PlanoInfo = {
+  tipo: "MENSAL" | "TRIMESTRAL" | "SEMESTRAL";
+  duracaoMeses: number;
+  valorMensal: number;
+};
+
+export type AlunoParaContrato = {
+  id: number;
+  nome: string;
+  status: "ATIVO" | "INATIVO";
+};
+
+export async function listarContratos(): Promise<ContratoComAluno[]> {
+  await requireAuth();
+
+  let response: Response;
+
+  try {
+    const apiUrl = process.env.API_URL ?? "http://localhost:8080";
+    response = await fetch(`${apiUrl}/contratos`, { cache: "no-store" });
+  } catch {
+    return [];
+  }
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const data = await response.json() as Array<{
+    id: number;
+    alunoId: number;
+    plano: "MENSAL" | "TRIMESTRAL" | "SEMESTRAL";
+    dataInicio: string;
+    dataTermino: string;
+    status: "ATIVO" | "CANCELADO" | "ENCERRADO";
+  }>;
+
+  // Buscar nomes dos alunos
+  const alunosResponse = await fetch(`${process.env.API_URL ?? "http://localhost:8080"}/alunos`, { cache: "no-store" });
+  const alunos: AlunoParaContrato[] = alunosResponse.ok ? await alunosResponse.json() : [];
+  const alunosMap = new Map(alunos.map(a => [a.id, a.nome]));
+
+  return data.map(c => ({
+    ...c,
+    alunoNome: alunosMap.get(c.alunoId) ?? `Aluno #${c.alunoId}`,
+  }));
+}
+
+export async function listarPlanos(): Promise<PlanoInfo[]> {
+  await requireAuth();
+
+  let response: Response;
+
+  try {
+    const apiUrl = process.env.API_URL ?? "http://localhost:8080";
+    response = await fetch(`${apiUrl}/planos`, { cache: "no-store" });
+  } catch {
+    return [];
+  }
+
+  if (!response.ok) {
+    return [];
+  }
+
+  return response.json() as Promise<PlanoInfo[]>;
+}
+
+export async function listarAlunosParaContrato(): Promise<AlunoParaContrato[]> {
+  await requireAuth();
+
+  let response: Response;
+
+  try {
+    const apiUrl = process.env.API_URL ?? "http://localhost:8080";
+    response = await fetch(`${apiUrl}/alunos`, { cache: "no-store" });
+  } catch {
+    return [];
+  }
+
+  if (!response.ok) {
+    return [];
+  }
+
+  const data = await response.json() as Array<{
+    id: number;
+    nome: string;
+    status: "ATIVO" | "INATIVO";
+  }>;
+
+  // Retornar todos os alunos (o backend valida RN03: impede 2º contrato ativo)
+  // Alunos INATIVOS ficam ATIVOS ao criar o contrato (RN05)
+  return data;
+}
+
 export async function criarContrato(
   _previousState: ContratoState,
   formData: FormData,
