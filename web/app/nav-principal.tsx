@@ -8,6 +8,7 @@ const links = [
   { href: "/", rotulo: "Alunos" },
   { href: "/contratos", rotulo: "Contratos" },
   { href: "/cobrancas", rotulo: "Cobranças" },
+  { href: "/programas", rotulo: "Programas" },
   { href: "/treinos", rotulo: "Treinos" },
 ];
 
