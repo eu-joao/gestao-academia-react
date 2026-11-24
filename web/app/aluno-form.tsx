@@ -7,49 +7,27 @@ import {
   cadastrarAluno,
   type CadastroAlunoState,
 } from "@/app/actions";
-import type { Aluno, AlunoRequest } from "@/types/aluno";
+import type { Aluno } from "@/types/aluno";
 
 const estadoInicial: CadastroAlunoState = { status: "idle" };
 
-type ValoresFormulario = Omit<
-  AlunoRequest,
-  "peso" | "altura" | "frequenciaSemanal"
-> & {
+type ValoresFormulario = {
+  nome: string;
+  email: string;
   peso: string;
   altura: string;
+  nivelExperiencia: "INICIANTE" | "INTERMEDIARIO" | "AVANCADO";
   frequenciaSemanal: string;
 };
 
 const valoresIniciais: ValoresFormulario = {
   nome: "",
-  cpf: "",
-  telefone: "",
   email: "",
-  dataNascimento: "",
   peso: "",
   altura: "",
   nivelExperiencia: "INICIANTE",
   frequenciaSemanal: "3",
-  status: "ATIVO",
 };
-
-function dataLocalHoje() {
-  const hoje = new Date();
-  const ano = hoje.getFullYear();
-  const mes = String(hoje.getMonth() + 1).padStart(2, "0");
-  const dia = String(hoje.getDate()).padStart(2, "0");
-  return `${ano}-${mes}-${dia}`;
-}
-
-function formatarCpf(valor: string) {
-  const digitos = valor.replace(/\D/g, "").slice(0, 11);
-  if (digitos.length <= 3) return digitos;
-  if (digitos.length <= 6) return `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
-  if (digitos.length <= 9) {
-    return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
-  }
-  return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6, 9)}-${digitos.slice(9)}`;
-}
 
 type CampoFormulario = keyof ValoresFormulario;
 type ErrosFormulario = Partial<Record<CampoFormulario, string>>;
@@ -62,15 +40,11 @@ function converterParaFormulario(aluno?: Aluno): ValoresFormulario {
 
   return {
     nome: aluno.nome,
-    cpf: formatarCpf(aluno.cpf),
-    telefone: aluno.telefone,
     email: aluno.email,
-    dataNascimento: aluno.dataNascimento,
     peso: String(aluno.peso),
     altura: String(aluno.altura),
     nivelExperiencia: aluno.nivelExperiencia,
     frequenciaSemanal: String(aluno.frequenciaSemanal),
-    status: aluno.status,
   };
 }
 
@@ -122,30 +96,12 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
   function validarFormulario(event: FormEvent<HTMLFormElement>) {
     const novosErros: ErrosFormulario = {};
     const email = event.currentTarget.elements.namedItem("email") as HTMLInputElement;
-    const dataNascimentoValida = (() => {
-      const [ano, mes, dia] = valores.dataNascimento.split("-").map(Number);
-      if (!ano || !mes || !dia) return false;
-      const data = new Date(ano, mes - 1, dia);
-      return data.getFullYear() === ano &&
-        data.getMonth() === mes - 1 &&
-        data.getDate() === dia &&
-        valores.dataNascimento < dataLocalHoje();
-    })();
 
     if (!valores.nome.trim()) novosErros.nome = "Informe o nome do aluno.";
-    if (valores.cpf.replace(/\D/g, "").length !== 11) {
-      novosErros.cpf = "Informe um CPF com exatamente 11 dígitos.";
-    }
-    if (!valores.telefone.trim()) novosErros.telefone = "Informe o telefone do aluno.";
     if (!valores.email.trim()) {
       novosErros.email = "Informe o e-mail do aluno.";
     } else if (email.validity.typeMismatch) {
       novosErros.email = "Informe um endereço de e-mail válido.";
-    }
-    if (!valores.dataNascimento) {
-      novosErros.dataNascimento = "Informe a data de nascimento.";
-    } else if (!dataNascimentoValida) {
-      novosErros.dataNascimento = "Informe uma data válida anterior a hoje.";
     }
     if (!valores.peso.trim()) {
       novosErros.peso = "Informe o peso do aluno.";
@@ -162,9 +118,6 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
     }
     if (!["3", "4", "5", "6"].includes(valores.frequenciaSemanal)) {
       novosErros.frequenciaSemanal = "Selecione uma frequência de 3, 4, 5 ou 6 dias.";
-    }
-    if (!( ["ATIVO", "INATIVO"] as string[]).includes(valores.status)) {
-      novosErros.status = "Selecione um status válido.";
     }
 
     setErrosValidacao(novosErros);
@@ -256,41 +209,12 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
                 onChange={(event) => atualizar("nome", event.target.value)}
                 autoComplete="name"
                 required
+                readOnly={editando}
               />
+              {editando && (
+                <p className="mt-1 text-xs text-slate-500">O nome não pode ser alterado após o cadastro.</p>
+              )}
               {errosValidacao.nome && <span id="nome-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.nome}</span>}
-            </label>
-
-            <label className="text-sm font-medium text-slate-700">
-              CPF
-              <input
-                id="cpf"
-                className={classeCampo("cpf")}
-                {...atributosCampo("cpf")}
-                name="cpf"
-                value={valores.cpf}
-                onChange={(event) => atualizar("cpf", formatarCpf(event.target.value))}
-                inputMode="numeric"
-                autoComplete="off"
-                placeholder="11 dígitos"
-                required
-              />
-              {errosValidacao.cpf && <span id="cpf-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.cpf}</span>}
-            </label>
-
-            <label className="text-sm font-medium text-slate-700">
-              Telefone
-              <input
-                id="telefone"
-                className={classeCampo("telefone")}
-                {...atributosCampo("telefone")}
-                name="telefone"
-                value={valores.telefone}
-                onChange={(event) => atualizar("telefone", event.target.value)}
-                type="tel"
-                autoComplete="tel"
-                required
-              />
-              {errosValidacao.telefone && <span id="telefone-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.telefone}</span>}
             </label>
 
             <label className="text-sm font-medium text-slate-700">
@@ -305,24 +229,12 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
                 type="email"
                 autoComplete="email"
                 required
+                readOnly={editando}
               />
+              {editando && (
+                <p className="mt-1 text-xs text-slate-500">O e-mail não pode ser alterado após o cadastro.</p>
+              )}
               {errosValidacao.email && <span id="email-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.email}</span>}
-            </label>
-
-            <label className="text-sm font-medium text-slate-700">
-              Data de nascimento
-              <input
-                id="dataNascimento"
-                className={classeCampo("dataNascimento")}
-                {...atributosCampo("dataNascimento")}
-                name="dataNascimento"
-                value={valores.dataNascimento}
-                onChange={(event) => atualizar("dataNascimento", event.target.value)}
-                type="date"
-                max={dataLocalHoje()}
-                required
-              />
-              {errosValidacao.dataNascimento && <span id="dataNascimento-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.dataNascimento}</span>}
             </label>
 
             <label className="text-sm font-medium text-slate-700">
@@ -368,7 +280,7 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
                 {...atributosCampo("nivelExperiencia")}
                 name="nivelExperiencia"
                 value={valores.nivelExperiencia}
-                onChange={(event) => atualizar("nivelExperiencia", event.target.value as AlunoRequest["nivelExperiencia"])}
+                onChange={(event) => atualizar("nivelExperiencia", event.target.value as ValoresFormulario["nivelExperiencia"])}
                 required
               >
                 <option value="INICIANTE">Iniciante</option>
@@ -395,27 +307,6 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
               </select>
               {errosValidacao.frequenciaSemanal && <span id="frequenciaSemanal-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.frequenciaSemanal}</span>}
             </label>
-
-            {editando ? (
-              <label className="text-sm font-medium text-slate-700">
-                Status
-                <select
-                  id="status"
-                  className={classeCampo("status")}
-                  {...atributosCampo("status")}
-                  name="status"
-                  value={valores.status}
-                  onChange={(event) => atualizar("status", event.target.value as AlunoRequest["status"])}
-                  required
-                >
-                  <option value="ATIVO">Ativo</option>
-                  <option value="INATIVO">Inativo</option>
-                </select>
-                {errosValidacao.status && <span id="status-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.status}</span>}
-              </label>
-            ) : (
-              <input type="hidden" name="status" value="ATIVO" />
-            )}
 
             {estado.status === "error" && feedbackAcaoVisivel && (
               <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 sm:col-span-2">

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { mensagemErroApi } from "@/lib/api-error";
 import type { TreinoRequest } from "@/types/treino";
+import { requireAuth } from "@/lib/require-auth";
 
 export type TreinoState =
   | { status: "idle" }
@@ -17,6 +18,7 @@ export async function atualizarTreino(
   _estadoAnterior: TreinoState,
   formData: FormData,
 ): Promise<TreinoState> {
+  await requireAuth();
   const payload: TreinoRequest = {
     nome: String(formData.get("nome") ?? "").trim(),
     categoria: String(formData.get("categoria") ?? "").trim(),
@@ -53,6 +55,7 @@ export async function atualizarTreino(
 }
 
 export async function excluirTreino(id: string): Promise<void> {
+  await requireAuth();
   let response: Response;
 
   try {

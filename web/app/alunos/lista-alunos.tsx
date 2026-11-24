@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import ExcluirAlunoButton from "@/app/alunos/excluir-aluno-button";
 import type { Aluno } from "@/types/aluno";
 
 function normalizarTexto(valor: string) {
@@ -15,13 +14,10 @@ function normalizarTexto(valor: string) {
 export default function ListaAlunos({ alunos }: { alunos: Aluno[] }) {
   const [busca, setBusca] = useState("");
   const consulta = normalizarTexto(busca.trim());
-  const cpfConsulta = busca.replace(/\D/g, "");
   const alunosFiltrados = consulta
     ? alunos.filter((aluno) =>
         normalizarTexto(aluno.nome).includes(consulta) ||
-        normalizarTexto(aluno.email).includes(consulta) ||
-        (cpfConsulta.length > 0 &&
-          aluno.cpf.replace(/\D/g, "").includes(cpfConsulta)),
+        normalizarTexto(aluno.email).includes(consulta),
       )
     : alunos;
 
@@ -82,7 +78,7 @@ export default function ListaAlunos({ alunos }: { alunos: Aluno[] }) {
                 type="search"
                 value={busca}
                 onChange={(event) => setBusca(event.target.value)}
-                placeholder="Buscar por nome, CPF ou e-mail..."
+                placeholder="Buscar por nome ou e-mail..."
                 className="mt-1.5 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-normal text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-600 focus:bg-white focus:ring-2 focus:ring-sky-100"
               />
             </label>
@@ -110,7 +106,7 @@ export default function ListaAlunos({ alunos }: { alunos: Aluno[] }) {
               Nenhum aluno encontrado para “{busca.trim()}”.
             </p>
             <p className="mt-1 text-sm text-slate-500">
-              Confira o nome, CPF ou e-mail e tente novamente.
+              Confira o nome ou e-mail e tente novamente.
             </p>
             <button
               type="button"
@@ -176,10 +172,6 @@ export default function ListaAlunos({ alunos }: { alunos: Aluno[] }) {
                     >
                       Editar
                     </Link>
-                    <ExcluirAlunoButton
-                      alunoId={aluno.id}
-                      alunoNome={aluno.nome}
-                    />
                   </div>
                 </div>
               </li>

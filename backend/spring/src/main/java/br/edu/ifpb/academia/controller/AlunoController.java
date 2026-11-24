@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifpb.academia.dto.request.AlunoAdminRequest;
 import br.edu.ifpb.academia.dto.request.AlunoRequest;
 import br.edu.ifpb.academia.dto.request.PesoAlunoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
@@ -37,6 +38,11 @@ public class AlunoController {
 	public AlunoResponse cadastrar(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AlunoRequest request) {
 		return service.registrar(jwt.getSubject(), jwt.getClaimAsString("email"),
 				jwt.getClaimAsString("name"), request);
+	}
+
+	@PostMapping
+	public AlunoResponse cadastrarComoPersonal(@Valid @RequestBody AlunoAdminRequest request) {
+		return service.cadastrarComoPersonal(request);
 	}
 
 	@PutMapping("/me/peso")

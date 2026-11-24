@@ -45,4 +45,10 @@ public class CobrancaController {
 		Long alunoId = alunoService.buscarPorGoogleSubject(jwt.getSubject()).getId();
 		return service.pagar(id, alunoId);
 	}
+
+	@PostMapping("/{id}/confirmar-pagamento")
+	@PreAuthorize("hasRole('PERSONAL')")
+	public CobrancaResponse confirmarPagamentoComoPersonal(@PathVariable Long id) {
+		return service.confirmarPagamentoComoPersonal(id);
+	}
 }
