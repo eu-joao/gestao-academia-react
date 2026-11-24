@@ -5,7 +5,8 @@ import { COOKIE_SESSAO, isSessionValid } from "@/lib/session";
 // Protege todas as telas do portal: sem sessão válida, redireciona para /login.
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const autenticado = isSessionValid(request.cookies.get(COOKIE_SESSAO)?.value);
+  const now = Math.floor(Date.now() / 1000);
+  const autenticado = isSessionValid(request.cookies.get(COOKIE_SESSAO)?.value, now);
 
   if (pathname === "/login") {
     return autenticado

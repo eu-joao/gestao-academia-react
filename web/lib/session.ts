@@ -72,8 +72,15 @@ export function createSessionCookie(): string {
  * - exp > iat
  * - Duração (exp - iat) não excede TTL + tolerância
  * - Sessão não expirada
+ *
+ * @param cookieValue - Valor do cookie de sessão
+ * @param now - Timestamp atual em segundos (obrigatório). Deve ser fornecido pelo chamador
+ *   após acesso dinâmico (ex.: `await cookies()`), para evitar instabilidade em prerender.
  */
-export function parseSessionCookie(cookieValue: string | undefined): { iat: number; exp: number } | null {
+export function parseSessionCookie(
+  cookieValue: string | undefined,
+  now: number,
+): { iat: number; exp: number } | null {
   if (!cookieValue) return null;
 
   const parts = cookieValue.split(".");
@@ -108,8 +115,6 @@ export function parseSessionCookie(cookieValue: string | undefined): { iat: numb
   // Valida estrutura do payload: iat e exp devem ser inteiros seguros (Number.isSafeInteger)
   if (!Number.isSafeInteger(payload.iat) || !Number.isSafeInteger(payload.exp)) return null;
 
-  const now = Math.floor(Date.now() / 1000);
-
   // Rejeita iat muito no futuro (clock skew tolerado: 60s)
   if (payload.iat > now + CLOCK_SKEW_TOLERANCE_SECONDS) return null;
 
@@ -128,7 +133,13 @@ export function parseSessionCookie(cookieValue: string | undefined): { iat: numb
 
 /**
  * Verifica se um cookie de sessão é válido (wrapper conveniente).
+ * @param cookieValue - Valor do cookie de sessão
+ * @param now - Timestamp atual em segundos (obrigatório). Deve ser fornecido pelo chamador
+ *   após acesso dinâmico (ex.: `await cookies()`), para evitar instabilidade em prerender.
  */
-export function isSessionValid(cookieValue: string | undefined): boolean {
-  return parseSessionCookie(cookieValue) !== null;
+export function isSessionValid(
+  cookieValue: string | undefined,
+  now: number,
+): boolean {
+  return parseSessionCookie(cookieValue, now) !== null;
 }

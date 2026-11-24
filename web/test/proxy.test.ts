@@ -334,15 +334,18 @@ describe("proxy middleware", () => {
   describe("validação de isSessionValid usada pelo proxy", () => {
     it("retorna true para cookie criado por createSessionCookie", () => {
       const cookie = createValidCookie();
-      expect(isSessionValid(cookie)).toBe(true);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid(cookie, now)).toBe(true);
     });
 
     it("retorna false para undefined", () => {
-      expect(isSessionValid(undefined)).toBe(false);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid(undefined, now)).toBe(false);
     });
 
     it("retorna false para string vazia", () => {
-      expect(isSessionValid("")).toBe(false);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid("", now)).toBe(false);
     });
   });
 });
