@@ -66,12 +66,12 @@ export function createSessionCookie(): string {
  * Retorna o payload se válido, null caso contrário.
  * Validações:
  * - Formato payload.signature
+ * - Assinatura HMAC-SHA256 válida (32 bytes) - VERIFICADA ANTES de interpretar o payload
  * - Payload JSON válido com iat e exp inteiros seguros
  * - iat não muito no futuro (tolerância de 60s)
  * - exp > iat
  * - Duração (exp - iat) não excede TTL + tolerância
  * - Sessão não expirada
- * - Assinatura HMAC-SHA256 válida (32 bytes)
  */
 export function parseSessionCookie(cookieValue: string | undefined): { iat: number; exp: number } | null {
   if (!cookieValue) return null;
@@ -81,10 +81,23 @@ export function parseSessionCookie(cookieValue: string | undefined): { iat: numb
 
   const [payloadB64, signatureB64] = parts;
 
-  // Decodifica payload
+  // Decodifica payload e signature
   const payloadBytes = base64UrlDecode(payloadB64);
   if (!payloadBytes) return null;
 
+  const receivedSignature = base64UrlDecode(signatureB64);
+  if (!receivedSignature || receivedSignature.length !== SESSION_SECRET_BYTES) return null;
+
+  // VERIFICA ASSINATURA HMAC ANTES de interpretar o payload (segurança: não processa dados não autenticados)
+  const secret = getSessionSecretBuffer();
+  const expectedHmac = createHmac("sha256", secret);
+  expectedHmac.update(payloadBytes);
+  const expectedSignature = expectedHmac.digest();
+
+  // Comparação timing-safe com tamanho fixo (32 bytes)
+  if (!safeEqualBufferFixed(expectedSignature, receivedSignature)) return null;
+
+  // Só após HMAC válido: parseia e valida o payload
   let payload: { iat: number; exp: number };
   try {
     payload = JSON.parse(payloadBytes.toString("utf-8"));
@@ -109,19 +122,6 @@ export function parseSessionCookie(cookieValue: string | undefined): { iat: numb
 
   // Verifica expiração
   if (payload.exp < now) return null;
-
-  // Verifica assinatura HMAC
-  const secret = getSessionSecretBuffer();
-  const expectedHmac = createHmac("sha256", secret);
-  expectedHmac.update(payloadBytes);
-  const expectedSignature = expectedHmac.digest();
-
-  // Decodifica assinatura recebida e valida tamanho (deve ser 32 bytes = SHA-256)
-  const receivedSignature = base64UrlDecode(signatureB64);
-  if (!receivedSignature || receivedSignature.length !== SESSION_SECRET_BYTES) return null;
-
-  // Comparação timing-safe com tamanho fixo (32 bytes)
-  if (!safeEqualBufferFixed(expectedSignature, receivedSignature)) return null;
 
   return payload;
 }
