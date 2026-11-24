@@ -25,7 +25,7 @@ cp backend/spring/.env.example backend/spring/.env
 
 O exemplo define as variáveis `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`, usadas por `src/main/resources/application.properties`. Configure os dados de conexão com o banco local ou na nuvem (Neon com parâmetros SSL `sslmode=require&channelbinding=require`). O arquivo `.env` é local e está estritamente protegido pelo Git.
 
-Configure também `GOOGLE_CLIENT_IDS` com os client IDs usados pelos clientes Google, separados por vírgula, e `ACADEMIA_PERSONAL_EMAIL` com o e-mail Google previamente autorizado para o personal.
+A API não exige autenticação nesta versão: `SecurityConfig` libera todas as rotas e a segurança por método (`@PreAuthorize`) está desativada. As variáveis `GOOGLE_CLIENT_IDS` e `ACADEMIA_PERSONAL_EMAIL` são opcionais e só terão efeito se a validação de tokens Google for reativada.
 
 ## Migração do banco
 
@@ -39,7 +39,7 @@ O Hibernate valida o esquema contra as tabelas criadas pelo Flyway (`spring.jpa.
 
 ## Acesso da API
 
-- **Alunos e Administração:** O aluno consulta `/alunos/me`, `/alunos/me/peso`, `/contratos/me`, `/cobrancas/me`, `/programas-treino/me` e `/sessoes-treino/me`. Pagamento fictício em `POST /cobrancas/{id}/pagar` e conclusão de sessões em `POST /sessoes-treino/me`.
+- **Alunos e Administração:** Os endpoints `/me` dependem da identidade do usuário autenticado e não funcionam enquanto a API estiver sem autenticação; o portal web usa os endpoints por identificador (`/alunos`, `/alunos/{id}`). O aluno consulta `/alunos/me`, `/alunos/me/peso`, `/contratos/me`, `/cobrancas/me`, `/programas-treino/me` e `/sessoes-treino/me`. Pagamento fictício em `POST /cobrancas/{id}/pagar` e conclusão de sessões em `POST /sessoes-treino/me`.
 - **Treinos Mobile (PDM):** CRUD completo e sincronização offline-first:
   - `GET /treinos`: lista treinos ativos (com filtros opcionais por aluno e dia da semana).
   - `GET /treinos/{id}`: busca um treino por identificador UUID.

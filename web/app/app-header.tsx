@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import NavPrincipal from "@/app/nav-principal";
 
 export default function AppHeader() {
   return (
@@ -22,14 +24,9 @@ export default function AppHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Navegação principal" className="flex items-center">
-          <Link
-            href="/"
-            className="rounded-xl bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-800 transition hover:bg-sky-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2 sm:px-4"
-          >
-            Alunos
-          </Link>
-        </nav>
+        <Suspense fallback={null}>
+          <NavPrincipal />
+        </Suspense>
       </div>
     </header>
   );

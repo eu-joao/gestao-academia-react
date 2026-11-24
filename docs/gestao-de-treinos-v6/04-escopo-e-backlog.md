@@ -8,7 +8,7 @@ Este documento separa o que deve compor a primeira entrega do que pode permanece
 
 | Ordem | Issue sugerida                                           | Resultado esperado                                                                     |
 | ----- | -------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| 1     | Adequar cadastro e autenticação do aluno ao minimundo V6 | Cadastro com dados físicos, nível, frequência e autenticação Google.                   |
+| 1     | Adequar cadastro do aluno ao minimundo V6                | Cadastro com dados físicos, nível e frequência; acesso do personal por login simulado. |
 | 2     | Implementar planos fixos e contratos                     | Enum de planos, criação de contrato, vigência e restrição de contrato ativo duplicado. |
 | 3     | Implementar geração e controle de cobranças              | Geração das parcelas, consulta de status e identificação de atrasos.                   |
 | 4     | Implementar pagamento fictício no aplicativo             | Aluno consegue simular o pagamento de uma cobrança própria.                            |
@@ -42,7 +42,7 @@ As issues essenciais devem ser criadas primeiro e priorizadas conforme as depend
 ## 4. Pontos para validação da equipe
 
 - Confirmar os valores mensais e as durações dos três planos antes de defini-los no enum.
-- Confirmar se a autenticação será exclusivamente Google, considerando o prazo e a infraestrutura disponível.
+- Confirmar se o login simulado do portal web e a API sem autenticação são suficientes para a avaliação, ou se a primeira versão em produção exigirá autenticação real (por exemplo, credenciais armazenadas no banco e token JWT).
 - Confirmar se os doze programas e seus exercícios já estão definidos e prontos para carga inicial.
 - Confirmar se o pagamento simulado será suficiente para a avaliação.
 - Confirmar com o professor se os indicadores financeiros e de assiduidade são obrigatórios na primeira entrega.
