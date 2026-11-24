@@ -1,72 +1,29 @@
-
 import { Suspense } from "react";
-import AlunoForm from "@/app/aluno-form";
-import ListaAlunos from "@/app/alunos/lista-alunos";
-import { mensagemErroApi } from "@/lib/api-error";
-import type { Aluno } from "@/types/aluno";
+import { connection } from "next/server";
+import DashboardStatsView, { FalhaAoCarregarDashboard } from "@/app/dashboard/dashboard-stats";
+import { obterDashboardStats } from "@/app/actions";
 
-const API_URL = process.env.API_URL ?? "http://localhost:8080";
+async function DashboardLista() {
+  await connection();
 
-function FalhaAoCarregarAlunos({ mensagem }: { mensagem: string }) {
-  return (
-    <div
-      role="alert"
-      className="rounded-[20px] border border-red-200 bg-red-50 p-6 shadow-sm sm:p-8"
-    >
-      <h2 className="text-lg font-bold text-slate-900">
-        Não foi possível carregar os alunos
-      </h2>
-      <p className="mt-2 text-sm leading-6 text-slate-700">{mensagem}</p>
-    </div>
-  );
-}
-
-async function AlunosLista() {
-  let res: Response;
-
-  try {
-    res = await fetch(`${API_URL}/alunos`, {
-      cache: "no-store",
-    });
-  } catch {
-    return (
-      <FalhaAoCarregarAlunos mensagem="Não foi possível conectar ao servidor da API. Verifique se o backend Spring Boot está em execução e atualize a página." />
-    );
-  }
-
-  if (!res.ok) {
-    return (
-      <FalhaAoCarregarAlunos
-        mensagem={await mensagemErroApi(
-          res,
-          "A API não conseguiu carregar os alunos. Tente novamente mais tarde.",
-        )}
-      />
-    );
-  }
-
-  let alunos: Aluno[] = [];
+  let stats: Awaited<ReturnType<typeof obterDashboardStats>>;
   let erroResposta: string | null = null;
 
   try {
-    const dados: unknown = await res.json();
-    if (!Array.isArray(dados)) {
-      erroResposta = "A API retornou uma resposta inválida ao carregar os alunos.";
-    } else {
-      alunos = dados as Aluno[];
-    }
+    stats = await obterDashboardStats();
   } catch (error) {
-    erroResposta = error instanceof TypeError
-      ? "A conexão com o servidor foi interrompida durante o carregamento. Verifique a API e atualize a página."
-      : "A API retornou uma resposta inválida ao carregar os alunos.";
+    erroResposta =
+      error instanceof TypeError
+        ? "A conexão com o servidor foi interrompida durante o carregamento. Verifique a API e atualize a página."
+        : "Não foi possível carregar o dashboard. Tente novamente mais tarde.";
   }
 
-  if (erroResposta) return <FalhaAoCarregarAlunos mensagem={erroResposta} />;
+  if (erroResposta) return <FalhaAoCarregarDashboard mensagem={erroResposta} />;
 
-  return <ListaAlunos alunos={alunos} />;
+  return <DashboardStatsView stats={stats!} />;
 }
 
-export default function AlunosPage() {
+export default function DashboardPage() {
   return (
     <main className="flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-10">
       <div className="mx-auto max-w-7xl">
@@ -76,14 +33,11 @@ export default function AlunosPage() {
               Gestão de academia
             </p>
             <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Alunos cadastrados
+              Dashboard
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
-              Gerencie e acompanhe os alunos da sua academia.
+              Acompanhamento de alunos, treinos e financeiro da academia.
             </p>
-          </div>
-          <div className="w-full sm:w-auto sm:min-w-44">
-            <AlunoForm />
           </div>
         </header>
 
@@ -95,11 +49,11 @@ export default function AlunosPage() {
               aria-busy="true"
               className="rounded-[20px] border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm"
             >
-              Carregando alunos...
+              Carregando dashboard...
             </div>
           }
         >
-          <AlunosLista />
+          <DashboardLista />
         </Suspense>
       </div>
     </main>

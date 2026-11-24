@@ -159,7 +159,8 @@ describe("session", () => {
 
     it("assinatura é válida para o payload", () => {
       const cookie = createSessionCookie();
-      expect(isSessionValid(cookie)).toBe(true);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid(cookie, now)).toBe(true);
     });
 
     it("assinatura decodifica para exatamente 32 bytes", () => {
@@ -175,8 +176,9 @@ describe("session", () => {
     it("cookies consecutivos são diferentes (iat diferente)", () => {
       const cookie1 = createSessionCookie();
       const cookie2 = createSessionCookie();
-      expect(isSessionValid(cookie1)).toBe(true);
-      expect(isSessionValid(cookie2)).toBe(true);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid(cookie1, now)).toBe(true);
+      expect(isSessionValid(cookie2, now)).toBe(true);
     });
   });
 
@@ -185,64 +187,76 @@ describe("session", () => {
 
     it("retorna payload para cookie válido", () => {
       const cookie = createSessionCookie();
-      const payload = parseSessionCookie(cookie);
+      const now = Math.floor(Date.now() / 1000);
+      const payload = parseSessionCookie(cookie, now);
       expect(payload).not.toBeNull();
       expect(payload!.iat).toBeTypeOf("number");
       expect(payload!.exp).toBeTypeOf("number");
     });
 
     it("retorna null para cookie undefined", () => {
-      expect(parseSessionCookie(undefined)).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie(undefined, now)).toBeNull();
     });
 
     it("retorna null para cookie vazio", () => {
-      expect(parseSessionCookie("")).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie("", now)).toBeNull();
     });
 
     it("retorna null para cookie sem separador", () => {
-      expect(parseSessionCookie("invalido")).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie("invalido", now)).toBeNull();
     });
 
     it("retorna null para cookie com partes a mais", () => {
-      expect(parseSessionCookie("a.b.c")).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie("a.b.c", now)).toBeNull();
     });
 
     it("retorna null para payload com base64 inválido", () => {
-      expect(parseSessionCookie("!!! . assinatura")).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie("!!! . assinatura", now)).toBeNull();
     });
 
     it("retorna null para payload JSON inválido", () => {
+      const now = Math.floor(Date.now() / 1000);
       const invalidPayload = base64UrlEncode(Buffer.from("nao e json"));
       const cookie = `${invalidPayload}.assinatura`;
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("retorna null para payload sem iat", () => {
-      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ exp: Date.now() })));
+      const now = Math.floor(Date.now() / 1000);
+      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ exp: now })));
       const cookie = `${payload}.assinatura`;
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("retorna null para payload sem exp", () => {
-      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: Date.now() })));
+      const now = Math.floor(Date.now() / 1000);
+      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: now })));
       const cookie = `${payload}.assinatura`;
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("retorna null para iat não inteiro seguro", () => {
-      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: 1.5, exp: Date.now() / 1000 + 3600 })));
+      const now = Math.floor(Date.now() / 1000);
+      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: 1.5, exp: now + 3600 })));
       const cookie = `${payload}.assinatura`;
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("retorna null para exp não inteiro seguro", () => {
-      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: Date.now() / 1000, exp: 1.5 })));
+      const now = Math.floor(Date.now() / 1000);
+      const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: now, exp: 1.5 })));
       const cookie = `${payload}.assinatura`;
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("retorna null para iat muito no futuro (fora da tolerância de 60s)", () => {
       const futureIat = Math.floor(Date.now() / 1000) + 120; // 2 minutos no futuro
+      const now = Math.floor(Date.now() / 1000);
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: futureIat, exp: futureIat + 3600 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
       const hmac = createHmac("sha256", secret);
@@ -250,11 +264,12 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("aceita iat no futuro dentro da tolerância de 60s", () => {
       const futureIat = Math.floor(Date.now() / 1000) + 30; // 30s no futuro
+      const now = Math.floor(Date.now() / 1000);
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: futureIat, exp: futureIat + 3600 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
       const hmac = createHmac("sha256", secret);
@@ -262,7 +277,7 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(parseSessionCookie(cookie)).not.toBeNull();
+      expect(parseSessionCookie(cookie, now)).not.toBeNull();
     });
 
     it("retorna null para exp <= iat", () => {
@@ -274,7 +289,7 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("retorna null para duração superior ao TTL + tolerância (8h + 60s)", () => {
@@ -287,7 +302,7 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("aceita duração igual ao TTL + tolerância", () => {
@@ -300,11 +315,12 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(parseSessionCookie(cookie)).not.toBeNull();
+      expect(parseSessionCookie(cookie, now)).not.toBeNull();
     });
 
     it("retorna null para cookie expirado", () => {
       const past = Math.floor(Date.now() / 1000) - 100;
+      const now = Math.floor(Date.now() / 1000);
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: past, exp: past + 10 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
       const hmac = createHmac("sha256", secret);
@@ -312,14 +328,15 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(parseSessionCookie(cookie)).toBeNull();
+      expect(parseSessionCookie(cookie, now)).toBeNull();
     });
 
     it("retorna null para assinatura inválida", () => {
       const cookie = createSessionCookie();
       const [payload] = cookie.split(".");
       const cookieTampered = `${payload}.assinaturaInvalida`;
-      expect(parseSessionCookie(cookieTampered)).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie(cookieTampered, now)).toBeNull();
     });
 
     it("retorna null para assinatura com tamanho incorreto (não 32 bytes)", () => {
@@ -328,7 +345,8 @@ describe("session", () => {
       // Assinatura de 16 bytes em vez de 32
       const shortSig = base64UrlEncode(Buffer.alloc(16));
       const cookieTampered = `${payload}.${shortSig}`;
-      expect(parseSessionCookie(cookieTampered)).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie(cookieTampered, now)).toBeNull();
     });
 
     it("retorna null para assinatura com tamanho maior que 32 bytes", () => {
@@ -336,7 +354,8 @@ describe("session", () => {
       const [payload] = cookie.split(".");
       const longSig = base64UrlEncode(Buffer.alloc(64));
       const cookieTampered = `${payload}.${longSig}`;
-      expect(parseSessionCookie(cookieTampered)).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie(cookieTampered, now)).toBeNull();
     });
 
     it("retorna null para cookie adulterado (payload modificado)", () => {
@@ -344,14 +363,16 @@ describe("session", () => {
       const [, signature] = cookie.split(".");
       const tamperedPayload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: 0, exp: 9999999999 })));
       const cookieTampered = `${tamperedPayload}.${signature}`;
-      expect(parseSessionCookie(cookieTampered)).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie(cookieTampered, now)).toBeNull();
     });
 
     it("retorna null para assinatura com base64url malformado", () => {
       const cookie = createSessionCookie();
       const [payload] = cookie.split(".");
       const cookieTampered = `${payload}.!!!`;
-      expect(parseSessionCookie(cookieTampered)).toBeNull();
+      const now = Math.floor(Date.now() / 1000);
+      expect(parseSessionCookie(cookieTampered, now)).toBeNull();
     });
   });
 
@@ -360,19 +381,23 @@ describe("session", () => {
 
     it("retorna true para cookie válido", () => {
       const cookie = createSessionCookie();
-      expect(isSessionValid(cookie)).toBe(true);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid(cookie, now)).toBe(true);
     });
 
     it("retorna false para cookie inválido", () => {
-      expect(isSessionValid("invalido")).toBe(false);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid("invalido", now)).toBe(false);
     });
 
     it("retorna false para undefined", () => {
-      expect(isSessionValid(undefined)).toBe(false);
+      const now = Math.floor(Date.now() / 1000);
+      expect(isSessionValid(undefined, now)).toBe(false);
     });
 
     it("retorna false para cookie expirado", () => {
       const past = Math.floor(Date.now() / 1000) - 100;
+      const now = Math.floor(Date.now() / 1000);
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: past, exp: past + 10 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
       const hmac = createHmac("sha256", secret);
@@ -380,11 +405,12 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(isSessionValid(cookie)).toBe(false);
+      expect(isSessionValid(cookie, now)).toBe(false);
     });
 
     it("retorna false para iat muito no futuro", () => {
       const futureIat = Math.floor(Date.now() / 1000) + 120;
+      const now = Math.floor(Date.now() / 1000);
       const payload = base64UrlEncode(Buffer.from(JSON.stringify({ iat: futureIat, exp: futureIat + 3600 })));
       const secret = Buffer.from(VALID_SECRET, "hex");
       const hmac = createHmac("sha256", secret);
@@ -392,7 +418,7 @@ describe("session", () => {
       const signature = base64UrlEncode(hmac.digest());
       const cookie = `${payload}.${signature}`;
 
-      expect(isSessionValid(cookie)).toBe(false);
+      expect(isSessionValid(cookie, now)).toBe(false);
     });
   });
 

@@ -291,7 +291,10 @@ export default function ListaProgramas({ programas }: { programas: ProgramaTrein
                     <option value="">Selecione um aluno</option>
                     {alunos.map((aluno) => (
                       <option key={aluno.id} value={String(aluno.id)}>
-                        {aluno.nome} {aluno.programaAtualId ? "(já tem programa)" : ""}
+                        {aluno.nome}
+                        {aluno.programaAtualDescricao
+                          ? ` — Atual: ${aluno.programaAtualDescricao}`
+                          : " — Sem programa"}
                       </option>
                     ))}
                   </select>

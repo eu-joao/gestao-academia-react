@@ -7,7 +7,8 @@ import { COOKIE_SESSAO, isSessionValid } from "./session";
 export async function requireAuth(): Promise<void> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(COOKIE_SESSAO)?.value;
-  if (!isSessionValid(sessionCookie)) {
+  const now = Math.floor(Date.now() / 1000);
+  if (!isSessionValid(sessionCookie, now)) {
     redirect("/login");
   }
 }

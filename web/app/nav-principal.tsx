@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { sair } from "@/app/login/actions";
 
 const links = [
-  { href: "/", rotulo: "Alunos" },
+  { href: "/", rotulo: "Dashboard" },
+  { href: "/alunos", rotulo: "Alunos" },
   { href: "/contratos", rotulo: "Contratos" },
   { href: "/cobrancas", rotulo: "Cobranças" },
   { href: "/programas", rotulo: "Programas" },
@@ -21,7 +22,7 @@ export default function NavPrincipal() {
   return (
     <nav aria-label="Navegação principal" className="flex items-center gap-1 sm:gap-2">
       {links.map(({ href, rotulo }) => {
-        const ativo = href === "/" ? pathname === "/" || pathname.startsWith("/alunos") : pathname.startsWith(href);
+        const ativo = href === "/" ? pathname === "/" : pathname.startsWith(href);
 
         return (
           <Link

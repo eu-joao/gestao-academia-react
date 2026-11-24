@@ -497,6 +497,7 @@ export type AlunoParaPrograma = {
   nivelExperiencia: NivelExperiencia;
   frequenciaSemanal: number;
   programaAtualId: number | null;
+  programaAtualDescricao: string | null;
 };
 
 export async function listarProgramas(): Promise<ProgramaTreino[]> {
@@ -521,20 +522,45 @@ export async function listarProgramas(): Promise<ProgramaTreino[]> {
 export async function listarAlunosParaPrograma(): Promise<AlunoParaPrograma[]> {
   await requireAuth();
 
-  let response: Response;
+  const apiUrl = process.env.API_URL ?? "http://localhost:8080";
+
+  let alunosResponse: Response;
+  let programasResponse: Response;
 
   try {
-    const apiUrl = process.env.API_URL ?? "http://localhost:8080";
-    response = await fetch(`${apiUrl}/alunos`, { cache: "no-store" });
+    [alunosResponse, programasResponse] = await Promise.all([
+      fetch(`${apiUrl}/alunos`, { cache: "no-store" }),
+      fetch(`${apiUrl}/programas-treino`, { cache: "no-store" }),
+    ]);
   } catch {
     return [];
   }
 
-  if (!response.ok) {
+  if (!alunosResponse.ok || !programasResponse.ok) {
     return [];
   }
 
-  return response.json() as Promise<AlunoParaPrograma[]>;
+  const alunos: Array<{
+    id: number;
+    nome: string;
+    nivelExperiencia: NivelExperiencia;
+    frequenciaSemanal: number;
+    programaAtualId: number | null;
+  }> = await alunosResponse.json();
+
+  const programas: Array<{
+    id: number;
+    descricao: string;
+  }> = await programasResponse.json();
+
+  const programaDescricaoMap = new Map(programas.map((p) => [p.id, p.descricao]));
+
+  return alunos.map((aluno) => ({
+    ...aluno,
+    programaAtualDescricao: aluno.programaAtualId
+      ? programaDescricaoMap.get(aluno.programaAtualId) ?? null
+      : null,
+  }));
 }
 
 export async function atribuirProgramaAluno(
@@ -572,4 +598,179 @@ export async function atribuirProgramaAluno(
   revalidatePath("/alunos");
   revalidatePath("/programas");
   return { status: "success", message: "Programa atribuído com sucesso." };
+}
+
+// ==================== DASHBOARD ====================
+
+export type AlunoDistribuicaoNivel = {
+  nivel: "INICIANTE" | "INTERMEDIARIO" | "AVANCADO";
+  quantidade: number;
+};
+
+export type AlunoDistribuicaoFrequencia = {
+  frequencia: number;
+  quantidade: number;
+};
+
+export type SessaoSemanaAluno = {
+  alunoId: number;
+  alunoNome: string;
+  frequenciaDesejada: number;
+  sessoesConcluidas: number;
+  percentual: number;
+};
+
+export type CobrancasResumo = {
+  pagas: number;
+  pendentes: number;
+  atrasadas: number;
+  canceladas: number;
+};
+
+export type ValoresPeriodo = {
+  recebido: number;
+  previsto: number;
+};
+
+export type DashboardStats = {
+  alunos: {
+    total: number;
+    ativos: number;
+    inativos: number;
+  };
+  distribuicaoNivel: AlunoDistribuicaoNivel[];
+  distribuicaoFrequencia: AlunoDistribuicaoFrequencia[];
+  sessoesSemana: SessaoSemanaAluno[];
+  cobrancas: CobrancasResumo;
+  valores: ValoresPeriodo;
+};
+
+export async function obterDashboardStats(): Promise<DashboardStats> {
+  await requireAuth();
+
+  const apiUrl = process.env.API_URL ?? "http://localhost:8080";
+
+  // Buscar todos os dados em paralelo
+  const [alunosRes, cobrancasRes, sessoesRes] = await Promise.all([
+    fetch(`${apiUrl}/alunos`, { cache: "no-store" }),
+    fetch(`${apiUrl}/cobrancas`, { cache: "no-store" }),
+    fetch(`${apiUrl}/sessoes-treino`, { cache: "no-store" }).catch(() => ({ ok: false } as Response)),
+  ]);
+
+  const alunos: Array<{
+    id: number;
+    nome: string;
+    nivelExperiencia: "INICIANTE" | "INTERMEDIARIO" | "AVANCADO";
+    frequenciaSemanal: number;
+    status: "ATIVO" | "INATIVO";
+  }> = alunosRes.ok ? await alunosRes.json() : [];
+
+  const cobrancas: Array<{
+    id: number;
+    contratoId: number;
+    numeroParcela: number;
+    dataVencimento: string;
+    valor: number;
+    status: "PENDENTE" | "PAGO" | "ATRASADO" | "CANCELADO";
+    dataPagamento: string | null;
+  }> = cobrancasRes.ok ? await cobrancasRes.json() : [];
+
+  const sessoes: Array<{
+    id: number;
+    alunoId: number;
+    dataHoraConclusao: string;
+  }> = sessoesRes.ok ? await sessoesRes.json() : [];
+
+  // Alunos ativos/inativos
+  const ativos = alunos.filter((a) => a.status === "ATIVO").length;
+  const inativos = alunos.filter((a) => a.status === "INATIVO").length;
+
+  // Distribuição por nível
+  const niveis: ("INICIANTE" | "INTERMEDIARIO" | "AVANCADO")[] = [
+    "INICIANTE",
+    "INTERMEDIARIO",
+    "AVANCADO",
+  ];
+  const distribuicaoNivel = niveis.map((nivel) => ({
+    nivel,
+    quantidade: alunos.filter((a) => a.nivelExperiencia === nivel).length,
+  }));
+
+  // Distribuição por frequência
+  const frequencias = [3, 4, 5, 6];
+  const distribuicaoFrequencia = frequencias.map((freq) => ({
+    frequencia: freq,
+    quantidade: alunos.filter((a) => a.frequenciaSemanal === freq).length,
+  }));
+
+  // Sessões da semana atual
+  const agora = new Date();
+  const inicioSemana = new Date(agora);
+  inicioSemana.setDate(agora.getDate() - agora.getDay()); // Domingo
+  inicioSemana.setHours(0, 0, 0, 0);
+  const fimSemana = new Date(inicioSemana);
+  fimSemana.setDate(inicioSemana.getDate() + 6);
+  fimSemana.setHours(23, 59, 59, 999);
+
+  const sessoesSemana = sessoes.filter((s) => {
+    const data = new Date(s.dataHoraConclusao);
+    return data >= inicioSemana && data <= fimSemana;
+  });
+
+  const sessoesPorAluno = new Map<number, number>();
+  for (const s of sessoesSemana) {
+    sessoesPorAluno.set(s.alunoId, (sessoesPorAluno.get(s.alunoId) ?? 0) + 1);
+  }
+
+  const sessoesSemanaAlunos: SessaoSemanaAluno[] = alunos.map((a) => {
+    const concluidas = sessoesPorAluno.get(a.id) ?? 0;
+    const percentual = a.frequenciaSemanal > 0
+      ? Math.min(100, Math.round((concluidas / a.frequenciaSemanal) * 100))
+      : 0;
+    return {
+      alunoId: a.id,
+      alunoNome: a.nome,
+      frequenciaDesejada: a.frequenciaSemanal,
+      sessoesConcluidas: concluidas,
+      percentual,
+    };
+  });
+
+  // Cobranças por status
+  const cobrancasResumo: CobrancasResumo = {
+    pagas: cobrancas.filter((c) => c.status === "PAGO").length,
+    pendentes: cobrancas.filter((c) => c.status === "PENDENTE").length,
+    atrasadas: cobrancas.filter((c) => c.status === "ATRASADO").length,
+    canceladas: cobrancas.filter((c) => c.status === "CANCELADO").length,
+  };
+
+  // Valores do mês atual
+  const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
+  const fimMes = new Date(agora.getFullYear(), agora.getMonth() + 1, 0, 23, 59, 59, 999);
+
+  const cobrancasMes = cobrancas.filter((c) => {
+    const venc = new Date(c.dataVencimento + "T00:00:00");
+    return venc >= inicioMes && venc <= fimMes;
+  });
+
+  const recebido = cobrancasMes
+    .filter((c) => c.status === "PAGO" && c.dataPagamento)
+    .reduce((sum, c) => sum + c.valor, 0);
+
+  const previsto = cobrancasMes
+    .filter((c) => c.status === "PENDENTE" || c.status === "ATRASADO")
+    .reduce((sum, c) => sum + c.valor, 0);
+
+  return {
+    alunos: {
+      total: alunos.length,
+      ativos,
+      inativos,
+    },
+    distribuicaoNivel,
+    distribuicaoFrequencia,
+    sessoesSemana: sessoesSemanaAlunos,
+    cobrancas: cobrancasResumo,
+    valores: { recebido, previsto },
+  };
 }
