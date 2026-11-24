@@ -10,7 +10,6 @@
 ## Dados de Acesso
 
 - Defina o usuário e a senha do personal nas variáveis de ambiente `ADMIN_USER` e `ADMIN_PASS` do servidor web
-- Use `admin` e `admin123` como valores padrão apenas em desenvolvimento
 - Grave a sessão em um cookie `httpOnly` com validade de 8 horas
 
 ## Regras de Negócio
