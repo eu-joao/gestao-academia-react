@@ -279,6 +279,23 @@ describe("instrumentation", () => {
     await expect(register()).resolves.not.toThrow();
   });
 
+  it("rejeita em produção sem NEXT_PHASE quando SESSION_SECRET, ADMIN_USER e ADMIN_PASS ausentes", async () => {
+    setEnv({
+      // NEXT_PHASE não definido
+      NODE_ENV: "production",
+      NEXT_RUNTIME: "nodejs",
+    });
+    const { register } = await import("@/instrumentation");
+    try {
+      await register();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      expect(message).toContain("SESSION_SECRET");
+      expect(message).toContain("ADMIN_USER");
+      expect(message).toContain("ADMIN_PASS");
+    }
+  });
+
   it("FALHA em phase-production-server com NEXT_RUNTIME=custom", async () => {
     setEnv({
       NEXT_PHASE: "phase-production-server",
