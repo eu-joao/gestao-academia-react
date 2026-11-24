@@ -5,7 +5,7 @@ description: "Commit, push e abre um PR seguindo o CONTRIBUTING.md do repositór
 
 # Commit, push e PR
 
-Versão personalizada do `commit-push-pr` do plugin `commit-commands` (repositório `anthropics/claude-code`). O fluxo base é o mesmo: contexto do git, branch, um commit, push, `gh pr create`. O que muda é de onde saem os nomes e os textos: da convenção do próprio repositório e do vocabulário simples do usuário, não de um padrão genérico. Se o `gh` não estiver disponível, a skill faz commit e push e entrega o PR pronto para abrir pelo navegador.
+Versão personalizada do `commit-push-pr` do plugin `commit-commands` (repositório `anthropics/claude-code`). O fluxo base é o mesmo: contexto do git, branch, commits, push, `gh pr create`. O que muda é de onde saem os nomes e os textos: da convenção do próprio repositório e do vocabulário simples do usuário, não de um padrão genérico. Se o `gh` não estiver disponível, a skill faz commit e push e entrega o PR pronto para abrir pelo navegador.
 
 ## Passo 1 — Coletar contexto (tudo de uma vez, em paralelo)
 
@@ -36,7 +36,7 @@ Sempre que possível, tudo na mesma rodada de chamadas de ferramenta:
 
 1. **Branch:** se estiver na branch principal (`main` ou `master`), criar uma nova com `git checkout -b`, no formato da convenção. Se a convenção usa o número da issue e ele não for conhecido, perguntar. Nunca commitar direto na branch principal.
 2. **Stage:** `git add` só dos arquivos ligados à mudança. Deixar de fora `.env`, chaves, saída de build e arquivos não relacionados, e mencionar o que ficou de fora.
-3. **Commit:** um único commit, mensagem na convenção do repositório, uma ideia só. Sempre que a IA tiver criado ou alterado parte relevante do código, incluir no fim da mensagem o trailer `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>`, para identificar a contribuição de IA. Manter esse trailer mesmo quando a convenção exigir um formato específico para o título; não o incluir se o usuário pedir explicitamente para não fazê-lo ou se a IA não tiver contribuído para o conteúdo do commit.
+3. **Organizar e commitar:** antes de criar os commits, agrupar as alterações por escopo e responsabilidade. Quando houver mudanças de escopos diferentes, faça commits separados para cada unidade lógica e coesa, em vez de reunir tudo em um único commit. Não crie um commit por arquivo nem fragmente alterações que dependam umas das outras. Cada mensagem deve descrever apenas o conteúdo daquele commit, ser curta e objetiva e respeitar os limites configurados pelo Commitlint. Se uma mensagem ficar longa por tentar descrever responsabilidades diferentes, reveja a divisão dos commits; não encurte a mensagem a ponto de torná-la vaga. Faça os commits na ordem necessária para preservar as dependências entre as alterações. Sempre que a IA tiver criado ou alterado parte relevante do conteúdo de um commit, incluir no fim da mensagem o trailer `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>`, para identificar a contribuição de IA. Manter esse trailer mesmo quando a convenção exigir um formato específico para o título; não o incluir se o usuário pedir explicitamente para não fazê-lo ou se a IA não tiver contribuído para o conteúdo daquele commit.
 4. **Push:** `git push -u origin <branch>`. Nunca usar `--force`.
 5. **PR:**
    - Com `gh` disponível e autenticado: `gh pr create` com título e corpo do Passo 4. Usar `--draft` se o usuário disser rascunho ou draft.
@@ -44,7 +44,7 @@ Sempre que possível, tudo na mesma rodada de chamadas de ferramenta:
 
 ## Plano B — git sem gh
 
-Fazer branch, stage, commit e push normalmente (passos 1 a 4). Depois entregar, no lugar do `gh pr create`:
+Fazer branch, stage, commits e push normalmente (passos 1 a 4). Depois entregar, no lugar do `gh pr create`:
 
 - O título e o corpo do PR, prontos para copiar, no formato do Passo 4
 - O link `https://github.com/<dono>/<repo>/compare/<branch>?expand=1`, montado a partir de `git remote get-url origin` (aceitar remote HTTPS ou SSH e tirar o `.git` do final)
@@ -81,12 +81,12 @@ Antes de enviar, reler e cortar tudo que repete o título da issue com outras pa
 
 ## Passo 5 — Resposta final
 
-Uma ou duas linhas: link do PR (ou o link de comparação, no plano B), nome da branch e mensagem do commit. Ao mostrar a mensagem, incluir também o trailer de coautoria. Sem recapitular os passos.
+Uma ou duas linhas: link do PR (ou o link de comparação, no plano B), nome da branch e mensagens dos commits. Ao mostrar cada mensagem, incluir também o trailer de coautoria quando aplicável. Sem recapitular os passos.
 
 ## Sem acesso a git
 
 Se não houver repositório ou terminal disponível (ex.: conversa no chat sem o repo), não tentar executar. Pedir o diff ou a lista de mudanças se faltar e entregar:
 
 - o nome da branch
-- os comandos prontos para copiar: `git checkout -b`, `git add`, `git commit -m`, `git push -u origin` e `gh pr create --title --body`
+- os comandos prontos para copiar: `git checkout -b`, `git add`, `git commit -m` (um por unidade lógica), `git push -u origin` e `gh pr create --title --body`
 - o texto do PR no formato do Passo 4
