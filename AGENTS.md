@@ -10,13 +10,6 @@
 - Os arquivos `AGENTS.md` dentro de diretórios se aplicam ao trabalho nesses diretórios e complementam estas instruções.
 - Para o aplicativo mobile, consulte [`mobile/AGENTS.md`](mobile/AGENTS.md), que contém as regras específicas de Expo e React Native.
 
-## Organização dos commits
-
-- Separe alterações de escopos diferentes em commits independentes, em vez de concentrar mudanças não relacionadas em um único commit.
-- Cada commit deve representar uma unidade lógica e coesa de alteração.
-- Mantenha as mensagens de commit curtas e objetivas, respeitando os limites estabelecidos pelo Commitlint.
-- Evite dividir alterações que dependam umas das outras apenas para reduzir o tamanho das mensagens.
-
 ## Validação e CI
 
 Antes de concluir mudanças de código neste repositório, use a skill [validar-e-acompanhar-ci](.agents/skills/validar-e-acompanhar-ci/SKILL.md) para escolher e executar as verificações locais adequadas e, quando houver um pull request, acompanhar a CI e investigar falhas.
