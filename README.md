@@ -32,7 +32,7 @@ mise run build
 
 Para consultar todas as tarefas disponíveis, execute `mise tasks`.
 
-O portal web exige login. Em desenvolvimento, use o usuário `admin` e a senha `admin123`; para alterá-los, consulte as [variáveis de ambiente do web](./web/README.md#variáveis-de-ambiente).
+O portal web exige login. Configure as variáveis `ADMIN_USER` e `ADMIN_PASS` no ambiente do servidor web; consulte as [variáveis de ambiente do web](./web/README.md#variáveis-de-ambiente).
 
 ## Protótipo mobile
 
