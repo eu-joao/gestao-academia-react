@@ -312,7 +312,26 @@ export async function cancelarContrato(
 
 // ==================== COBRANÇAS ====================
 
-export async function listarCobrancas(): Promise<unknown[]> {
+export type StatusCobranca = "PENDENTE" | "PAGO" | "ATRASADO" | "CANCELADO";
+
+export type CobrancaComContrato = {
+  id: number;
+  contratoId: number;
+  alunoId: number;
+  alunoNome: string;
+  numeroParcela: number;
+  dataVencimento: string;
+  valor: number;
+  status: StatusCobranca;
+  dataPagamento: string | null;
+};
+
+export type CobrancaState =
+  | { status: "idle" }
+  | { status: "success"; message: string }
+  | { status: "error"; message: string };
+
+export async function listarCobrancas(): Promise<CobrancaComContrato[]> {
   await requireAuth();
 
   let response: Response;
@@ -328,10 +347,33 @@ export async function listarCobrancas(): Promise<unknown[]> {
     return [];
   }
 
-  return response.json() as Promise<unknown[]>;
+  const data = await response.json() as Array<{
+    id: number;
+    contratoId: number;
+    numeroParcela: number;
+    dataVencimento: string;
+    valor: number;
+    status: StatusCobranca;
+    dataPagamento: string | null;
+  }>;
+
+  // Buscar nomes dos alunos via contratos
+  const contratosResponse = await fetch(`${process.env.API_URL ?? "http://localhost:8080"}/contratos`, { cache: "no-store" });
+  const contratos: Array<{ id: number; alunoId: number }> = contratosResponse.ok ? await contratosResponse.json() : [];
+  const contratoAlunoMap = new Map(contratos.map(c => [c.id, c.alunoId]));
+
+  const alunosResponse = await fetch(`${process.env.API_URL ?? "http://localhost:8080"}/alunos`, { cache: "no-store" });
+  const alunos: Array<{ id: number; nome: string }> = alunosResponse.ok ? await alunosResponse.json() : [];
+  const alunosMap = new Map(alunos.map(a => [a.id, a.nome]));
+
+  return data.map(c => ({
+    ...c,
+    alunoId: contratoAlunoMap.get(c.contratoId) ?? 0,
+    alunoNome: alunosMap.get(contratoAlunoMap.get(c.contratoId) ?? 0) ?? `Aluno #${contratoAlunoMap.get(c.contratoId) ?? "?"}`,
+  }));
 }
 
-export async function listarCobrancasDoContrato(contratoId: number): Promise<unknown[]> {
+export async function listarCobrancasDoContrato(contratoId: number): Promise<CobrancaComContrato[]> {
   await requireAuth();
 
   let response: Response;
@@ -347,7 +389,71 @@ export async function listarCobrancasDoContrato(contratoId: number): Promise<unk
     return [];
   }
 
-  return response.json() as Promise<unknown[]>;
+  const data = await response.json() as Array<{
+    id: number;
+    contratoId: number;
+    numeroParcela: number;
+    dataVencimento: string;
+    valor: number;
+    status: StatusCobranca;
+    dataPagamento: string | null;
+  }>;
+
+  // Buscar nome do aluno
+  const contratoResponse = await fetch(`${process.env.API_URL ?? "http://localhost:8080"}/contratos/${contratoId}`, { cache: "no-store" });
+  let alunoId = 0;
+  let alunoNome = "Desconhecido";
+  if (contratoResponse.ok) {
+    const contrato = await contratoResponse.json() as { alunoId: number };
+    alunoId = contrato.alunoId;
+    const alunoResponse = await fetch(`${process.env.API_URL ?? "http://localhost:8080"}/alunos/${alunoId}`, { cache: "no-store" });
+    if (alunoResponse.ok) {
+      const aluno = await alunoResponse.json() as { nome: string };
+      alunoNome = aluno.nome;
+    }
+  }
+
+  return data.map(c => ({
+    ...c,
+    alunoId,
+    alunoNome,
+  }));
+}
+
+export async function marcarPago(
+  id: number,
+  _previousState: CobrancaState,
+  _formData: FormData,
+): Promise<CobrancaState> {
+  await requireAuth();
+  void _previousState;
+  void _formData;
+
+  let response: Response;
+
+  try {
+    const apiUrl = process.env.API_URL ?? "http://localhost:8080";
+    // Endpoint para o personal confirmar pagamento (precisa ser implementado no backend)
+    response = await fetch(`${apiUrl}/cobrancas/${id}/confirmar-pagamento`, {
+      method: "POST",
+      cache: "no-store",
+    });
+  } catch {
+    return {
+      status: "error",
+      message: "Não foi possível conectar ao servidor da API. Verifique se o backend Spring Boot está em execução e tente novamente.",
+    };
+  }
+
+  if (!response.ok) {
+    return {
+      status: "error",
+      message: await mensagemErroApi(response, "Não foi possível confirmar o pagamento. Tente novamente."),
+    };
+  }
+
+  revalidatePath("/cobrancas");
+  return { status: "success", message: "Pagamento confirmado com sucesso." };
 }
 
 // ==================== PROGRAMAS DE TREINO ====================
