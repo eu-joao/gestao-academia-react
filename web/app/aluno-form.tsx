@@ -66,6 +66,10 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
   ) {
     const resultado = await actionServer(estadoAnterior, formData);
     setFeedbackAcaoVisivel(true);
+    if (resultado.status === "success" && !editando) {
+      setValores({ ...valoresIniciais });
+      setErrosValidacao({});
+    }
     return resultado;
   }
 
@@ -96,6 +100,7 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
   function validarFormulario(event: FormEvent<HTMLFormElement>) {
     const novosErros: ErrosFormulario = {};
     const email = event.currentTarget.elements.namedItem("email") as HTMLInputElement;
+    const altura = Number(valores.altura);
 
     if (!valores.nome.trim()) novosErros.nome = "Informe o nome do aluno.";
     if (!valores.email.trim()) {
@@ -110,8 +115,14 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
     }
     if (!valores.altura.trim()) {
       novosErros.altura = "Informe a altura do aluno.";
-    } else if (!Number.isFinite(Number(valores.altura)) || Number(valores.altura) <= 0) {
+    } else if (!Number.isFinite(altura) || altura <= 0) {
       novosErros.altura = "A altura deve ser um número maior que zero.";
+    } else if (
+      altura > 3 &&
+      (altura < 30 || altura > 300)
+    ) {
+      novosErros.altura =
+        "Informe a altura em metros (ex.: 1.80) ou em centímetros (de 30 a 300, ex.: 180).";
     }
     if (!( ["INICIANTE", "INTERMEDIARIO", "AVANCADO"] as string[]).includes(valores.nivelExperiencia)) {
       novosErros.nivelExperiencia = "Selecione um nível de experiência válido.";
@@ -255,7 +266,7 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
             </label>
 
             <label className="text-sm font-medium text-slate-700">
-              Altura (m)
+              Altura (m ou cm)
               <input
                 id="altura"
                 className={classeCampo("altura")}
@@ -265,10 +276,19 @@ export default function AlunoForm({ aluno }: { aluno?: Aluno }) {
                 onChange={(event) => atualizar("altura", event.target.value)}
                 type="number"
                 min="0.01"
+                max="300"
+                aria-describedby={
+                  errosValidacao.altura
+                    ? "altura-ajuda altura-erro"
+                    : "altura-ajuda"
+                }
                 step="any"
-                placeholder="Ex.: 1.75"
+                placeholder="Ex.: 1.75 ou 175"
                 required
               />
+              <span id="altura-ajuda" className="mt-1 block text-xs font-normal text-slate-500">
+                Informe em metros ou centímetros; por exemplo, 1.80 ou 180.
+              </span>
               {errosValidacao.altura && <span id="altura-erro" className="mt-1 block text-sm text-red-700">{errosValidacao.altura}</span>}
             </label>
 
