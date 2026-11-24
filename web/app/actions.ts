@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { mensagemErroApi } from "@/lib/api-error";
 import type { ContratoRequest } from "@/types/contrato";
 import { requireAuth } from "@/lib/require-auth";
@@ -125,41 +124,6 @@ async function atualizarAlunoComoPersonal(
     status: "success",
     message: "Aluno atualizado com sucesso.",
   };
-}
-
-export async function excluirAluno(
-  id: number,
-  _previousState: CadastroAlunoState,
-  _formData: FormData,
-): Promise<CadastroAlunoState> {
-  await requireAuth();
-  void _previousState;
-  void _formData;
-
-  let response: Response;
-
-  try {
-    const apiUrl = process.env.API_URL ?? "http://localhost:8080";
-    response = await fetch(`${apiUrl}/alunos/${id}`, {
-      method: "DELETE",
-      cache: "no-store",
-    });
-  } catch {
-    return {
-      status: "error",
-      message: "Não foi possível conectar ao servidor da API. Verifique se o backend Spring Boot está em execução e tente novamente.",
-    };
-  }
-
-  if (!response.ok) {
-    return {
-      status: "error",
-      message: await mensagemErroApi(response, "Não foi possível excluir o aluno. Tente novamente."),
-    };
-  }
-
-  revalidatePath("/");
-  redirect("/?alunoExcluido=sucesso");
 }
 
 // ==================== CONTRATOS ====================

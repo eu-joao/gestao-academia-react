@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import ExcluirAlunoButton from "@/app/alunos/excluir-aluno-button";
 import type { Aluno } from "@/types/aluno";
 
 function normalizarTexto(valor: string) {
@@ -173,10 +172,6 @@ export default function ListaAlunos({ alunos }: { alunos: Aluno[] }) {
                     >
                       Editar
                     </Link>
-                    <ExcluirAlunoButton
-                      alunoId={aluno.id}
-                      alunoNome={aluno.nome}
-                    />
                   </div>
                 </div>
               </li>
