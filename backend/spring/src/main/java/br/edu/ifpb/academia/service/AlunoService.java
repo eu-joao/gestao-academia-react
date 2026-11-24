@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.ifpb.academia.dto.Mapper;
+import br.edu.ifpb.academia.dto.request.AlunoAdminRequest;
 import br.edu.ifpb.academia.dto.request.AlunoRequest;
 import br.edu.ifpb.academia.dto.request.PesoAlunoRequest;
 import br.edu.ifpb.academia.dto.response.Responses.AlunoResponse;
@@ -55,6 +56,20 @@ public class AlunoService {
 		aluno.setGoogleSubject(googleSubject);
 		aluno.setEmail(email);
 		aluno.setNome(nome);
+		aluno.setStatus(StatusAluno.INATIVO);
+		aplicar(aluno, request);
+		aluno.setProgramaAtual(programa(request));
+		return Mapper.toResponse(repository.save(aluno));
+	}
+
+	@Transactional
+	public AlunoResponse cadastrarComoPersonal(AlunoAdminRequest request) {
+		if (repository.existsByEmail(request.email())) {
+			throw new RegraDeNegocioException("E-mail já cadastrado.");
+		}
+		Aluno aluno = new Aluno();
+		aluno.setNome(request.nome());
+		aluno.setEmail(request.email());
 		aluno.setStatus(StatusAluno.INATIVO);
 		aplicar(aluno, request);
 		aluno.setProgramaAtual(programa(request));
@@ -115,6 +130,19 @@ public class AlunoService {
 		return programaRepository.findByNivelExperienciaAndFrequenciaSemanal(request.nivelExperiencia(),
 				request.frequenciaSemanal()).orElseThrow(() -> new RegraDeNegocioException(
 						"Não há programa para o nível e a frequência informados."));
+	}
+
+	private br.edu.ifpb.academia.entity.ProgramaTreino programa(AlunoAdminRequest request) {
+		return programaRepository.findByNivelExperienciaAndFrequenciaSemanal(request.nivelExperiencia(),
+				request.frequenciaSemanal()).orElseThrow(() -> new RegraDeNegocioException(
+						"Não há programa para o nível e a frequência informados."));
+	}
+
+	private void aplicar(Aluno aluno, AlunoAdminRequest request) {
+		aluno.setPeso(request.peso());
+		aluno.setAltura(request.altura());
+		aluno.setNivelExperiencia(request.nivelExperiencia());
+		aluno.setFrequenciaSemanal(request.frequenciaSemanal());
 	}
 
 	private void aplicar(Aluno aluno, AlunoRequest request) {
